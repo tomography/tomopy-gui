@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='tomoshell',
-    version='0.1',
+    version=open('VERSION').read().strip(),
     author='Matthias Vogelgesang',
     author_email='matthias.vogelgesang@kit.edu',
     url='https://github.com/ufo-kit',

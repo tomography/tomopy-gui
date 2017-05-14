@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='tomoshell',
+    name='tomopyui',
     version=open('VERSION').read().strip(),
     author='Matthias Vogelgesang',
     author_email='matthias.vogelgesang@kit.edu',

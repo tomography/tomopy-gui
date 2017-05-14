@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Tomoshell</string>
+   <string>TomoPy UI</string>
   </property>
   <property name="toolTip">
    <string notr="true"/>
@@ -69,124 +69,8 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="tab_widgetPage0">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <attribute name="title">
-        <string>Page</string>
-       </attribute>
-       <widget class="QGroupBox" name="input_container0">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>10</y>
-          <width>931</width>
-          <height>331</height>
-         </rect>
-        </property>
-        <property name="title">
-         <string>Data Exchange Input</string>
-        </property>
-        <widget class="QWidget" name="gridLayoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>30</y>
-           <width>891</width>
-           <height>161</height>
-          </rect>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="4" column="0">
-           <widget class="QRadioButton" name="radioButton_proj">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string notr="true"/>
-            </property>
-            <property name="text">
-             <string>Proj</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QRadioButton" name="radioButton_sino">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string notr="true"/>
-            </property>
-            <property name="text">
-             <string>Sino</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="horizontalLayoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>200</y>
-           <width>891</width>
-           <height>78</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Path</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>Browse</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </widget>
       <widget class="QWidget" name="tab_widgetPage1_2">
        <attribute name="title">
         <string>Reconstruct</string>
@@ -708,9 +592,6 @@
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="flats2_label">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -1069,19 +950,6 @@
             <layout class="QVBoxLayout" name="verticalLayout_11">
              <item>
               <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0">
-               <item row="2" column="2">
-                <widget class="QPushButton" name="calibrate_button">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Calibrate</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="2">
                 <widget class="QPushButton" name="path_button_0">
                  <property name="sizePolicy">
@@ -1190,7 +1058,40 @@
                  </property>
                 </widget>
                </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_dx">
+                 <property name="text">
+                  <string>Data Exchange</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="path_line_dx"/>
+               </item>
+               <item row="2" column="2">
+                <widget class="QPushButton" name="path_button_dx">
+                 <property name="text">
+                  <string>Browse ...</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
+             </item>
+             <item>
+              <widget class="QPushButton" name="calibrate_button">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Calibrate</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -1262,7 +1163,16 @@
              </sizepolicy>
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <property name="spacing">
@@ -1285,7 +1195,7 @@
      <x>0</x>
      <y>0</y>
      <width>1018</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -1375,9 +1285,6 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::WindowShortcut</enum>
-   </property>
-   <property name="softKeyRole">
-    <enum>QAction::NoSoftKey</enum>
    </property>
   </action>
   <action name="save_action">

@@ -1,11 +1,11 @@
-#!/local/decarlo/conda/anaconda/bin/python
+#!/Users/decarlo/anaconda2/bin/python
 
 import sys
 import logging
 import pkg_resources
 import tifffile
-import tomoshell.widgets
-import tomoshell.process
+import tomopyui.widgets
+import tomopyui.process
 import numpy as np
 from contextlib import contextmanager
 from PyQt4 import QtGui, QtCore, uic
@@ -33,15 +33,15 @@ def spinning_cursor():
 class ApplicationWindow(QtGui.QMainWindow):
     def __init__(self, app):
         QtGui.QMainWindow.__init__(self)
-        ui_file = pkg_resources.resource_filename('tomoshell', 'tomoshell.ui')
+        ui_file = pkg_resources.resource_filename('tomopyui', 'tomopy.ui')
         self.ui = uic.loadUi(ui_file, self)
         self.last_dir = '.'
         self.axis_calibration = None
 
         # set up run-time widgets
-        self.overlap_viewer = tomoshell.widgets.OverlapViewer()
-        self.slice_viewer = tomoshell.widgets.ImageViewer()
-        self.volume_viewer = tomoshell.widgets.VolumeViewer()
+        self.overlap_viewer = tomopyui.widgets.OverlapViewer()
+        self.slice_viewer = tomopyui.widgets.ImageViewer()
+        self.volume_viewer = tomopyui.widgets.VolumeViewer()
 
         self.ui.overlap_layout.addWidget(self.overlap_viewer)
         self.ui.slice_dock.setWidget(self.slice_viewer)
@@ -94,7 +94,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         last = tifffile.TiffFile(second_name).asarray().astype(np.float)
 
         with spinning_cursor():
-            self.axis_calibration = tomoshell.process.AxisCalibration(first, last)
+            self.axis_calibration = tomopyui.process.AxisCalibration(first, last)
 
         position = self.axis_calibration.position
         self.overlap_viewer.set_images(first, last)

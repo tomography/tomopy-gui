@@ -4,8 +4,11 @@ import sys
 import logging
 import pkg_resources
 import tifffile
+import dxchange as dx
 import tomopyui.widgets
 import tomopyui.process
+import tomopyui.util as util
+
 import numpy as np
 from contextlib import contextmanager
 from PyQt4 import QtGui, QtCore, uic
@@ -56,6 +59,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.path_button_0.clicked.connect(self.path_0_clicked)
         self.ui.path_button_180.clicked.connect(self.path_180_clicked)
         self.ui.calibrate_button.clicked.connect(self.calibrate)
+        self.ui.calibrate_dx_button.clicked.connect(self.calibrate_dx)
+
+        self.ui.path_button_dx.clicked.connect(self.path_dx_clicked)
 
         # set up log handler
         log_handler = CallableHandler(self.output_log)
@@ -87,11 +93,27 @@ class ApplicationWindow(QtGui.QMainWindow):
         path = self.get_filename('Open TIFF', 'Images (*.tif *.tiff)')
         self.ui.path_line_180.setText(path)
 
+    def path_dx_clicked(self, checked):
+        path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
+        self.ui.label_data_size.setText("Data: " + str(util.read_dx_dims(str(path), 'data')))
+        self.ui.path_line_dx.setText(path)
+
     def calibrate(self):
         first_name = str(self.ui.path_line_0.text())
         second_name = str(self.ui.path_line_180.text())
         first = tifffile.TiffFile(first_name).asarray().astype(np.float)
         last = tifffile.TiffFile(second_name).asarray().astype(np.float)
+
+    def calibrate_dx(self):
+        path = str(self.ui.path_line_dx.text())
+        last_ind = util.read_dx_dims(str(path), 'theta')
+        print(last_ind[0])
+        proj, flat, dark = dx.read_aps_32id(path, proj=(0, 1))
+        first = proj[0,:,:].astype(np.float)
+        proj, flat, dark = dx.read_aps_32id(path, proj=(last_ind[0]-1, last_ind[0]))
+        last = proj[0,:,:].astype(np.float)
+        #first = tifffile.TiffFile(first_name).asarray().astype(np.float)
+        #last = tifffile.TiffFile(second_name).asarray().astype(np.float)
 
         with spinning_cursor():
             self.axis_calibration = tomopyui.process.AxisCalibration(first, last)

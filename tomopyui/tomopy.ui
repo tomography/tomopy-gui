@@ -949,9 +949,22 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_11">
              <item>
-              <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0">
-               <item row="0" column="2">
-                <widget class="QPushButton" name="path_button_0">
+              <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0">
+               <item row="2" column="2">
+                <widget class="QLineEdit" name="path_line_0">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string notr="true"/>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QPushButton" name="path_button_180">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -966,7 +979,33 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
+               <item row="3" column="2">
+                <widget class="QLineEdit" name="path_line_180">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string notr="true"/>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QPushButton" name="calibrate_dx_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Calibrate</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
                 <widget class="QLabel" name="label_180">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -992,48 +1031,13 @@
                 </widget>
                </item>
                <item row="1" column="2">
-                <widget class="QPushButton" name="path_button_180">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
+                <widget class="QLabel" name="label_data_size">
                  <property name="text">
-                  <string>Browse ...</string>
+                  <string>          </string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="path_line_180">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="path_line_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
+               <item row="2" column="1">
                 <widget class="QLabel" name="label_0">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1058,7 +1062,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
+               <item row="0" column="1">
                 <widget class="QLabel" name="label_dx">
                  <property name="text">
                   <string>Data Exchange</string>
@@ -1068,30 +1072,46 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
+               <item row="2" column="3">
+                <widget class="QPushButton" name="path_button_0">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Browse ...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
                 <widget class="QLineEdit" name="path_line_dx"/>
                </item>
-               <item row="2" column="2">
+               <item row="0" column="3">
                 <widget class="QPushButton" name="path_button_dx">
                  <property name="text">
                   <string>Browse ...</string>
                  </property>
                 </widget>
                </item>
+               <item row="4" column="3">
+                <widget class="QPushButton" name="calibrate_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Calibrate</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="calibrate_button">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Calibrate</string>
-               </property>
-              </widget>
              </item>
             </layout>
            </widget>

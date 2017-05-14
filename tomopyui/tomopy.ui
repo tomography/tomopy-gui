@@ -1099,7 +1099,7 @@
                 </widget>
                </item>
                <item row="4" column="3">
-                <widget class="QPushButton" name="calibrate_button">
+                <widget class="QPushButton" name="calibrate_tiff_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>

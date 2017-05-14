@@ -1023,22 +1023,18 @@
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>180° projection:</string>
+                  <string>tiff 180° proj:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QLabel" name="label_data_size">
-                 <property name="text">
-                  <string>          </string>
-                 </property>
-                </widget>
-               </item>
                <item row="2" column="1">
                 <widget class="QLabel" name="label_0">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -1055,7 +1051,7 @@
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>0° projection:</string>
+                  <string>tiff 0° proj:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1124,7 +1120,7 @@
             <layout class="QVBoxLayout" name="verticalLayout_12">
              <item>
               <layout class="QGridLayout" name="gridLayout_6">
-               <item row="0" column="0">
+               <item row="1" column="0">
                 <widget class="QLabel" name="label_8">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1139,14 +1135,14 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>Axis center:</string>
+                  <string>Center:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="1" column="1">
                 <widget class="QLabel" name="axis_num">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1162,6 +1158,23 @@
                  </property>
                  <property name="text">
                   <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_data_size">
+                 <property name="text">
+                  <string>          </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Size:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
@@ -1234,7 +1247,14 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="open_action"/>
+    <widget class="QMenu" name="menuOpen">
+     <property name="title">
+      <string>Open ...</string>
+     </property>
+     <addaction name="actionData_Exchange"/>
+     <addaction name="actionTiff"/>
+    </widget>
+    <addaction name="menuOpen"/>
     <addaction name="save_action"/>
     <addaction name="close_action"/>
    </widget>
@@ -1299,14 +1319,6 @@
     <string>Save as...</string>
    </property>
   </action>
-  <action name="open_action">
-   <property name="text">
-    <string>Open ...</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WindowShortcut</enum>
-   </property>
-  </action>
   <action name="save_action">
    <property name="text">
     <string>Save as ...</string>
@@ -1336,6 +1348,16 @@
   <action name="about_action">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionData_Exchange">
+   <property name="text">
+    <string>Data Exchange</string>
+   </property>
+  </action>
+  <action name="actionTiff">
+   <property name="text">
+    <string>Tiff</string>
    </property>
   </action>
  </widget>

@@ -375,7 +375,10 @@
                 <string> rad</string>
                </property>
                <property name="decimals">
-                <number>10</number>
+                <number>8</number>
+               </property>
+               <property name="maximum">
+                <double>361.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1253,6 +1256,7 @@
      </property>
      <addaction name="actionData_Exchange"/>
      <addaction name="actionTiff"/>
+     <addaction name="open_action_2"/>
     </widget>
     <addaction name="menuOpen"/>
     <addaction name="save_action"/>
@@ -1353,6 +1357,11 @@
   <action name="actionData_Exchange">
    <property name="text">
     <string>Data Exchange</string>
+   </property>
+  </action>
+  <action name="open_action_2">
+   <property name="text">
+    <string>Config</string>
    </property>
   </action>
   <action name="actionTiff">

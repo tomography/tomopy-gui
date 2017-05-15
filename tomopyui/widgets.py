@@ -3,7 +3,7 @@ import pyqtgraph.opengl as gl
 import logging
 import numpy as np
 from PyQt4 import QtGui, QtCore
-
+import dxchange as dx
 
 LOG = logging.getLogger(__name__)
 
@@ -57,7 +57,10 @@ class ImageViewer(QtGui.QWidget):
     def load_files(self, filenames):
         """Load *filenames* for display."""
         self.filenames = filenames
-        self.slider.setRange(0, len(self.filenames) - 1)
+        proj, flat, dark, theta = dx.read_aps_32id(filenames, proj=(0, 1))
+        self.slider.setRange(0, len(theta) - 1)
+        print(theta)
+        print(0, len(theta)-1)
         self.slider.setSliderPosition(0)
         self.update_image()
 
@@ -65,7 +68,8 @@ class ImageViewer(QtGui.QWidget):
         """Update the currently display image."""
         if self.filenames:
             pos = self.slider.value()
-            image = read_tiff(self.filenames[pos])
+            proj, flat, dark, theta = dx.read_aps_32id(self.filenames, proj=(pos, pos+1))
+            image = proj[0,:,:].astype(np.float)
             self.image_item.setImage(image)
 
 

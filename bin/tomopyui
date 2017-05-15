@@ -1,3 +1,4 @@
+#!/Users/decarlo/anaconda2/bin/python
 #!/usr/bin/python
 
 import sys
@@ -41,6 +42,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.last_dir = '.'
         self.axis_calibration = None
 
+        #self.params = params
+        #self.params.angle = 0
+
         # set up run-time widgets
         self.overlap_viewer = tomopyui.widgets.OverlapViewer()
         self.slice_viewer = tomopyui.widgets.ImageViewer()
@@ -59,9 +63,13 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.path_button_0.clicked.connect(self.path_0_clicked)
         self.ui.path_button_180.clicked.connect(self.path_180_clicked)
         self.ui.path_button_dx.clicked.connect(self.path_dx_clicked)
+        self.ui.input_path_button.clicked.connect(self.path_dx_clicked)
 
         self.ui.calibrate_tiff_button.clicked.connect(self.calibrate_tiff)
         self.ui.calibrate_dx_button.clicked.connect(self.calibrate_dx)
+        self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
+
+        #self.ui.angle_step.valueChanged.connect(self.change_angle_step)
 
         #self.ui.input_path_button.clicked.connect(self.input_path_button_clicked)
 
@@ -73,6 +81,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         root_logger = logging.getLogger('')
         root_logger.setLevel(logging.DEBUG)
         root_logger.handlers = [log_handler]
+
+        #self.ui.open_action.triggered.connect(self.on_open_from)
 
         self.ui.show()
 
@@ -100,7 +110,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
         self.ui.label_data_size.setText(str(util.read_dx_dims(str(path), 'data')))
         self.ui.path_line_dx.setText(path)
-        self.ui.path_line_dx.setText(path)
+        self.ui.input_path_line.setText(path)
 
     def calibrate_tiff(self):
         first_name = str(self.ui.path_line_0.text())
@@ -112,6 +122,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         path = str(self.ui.path_line_dx.text())
         last_ind = util.read_dx_dims(str(path), 'theta')
         proj, flat, dark, theta = dx.read_aps_32id(path, proj=(0, 1))
+        print(theta[0], theta[1])
+        self.ui.angle_step.setValue((theta[1] - theta[0]).astype(np.float))
         first = proj[0,:,:].astype(np.float)
         proj, flat, dark, theta = dx.read_aps_32id(path, proj=(last_ind[0]-1, last_ind[0]))
         last = proj[0,:,:].astype(np.float)
@@ -129,6 +141,34 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.axis_num.setText('{} px'.format(self.axis_calibration.axis))
         self.ui.axis_spin.setValue(self.axis_calibration.axis)
 
+    def on_show_slices_clicked(self):
+        path = str(self.ui.path_line_dx.text())
+
+        if not self.slice_viewer:
+            self.slice_viewer = tomopyui.process.ImageViewer(path)
+            self.slice_dock.setWidget(self.slice_viewer)
+            self.ui.slice_dock.setVisible(True)
+        else:
+            self.slice_viewer.load_files(path)
+
+    #def change_angle_step(self):
+    #    if self.ui.angle_step.value() == 0:
+    #        self.params.angle = None
+    #    else:
+    #        self.params.angle = self.ui.angle_step.value()
+
+    #def get_values_from_params(self):
+    #    self.ui.angle_step.setValue(self.params.angle if self.params.angle else 0.0)
+
+
+
+    #def on_open_from(self):
+        #config_file = QtGui.QFileDialog.getOpenFileName(self, 'Open ...', self.params.last_dir)
+        #parser = ArgumentParser()
+        #params = config.Params(sections=config.TOMO_PARAMS + ('gui',))
+        #parser = params.add_arguments(parser)
+        #self.params = parser.parse_known_args(config.config_to_list(config_name=config_file))[0]
+        #self.get_values_from_params()
 
 def main():
     app = QtGui.QApplication(sys.argv)
@@ -138,3 +178,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    #main(params)

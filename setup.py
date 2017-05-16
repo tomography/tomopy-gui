@@ -7,7 +7,7 @@ setup(
     author_email='matthias.vogelgesang@kit.edu',
     url='https://github.com/ufo-kit',
     packages=find_packages(),
-    package_data={'':['tomopy.ui']},
+    package_data={'':['gui.ui']},
     scripts=['bin/tomopyui'],
     description='Basic tomographic reconstruction GUI',
     install_requires=['pyqtgraph'],

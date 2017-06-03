@@ -58,7 +58,13 @@ class ImageViewer(QtGui.QWidget):
         """Load *filenames* for display."""
         self.filenames = filenames
         proj, flat, dark, theta = dx.read_aps_32id(filenames, proj=(0, 1))
-        self.slider.setRange(0, len(theta) - 1)
+        print (proj.shape)
+        print (flat.shape)
+        print (dark.shape)
+        print (theta.shape)
+
+        #self.slider.setRange(0, len(theta) - 1)
+        self.slider.setRange(0, 1499 - 1)
         self.slider.setSliderPosition(0)
         self.update_image()
 

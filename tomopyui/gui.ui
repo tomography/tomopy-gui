@@ -979,115 +979,7 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_11">
              <item>
-              <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0">
-               <item row="1" column="3">
-                <widget class="QPushButton" name="calibrate_dx_button">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Calibrate</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QLineEdit" name="path_line_180">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QLineEdit" name="path_line_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="3">
-                <widget class="QPushButton" name="path_button_180">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Browse ...</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLabel" name="label_180">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>112</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>tiff 180° proj:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="label_0">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>112</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>tiff 0° proj:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
+              <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0">
                <item row="0" column="2">
                 <widget class="QLineEdit" name="path_line_dx"/>
                </item>
@@ -1101,22 +993,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="3">
-                <widget class="QPushButton" name="path_button_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string notr="true"/>
-                 </property>
-                 <property name="text">
-                  <string>Browse ...</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="3">
                 <widget class="QPushButton" name="path_button_dx">
                  <property name="text">
@@ -1124,8 +1000,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="3">
-                <widget class="QPushButton" name="calibrate_tiff_button">
+               <item row="1" column="3">
+                <widget class="QPushButton" name="calibrate_dx_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1277,15 +1153,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuOpen">
-     <property name="title">
-      <string>Open ...</string>
-     </property>
-     <addaction name="actionData_Exchange"/>
-     <addaction name="actionTiff"/>
-     <addaction name="open_action_2"/>
-    </widget>
-    <addaction name="menuOpen"/>
+    <addaction name="open_action"/>
     <addaction name="save_action"/>
     <addaction name="close_action"/>
    </widget>
@@ -1381,9 +1249,9 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionData_Exchange">
+  <action name="open_action">
    <property name="text">
-    <string>Data Exchange</string>
+    <string>Open</string>
    </property>
   </action>
   <action name="open_action_2">

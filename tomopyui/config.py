@@ -7,7 +7,7 @@ from tofu.util import positive_int, tupleize, range_list
 
 
 LOG = logging.getLogger(__name__)
-NAME = "reco.conf"
+NAME = "tomopyui.conf"
 SECTIONS = OrderedDict()
 
 SECTIONS['general'] = {
@@ -312,6 +312,11 @@ SECTIONS['sbtv'] = {
         'help': "mu"}}
 
 SECTIONS['gui'] = {
+    'last-dir': {
+        'default': '.',
+        'type': str,
+        'help': "Path of the last used directory",
+        'metavar': 'PATH'},
     'enable-cropping': {
         'default': False,
         'help': "Enable cropping width",
@@ -324,21 +329,6 @@ SECTIONS['gui'] = {
         'default': False,
         'help': "Show 3D slices with pyqtgraph",
         'action': 'store_true'},
-    'last-dir': {
-        'default': '.',
-        'type': str,
-        'help': "Path of the last used directory",
-        'metavar': 'PATH'},
-    'deg0': {
-        'default': '.',
-        'type': str,
-        'help': "Location with 0 deg projection",
-        'metavar': 'PATH'},
-    'deg180': {
-        'default': '.',
-        'type': str,
-        'help': "Location with 180 deg projection",
-        'metavar': 'PATH'},
     'ffc-correction': {
         'default': False,
         'help': "Enable darks or flats correction",

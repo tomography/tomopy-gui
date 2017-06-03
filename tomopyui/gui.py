@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 import pkg_resources
@@ -6,14 +7,24 @@ import dxchange as dx
 import tomopyui.widgets
 import tomopyui.process
 import tomopyui.util as util
+import tomopyui.config as config
 
+from argparse import ArgumentParser
 import numpy as np
 from contextlib import contextmanager
 from PyQt4 import QtGui, QtCore, uic
 
 
-LOG = logging.getLogger('shell')
+LOG = logging.getLogger(__name__)
 
+
+def set_last_dir(path, line_edit, last_dir):
+    if os.path.exists(str(path)):
+        line_edit.clear()
+        line_edit.setText(path)
+        last_dir = str(line_edit.text())
+
+    return last_dir
 
 class CallableHandler(logging.Handler):
     def __init__(self, func):
@@ -32,21 +43,31 @@ def spinning_cursor():
 
 
 class ApplicationWindow(QtGui.QMainWindow):
-    def __init__(self, app,params):
+    def __init__(self, app, params):
         QtGui.QMainWindow.__init__(self)
         self.params = params
+        self.app = app
         ui_file = pkg_resources.resource_filename(__name__, 'gui.ui')
         self.ui = uic.loadUi(ui_file, self)
+        self.ui.show()
+
+        self.ui.tab_widget.setCurrentIndex(0)
+        self.ui.slice_dock.setVisible(False)
+        self.ui.volume_dock.setVisible(False)
+        self.ui.axis_view_widget.setVisible(False)
+
         self.last_dir = '.'
         self.axis_calibration = None
-
-        #self.params = params
+        #self.ui.slice_dock.setVisible(False)
+    
+        self.params = params
+        self.get_values_from_params()
         #self.params.angle = 0
 
         # set up run-time widgets
-        self.overlap_viewer = tomopyui.widgets.OverlapViewer()
         self.slice_viewer = tomopyui.widgets.ImageViewer()
         self.volume_viewer = tomopyui.widgets.VolumeViewer()
+        self.overlap_viewer = tomopyui.widgets.OverlapViewer()
 
         self.ui.overlap_layout.addWidget(self.overlap_viewer)
         self.ui.slice_dock.setWidget(self.slice_viewer)
@@ -58,17 +79,18 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.region_box.clicked.connect(self.region_box_clicked)
         self.ui.ffc_box.clicked.connect(self.ffc_box_clicked)
 
-        self.ui.path_button_0.clicked.connect(self.path_0_clicked)
-        self.ui.path_button_180.clicked.connect(self.path_180_clicked)
         self.ui.path_button_dx.clicked.connect(self.path_dx_clicked)
         self.ui.path_button_rec.clicked.connect(self.path_dx_clicked)
 
-        self.ui.calibrate_tiff_button.clicked.connect(self.calibrate_tiff)
         self.ui.calibrate_dx_button.clicked.connect(self.calibrate_dx)
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
 
+        #self.ui.path_line_0.textChanged.connect(lambda value: self.change_value('deg0', str(self.ui.path_line_0.text())))
         #self.ui.angle_step.valueChanged.connect(self.change_angle_step)
+        self.ui.open_action.triggered.connect(self.on_open_from)
+        self.ui.close_action.triggered.connect(self.close)
+        self.ui.about_action.triggered.connect(self.on_about)
 
 
         # set up log handler
@@ -80,8 +102,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         root_logger.handlers = [log_handler]
 
         #self.ui.open_action.triggered.connect(self.on_open_from)
+        self.ui.close_action.triggered.connect(self.close)
+        self.ui.about_action.triggered.connect(self.on_about)
 
-        self.ui.show()
 
     def region_box_clicked(self):
         self.ui.y_step.setEnabled(self.ui.region_box.isChecked())
@@ -95,26 +118,14 @@ class ApplicationWindow(QtGui.QMainWindow):
     def get_filename(self, caption, type_filter):
         return QtGui.QFileDialog.getOpenFileName(self, caption, self.last_dir, type_filter)
 
-    def path_0_clicked(self, checked):
-        path = self.get_filename('Open TIFF', 'Images (*.tif *.tiff)')
-        self.ui.path_line_0.setText(path)
-
-    def path_180_clicked(self, checked):
-        path = self.get_filename('Open TIFF', 'Images (*.tif *.tiff)')
-        self.ui.path_line_180.setText(path)
-
     def path_dx_clicked(self, checked):
         path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
         self.ui.label_data_size.setText(str(util.read_dx_dims(str(path), 'data')))
         self.ui.path_line_dx.setText(path)
         self.ui.input_path_line.setText(path)
         self.on_show_projection_clicked()
-
-    def calibrate_tiff(self):
-        first_name = str(self.ui.path_line_0.text())
-        second_name = str(self.ui.path_line_180.text())
-        first = tifffile.TiffFile(first_name).asarray().astype(np.float)
-        last = tifffile.TiffFile(second_name).asarray().astype(np.float)
+        self.last_dir = path
+        self.params.last_dir = set_last_dir(path, self.ui.path_line_dx, self.params.last_dir)
 
     def calibrate_dx(self):
         path = str(self.ui.path_line_dx.text())
@@ -143,31 +154,53 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def on_show_projection_clicked(self):
         path = str(self.ui.path_line_dx.text())
+        self.ui.slice_dock.setVisible(True)
 
         if not self.slice_viewer:
-            self.slice_viewer = tomopyui.process.ImageViewer(path)
+            self.slice_viewer = tomopyui.widgets.ImageViewer(path)
             self.slice_dock.setWidget(self.slice_viewer)
             self.ui.slice_dock.setVisible(True)
         else:
             self.slice_viewer.load_files(path)
-   #def change_angle_step(self):
+    #def change_angle_step(self):
     #    if self.ui.angle_step.value() == 0:
     #        self.params.angle = None
     #    else:
     #        self.params.angle = self.ui.angle_step.value()
 
-    #def get_values_from_params(self):
-    #    self.ui.angle_step.setValue(self.params.angle if self.params.angle else 0.0)
+    def get_values_from_params(self):
+        self.ui.input_path_line.setText(self.params.sinograms or self.params.projections or '.')
+        self.ui.angle_step.setValue(self.params.angle if self.params.angle else 0.0)
+
+    def closeEvent(self, event):
+        try:
+            sections = config.TOMO_PARAMS + ('gui',)
+            config.write('reco.conf', args=self.params, sections=sections)
+        except IOError as e:
+            self.gui_warn(str(e))
+            self.on_save_as()
 
 
+    def on_open_from(self):
+        config_file = QtGui.QFileDialog.getOpenFileName(self, 'Open ...', self.params.last_dir)
+        print(config_file)
+        parser = ArgumentParser()
+        params = config.Params(sections=config.TOMO_PARAMS + ('gui',))
+        parser = params.add_arguments(parser)
+        self.params = parser.parse_known_args(config.config_to_list(config_name=config_file))[0]
+        self.get_values_from_params()
 
-    #def on_open_from(self):
-        #config_file = QtGui.QFileDialog.getOpenFileName(self, 'Open ...', self.params.last_dir)
-        #parser = ArgumentParser()
-        #params = config.Params(sections=config.TOMO_PARAMS + ('gui',))
-        #parser = params.add_arguments(parser)
-        #self.params = parser.parse_known_args(config.config_to_list(config_name=config_file))[0]
-        #self.get_values_from_params()
+    def on_about(self):
+        message = "GUI is part of ufo-reconstruct {}.".format(__version__)
+        QtGui.QMessageBox.about(self, "About ufo-reconstruct", message)
+
+    def closeEvent(self, event):
+        try:
+            sections = config.TOMO_PARAMS + ('gui',)
+            config.write('tomopyui.conf', args=self.params, sections=sections)
+        except IOError as e:
+            self.gui_warn(str(e))
+            self.on_save_as()
 
 def main(params):
     app = QtGui.QApplication(sys.argv)

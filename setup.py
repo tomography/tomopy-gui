@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='tomopyui',
     version=open('VERSION').read().strip(),
+    #version=__version__,
     author='Matthias Vogelgesang',
     author_email='matthias.vogelgesang@kit.edu',
     url='https://github.com/ufo-kit',

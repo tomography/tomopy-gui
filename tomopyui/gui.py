@@ -55,13 +55,10 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_dock.setVisible(False)
         self.ui.volume_dock.setVisible(False)
         self.ui.axis_view_widget.setVisible(False)
-
-        self.last_dir = '.'
-        self.axis_calibration = None
-        #self.ui.slice_dock.setVisible(False)
-    
-        self.params = params
         self.get_values_from_params()
+
+        self.axis_calibration = None
+    
         #self.params.angle = 0
 
         # set up run-time widgets
@@ -76,7 +73,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         # connect signals
         self.overlap_viewer.slider.valueChanged.connect(self.axis_slider_changed)
 
-        self.ui.region_box.clicked.connect(self.region_box_clicked)
+        self.ui.slice_box.clicked.connect(self.slice_box_clicked)
         self.ui.ffc_box.clicked.connect(self.ffc_box_clicked)
 
         self.ui.path_button_dx.clicked.connect(self.path_dx_clicked)
@@ -85,6 +82,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.calibrate_dx_button.clicked.connect(self.calibrate_dx)
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
+        self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
 
         #self.ui.path_line_0.textChanged.connect(lambda value: self.change_value('deg0', str(self.ui.path_line_0.text())))
         #self.ui.angle_step.valueChanged.connect(self.change_angle_step)
@@ -92,6 +90,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.close_action.triggered.connect(self.close)
         self.ui.about_action.triggered.connect(self.on_about)
 
+        self.ui.y_step.valueChanged.connect(lambda value: self.change_value('y_step', value))
 
         # set up log handler
         log_handler = CallableHandler(self.output_log)
@@ -106,8 +105,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.about_action.triggered.connect(self.on_about)
 
 
-    def region_box_clicked(self):
-        self.ui.y_step.setEnabled(self.ui.region_box.isChecked())
+    def slice_box_clicked(self):
+        self.ui.y_step.setEnabled(self.ui.slice_box.isChecked())
 
     def ffc_box_clicked(self):
         self.ui.preprocessing_container.setEnabled(self.ui.ffc_box.isChecked())
@@ -120,7 +119,17 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def path_dx_clicked(self, checked):
         path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
-        self.ui.label_data_size.setText(str(util.read_dx_dims(str(path), 'data')))
+
+        data_size = util.read_dx_dims(str(path), 'data')
+        data_dark_size = util.read_dx_dims(str(path), 'data_dark')
+        data_white_size = util.read_dx_dims(str(path), 'data_white')
+        self.ui.label_data_size.setText(str(data_size))
+        self.ui.label_data_dark_size.setText(str(data_dark_size))
+        self.ui.label_data_white_size.setText(str(data_white_size))
+
+        self.ui.y_step.setValue(data_size[1]/2)
+        self.ui.y_step.setRange(0, data_size[1])
+
         self.ui.path_line_dx.setText(path)
         self.ui.input_path_line.setText(path)
         self.on_show_projection_clicked()
@@ -130,8 +139,12 @@ class ApplicationWindow(QtGui.QMainWindow):
     def calibrate_dx(self):
         path = str(self.ui.path_line_dx.text())
         last_ind = util.read_dx_dims(str(path), 'theta')
+        if (last_ind == None):
+            last_ind = util.read_dx_dims(str(path), 'data')
+    
         proj, flat, dark, theta = dx.read_aps_32id(path, proj=(0, 1))
         self.ui.angle_step.setValue((theta[1] - theta[0]).astype(np.float))
+
         first = proj[0,:,:].astype(np.float)
         proj, flat, dark, theta = dx.read_aps_32id(path, proj=(last_ind[0]-1, last_ind[0]))
         last = proj[0,:,:].astype(np.float)
@@ -168,9 +181,28 @@ class ApplicationWindow(QtGui.QMainWindow):
     #    else:
     #        self.params.angle = self.ui.angle_step.value()
 
+    def change_value(self, name, value):
+        setattr(self.params, name, value)
+
+    def on_ffc_box_clicked(self):
+        checked = self.ui.ffc_box.isChecked()
+        #self.ui.preprocessing_container.setVisible(checked)
+        print("CHECKED")
+        self.params.ffc_correction = checked
+
     def get_values_from_params(self):
+        self.last_dir = self.params.last_dir
+
         self.ui.input_path_line.setText(self.params.sinograms or self.params.projections or '.')
         self.ui.angle_step.setValue(self.params.angle if self.params.angle else 0.0)
+        self.ui.y_step.setValue(self.params.y_step if self.params.y_step else 1)
+
+        if self.params.y_step > 0 :
+            self.ui.slice_box.setChecked(True)
+        else:
+            self.ui.slice_box.setChecked(False)
+        self.ui.on_slice_box_clicked()
+        self.ui.minus_log_box.setChecked(self.params.minus_log)
 
     def closeEvent(self, event):
         try:
@@ -201,6 +233,13 @@ class ApplicationWindow(QtGui.QMainWindow):
         except IOError as e:
             self.gui_warn(str(e))
             self.on_save_as()
+
+    def on_slice_box_clicked(self):
+        self.ui.y_step.setEnabled(self.ui.slice_box.isChecked())
+        if self.ui.slice_box.isChecked():
+            self.params.y_step = self.ui.y_step.value()
+        else:
+            self.params.y_step = 1
 
 def main(params):
     app = QtGui.QApplication(sys.argv)

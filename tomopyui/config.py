@@ -121,7 +121,11 @@ SECTIONS['flat-correction'] = {
     'absorptivity': {
         'default': False,
         'action': 'store_true',
-        'help': 'Do absorption correction'}}
+        'help': 'Do absorption correction'},
+    'minus-log': {
+        'default': True,
+        'action': 'store_true',
+        'help': 'Do minus log'}}
 
 SECTIONS['retrieve-phase'] = {
     'retrieval-method': {

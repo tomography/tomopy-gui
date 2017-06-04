@@ -4,6 +4,7 @@ import logging
 import numpy as np
 from PyQt4 import QtGui, QtCore
 import dxchange as dx
+import tomopyui.util as util
 
 LOG = logging.getLogger(__name__)
 
@@ -62,9 +63,10 @@ class ImageViewer(QtGui.QWidget):
         print (flat.shape)
         print (dark.shape)
         print (theta.shape)
+        print (util.read_dx_dims(str(filenames), 'data')[0])
 
         #self.slider.setRange(0, len(theta) - 1)
-        self.slider.setRange(0, 1499 - 1)
+        self.slider.setRange(0, util.read_dx_dims(str(filenames), 'data')[0] - 1)
         self.slider.setSliderPosition(0)
         self.update_image()
 

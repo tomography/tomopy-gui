@@ -100,7 +100,7 @@ SECTIONS['flat-correction'] = {
         'default': 1,
         'type': float,
         'help': "Scaling dark"},
-    'reduction-mode': {
+    'normalization-mode': {
         'default': "Average",
         'type': str,
         'help': "Flat-field correction options: Average (darks) or median (flats)"},
@@ -198,9 +198,24 @@ SECTIONS['reconstruction'] = {
     'projection-padding-mode': {
         'choices': ['none', 'clamp', 'clamp_to_edge', 'repeat'],
         'default': 'clamp_to_edge',
-        'help': "Padded values assignment"}}
+        'help': "Padded values assignment"},
+    'output-dir': {
+        'default': '.',
+        'type': str,
+        'help': "Path to location or format-specified file path "
+                "for storing reconstructed slices",
+        'metavar': 'PATH'}}
 
 SECTIONS['tomographic-reconstruction'] = {
+    'slice-number': {
+        'type': positive_int,
+        'default': 1,
+        'help': "Slice to reconstruct"},
+    'binning': {
+        'type': str,
+        'default': '2',
+        'help': "Reconstruction binning factor",
+        'choices': ['1', '2', '4', '8']},
     'axis': {
         'default': None,
         'type': float,
@@ -214,10 +229,10 @@ SECTIONS['tomographic-reconstruction'] = {
         'type': float,
         'help': "Angle offset of first projection in radians"},
     'method': {
-        'default': 'fbp',
+        'default': 'gridrec',
         'type': str,
         'help': "Reconstruction method",
-        'choices': ['fbp', 'dfi', 'sart', 'sirt', 'sbtv', 'asdpocs']}}
+        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sartfbp']}}
 
 SECTIONS['laminographic-reconstruction'] = {
     'dry-run': {
@@ -281,31 +296,31 @@ SECTIONS['laminographic-reconstruction'] = {
         'default': 'clamp',
         'help': "Padded values assignment for the filtered projection"}}
 
-SECTIONS['fbp'] = {
-    'crop-width': {
-        'default': None,
-        'type': positive_int,
-        'help': "Width of final slice"}}
-
-SECTIONS['dfi'] = {
-    'oversampling': {
-        'default': None,
-        'type': positive_int,
-        'help': "Oversample factor"}}
-
 SECTIONS['ir'] = {
     'num-iterations': {
         'default': 10,
         'type': positive_int,
         'help': "Maximum number of iterations"}}
 
-SECTIONS['sart'] = {
+SECTIONS['gridrec'] = {
+    'gridrec-crop-width': {
+        'default': None,
+        'type': positive_int,
+        'help': "Width of final slice"}}
+
+SECTIONS['fbp'] = {
+    'fbp-crop-width': {
+        'default': None,
+        'type': positive_int,
+        'help': "Width of final slice"}}
+
+SECTIONS['sirt'] = {
     'relaxation-factor': {
         'default': 0.25,
         'type': float,
         'help': "Relaxation factor"}}
 
-SECTIONS['sbtv'] = {
+SECTIONS['sartfbp'] = {
     'lambda': {
         'default': 0.1,
         'type': float,
@@ -320,6 +335,11 @@ SECTIONS['gui'] = {
         'default': '.',
         'type': str,
         'help': "Path of the last used directory",
+        'metavar': 'PATH'},
+    'last-file': {
+        'default': '.',
+        'type': str,
+        'help': "Name of the last file used",
         'metavar': 'PATH'},
     'enable-cropping': {
         'default': False,
@@ -367,7 +387,7 @@ SECTIONS['perf'] = {
         'type': range_list,
         'help': "Number or range of number of projections"}}
 
-TOMO_PARAMS = ('flat-correction', 'reconstruction', 'tomographic-reconstruction', 'fbp', 'dfi', 'ir', 'sart', 'sbtv')
+TOMO_PARAMS = ('flat-correction', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')
 
 LAMINO_PARAMS = ('flat-correction', 'reconstruction', 'laminographic-reconstruction', 'retrieve-phase')
 

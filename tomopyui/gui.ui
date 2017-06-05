@@ -148,7 +148,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QSpinBox" name="y_step">
+              <widget class="QSpinBox" name="slice_number">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -188,7 +188,7 @@
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string>Path:</string>
+                <string>Data Exchange</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -250,6 +250,9 @@
                </property>
                <property name="maximum">
                 <double>8192.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.500000000000000</double>
                </property>
               </widget>
              </item>
@@ -377,7 +380,7 @@
         <item>
          <widget class="QGroupBox" name="preprocessing_container">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -437,6 +440,9 @@
              </item>
              <item row="0" column="1">
               <widget class="QComboBox" name="ffc_options">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -450,17 +456,17 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Normalize BG</string>
+                 <string>Normalize_BG</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Normalize NF</string>
+                 <string>Normalize_NF</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Normalize ROI</string>
+                 <string>Normalize_ROI</string>
                 </property>
                </item>
               </widget>
@@ -569,7 +575,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="binning_label">
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -577,7 +583,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Reduction:</string>
+                <string>Binning</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -585,7 +591,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="reduction_box">
+              <widget class="QComboBox" name="binning_box">
                <property name="currentIndex">
                 <number>1</number>
                </property>
@@ -715,17 +721,27 @@
                </property>
                <item>
                 <property name="text">
-                 <string>GriRec</string>
+                 <string>gridrec</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>DFI</string>
+                 <string>fbp</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>SART</string>
+                 <string>mlem</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>sirt</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>sartfbp</string>
                 </property>
                </item>
               </widget>
@@ -742,6 +758,19 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="iterations_label">
+               <property name="text">
+                <string>Iteration</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSpinBox" name="iterations"/>
              </item>
             </layout>
            </item>
@@ -808,10 +837,10 @@
              <item>
               <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0">
                <item row="0" column="2">
-                <widget class="QLineEdit" name="path_line_dx"/>
+                <widget class="QLineEdit" name="dx_file_name_line"/>
                </item>
                <item row="0" column="1">
-                <widget class="QLabel" name="label_dx">
+                <widget class="QLabel" name="dx_label">
                  <property name="text">
                   <string>Data Exchange</string>
                  </property>
@@ -821,7 +850,7 @@
                 </widget>
                </item>
                <item row="0" column="3">
-                <widget class="QPushButton" name="path_button_dx">
+                <widget class="QPushButton" name="dx_file_name_button">
                  <property name="text">
                   <string>Browse ...</string>
                  </property>

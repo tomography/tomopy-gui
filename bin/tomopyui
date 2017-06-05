@@ -155,6 +155,8 @@ def main():
     lamino_params = config.LAMINO_PARAMS
     gui_params = tomo_params + ('gui', )
 
+    print(tomo_params)
+    
     cmd_parsers = [
         ('init',        init,           (),                             "Create configuration file"),
         # ('flatcorrect', run_flat_correct, ('flat-correction',),         "Run flat field correction"),

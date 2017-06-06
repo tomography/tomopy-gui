@@ -4,7 +4,8 @@ import glob
 import tempfile
 import sys
 import numpy as np
-
+import tomopy
+import dxchange
 
 LOG = logging.getLogger(__name__)
 
@@ -50,7 +51,6 @@ def get_sinogram_reader(params):
 
     return reader, width, height
 
-
 def tomo(params):
     # Create reader and writer
     print("slice:", str(params.slice_number))
@@ -61,8 +61,51 @@ def tomo(params):
     print("raw data file dir", str(params.last_file))
     print("rec method", str(params.method))
     print("rec iteration", str(params.num_iterations))
+    print("full reconstruction", str(params.full_reconstruction))
+ 
+    fname = str(params.last_file)
+    start = params.slice_number
+    end = start + 1
 
-    #width, height = get_projection_reader(params)
+    print("START-END", start, end)
+     # Read raw data.
+    proj, flat, dark, theta = dxchange.read_aps_32id(fname, sino=(start, end))
+
+    print(proj.shape)
+    print(flat.shape)
+    print(dark.shape)
+ 
+    # Flat-field correction of raw data.
+    data = tomopy.normalize(proj, flat, dark)
+    print("NORMALIZED")
+
+    #data = tomopy.downsample(data, level=int(params.binning))
+    #print("BINNING: ", params.binning)
+
+    # remove stripes    
+    #data = tomopy.prep.stripe.remove_stripe_fw(data,level=5,wname='sym16',sigma=1,pad=True)
+
+    # phase retrieval
+    #data = tomopy.prep.phase.retrieve_phase(data,pixel_size=detector_pixel_size_x,dist=sample_detector_distance,energy=monochromator_energy,alpha=8e-3,pad=True)
+
+    # Set rotation center.
+    rot_center = params.axis/float(params.binning)
+    print ("ROT:", rot_center)
+
+    data = tomopy.minus_log(data)
+    print("MINUS LOG")
+
+    # Reconstruct object using Gridrec algorithm.
+    rec = tomopy.recon(data, theta, center=rot_center, algorithm='gridrec')
+    print("REC:", rec.shape)
+
+    # Mask each reconstructed slice with a circle.
+    #rec = tomopy.circ_mask(rec, axis=0, ratio=0.95)
+
+    # Write data as stack of TIFs.
+    dxchange.write_tiff_stack(rec, fname='recon_dir/aps_nik')
+
+   #width, height = get_projection_reader(params)
 
     #axis = params.axis or width / 2.0
 

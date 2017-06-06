@@ -224,6 +224,10 @@ SECTIONS['tomographic-reconstruction'] = {
         'default': False,
         'help': "Reconstruct without writing data",
         'action': 'store_true'},
+    'full-reconstruction': {
+        'default': False,
+        'help': "Full or one slice only reconstruction",
+        'action': 'store_true'},
     'offset': {
         'default': 0.0,
         'type': float,

@@ -310,8 +310,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_number.setEnabled(self.ui.slice_box.isChecked())
         if self.ui.slice_box.isChecked():
             self.params.slice_number = self.ui.slice_number.value()
+            self.params.full_reconstruction = False
         else:
-            self.params.slice_number = -1
+            self.params.full_reconstruction = True
 
     def change_ffc_options(self):
         self.params.normalization_mode = str(self.ui.ffc_options.currentText()).lower()

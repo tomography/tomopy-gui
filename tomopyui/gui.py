@@ -19,6 +19,39 @@ from PyQt4 import QtGui, QtCore, uic
 LOG = logging.getLogger(__name__)
 
 
+def set_gui_startup(self, path):
+        data_size = util.read_dx_dims(str(path), 'data')
+        data_dark_size = util.read_dx_dims(str(path), 'data_dark')
+        data_white_size = util.read_dx_dims(str(path), 'data_white')
+        self.ui.label_data_size.setText(str(data_size))
+        self.ui.label_data_dark_size.setText(str(data_dark_size))
+        self.ui.label_data_white_size.setText(str(data_white_size))
+
+        self.dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
+
+        self.ui.slice_start.setRange(0, self.dsize)
+        self.ui.slice_start.setValue(self.dsize/2)
+        self.ui.slice_start.setRange(0, self.dsize)
+        self.ui.slice_end.setRange(self.dsize/2+1, self.dsize)
+        self.ui.slice_end.setValue(self.dsize/2+1)
+
+        self.ui.dx_file_name_line.setText(path)
+        self.ui.input_path_line.setText(path)
+        self.on_show_projection_clicked()
+
+        self.last_file = os.path.dirname(str(path))
+
+        self.params.last_file = set_last_file(path, self.ui.dx_file_name_line, self.params.last_file)
+        self.params.last_dir = set_last_dir(path, self.ui.input_path_line, self.params.last_dir)  
+        self.params.output_dir = set_output_dir(path, self.ui.output_path_line, self.params.output_dir)
+
+        self.ui.preprocessing_container.setVisible(True)
+        self.ui.reconstruction_container.setVisible(True)
+        self.ui.output_container.setVisible(True)
+        self.ui.ffc_box.setEnabled(True)
+        self.ui.ffc_box.setVisible(True)
+        self.ui.calibrate_dx.setVisible(True)
+
 def set_last_file(path, line_edit, last_file):
     if os.path.exists(str(path)):
         line_edit.clear()
@@ -82,9 +115,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.axis_view_widget.setVisible(False)
 
         self.get_values_from_params()
-        self.ui.binning_box.setEnabled(False)
-        self.ui.slice_start.setEnabled(False)
-        self.ui.slice_end.setEnabled(False)
+
+        self.ui.preprocessing_container.setVisible(False)
+        self.ui.reconstruction_container.setVisible(False)
+        self.ui.output_container.setVisible(False)
+        self.ui.ffc_box.setVisible(False)
+        self.ui.calibrate_dx.setVisible(False)
         self.axis_calibration = None
     
         # set up run-time widgets
@@ -99,17 +135,20 @@ class ApplicationWindow(QtGui.QMainWindow):
         # connect signals
         self.overlap_viewer.slider.valueChanged.connect(self.axis_slider_changed)
         self.ui.slice_box.clicked.connect(self.slice_box_clicked)
-        self.ui.dx_file_name_button.clicked.connect(self.dx_file_name_clicked)
-        self.ui.path_button_rec.clicked.connect(self.dx_file_name_clicked)
-        self.ui.calibrate_dx_button.clicked.connect(self.calibrate_dx)
+        
+        self.ui.dx_file_select.clicked.connect(self.dx_file_select_clicked)
+        self.ui.dx_file_load.clicked.connect(self.dx_file_load_clicked)
+
+        self.ui.path_select_rec.clicked.connect(self.dx_file_select_clicked)
+        self.ui.path_load_rec.clicked.connect(self.dx_file_load_clicked)
+
+        self.ui.calibrate_dx.clicked.connect(self.on_calibrate_dx)
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
         self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
         self.ui.ffc_options.currentIndexChanged.connect(self.change_ffc_options)
         self.ui.method_box.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
-        #self.ui.slice_start.valueChanged.connect(lambda value: self.change_value('slice_start', value))
-        #self.ui.slice_end.valueChanged.connect(lambda value: self.change_value('slice_end', value))
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
         self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
@@ -137,38 +176,15 @@ class ApplicationWindow(QtGui.QMainWindow):
     def get_filename(self, caption, type_filter):
         return QtGui.QFileDialog.getOpenFileName(self, caption, self.last_file, type_filter)
 
-    def dx_file_name_clicked(self, checked):
+    def dx_file_select_clicked(self, checked):
         path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
+        set_gui_startup(self, path)
 
-        self.data_size = util.read_dx_dims(str(path), 'data')
-        self.data_dark_size = util.read_dx_dims(str(path), 'data_dark')
-        self.data_white_size = util.read_dx_dims(str(path), 'data_white')
-        self.ui.label_data_size.setText(str(self.data_size))
-        self.ui.label_data_dark_size.setText(str(self.data_dark_size))
-        self.ui.label_data_white_size.setText(str(self.data_white_size))
+    def dx_file_load_clicked(self, checked):
+        path = str(self.ui.dx_file_name_line.text())
+        set_gui_startup(self, path)
 
-        self.dsize = (self.data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
-
-        self.ui.slice_start.setRange(0, self.dsize)
-        self.ui.slice_start.setValue(self.dsize/2)
-        self.ui.slice_start.setRange(0, self.dsize)
-        self.ui.slice_end.setRange(self.dsize/2+1, self.dsize)
-        self.ui.slice_end.setValue(self.dsize/2+1)
-
-        self.ui.dx_file_name_line.setText(path)
-        self.ui.input_path_line.setText(path)
-        self.on_show_projection_clicked()
-
-        self.last_file = os.path.dirname(str(path))
-
-        self.params.last_file = set_last_file(path, self.ui.dx_file_name_line, self.params.last_file)
-        self.params.last_dir = set_last_dir(path, self.ui.input_path_line, self.params.last_dir)  
-        self.params.output_dir = set_output_dir(path, self.ui.output_path_line, self.params.output_dir)
-        self.ui.binning_box.setEnabled(True)
-        self.ui.slice_start.setEnabled(True)
-        self.ui.slice_end.setEnabled(True)
-
-    def calibrate_dx(self):
+    def on_calibrate_dx(self):
         fname = str(self.ui.dx_file_name_line.text())
         last_ind = util.read_dx_dims(str(fname), 'theta')
         if (last_ind == None):
@@ -213,9 +229,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def change_start(self, name, value):
         setattr(self.params, name, value)
-        self.ui.slice_end.setRange(value+1, self.dsize)
-#        self.change_end('slice_end', value+1)
-
+        self.ui.slice_end.setMinimum(value+1)
 
     def change_end(self, name, value):
         setattr(self.params, name, value)
@@ -288,7 +302,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
         self.ui.slice_start.setRange(0, dsize)
         self.ui.slice_start.setValue(dsize/2)
-        self.ui.slice_start.setRange(0, dsize)
         self.ui.slice_end.setRange(dsize/2+1, dsize)
         self.ui.slice_end.setValue(dsize/2+1)
 

@@ -53,7 +53,9 @@ def get_sinogram_reader(params):
 
 def tomo(params):
     # Create reader and writer
-    print("slice:", str(params.slice_number))
+    print("XXXXXXXXXXXXXXXXXXXXXXXXX")
+    print("slice:", str(params.slice_start))
+    print("slice:", str(params.slice_end))
     print("normalize", str(params.ffc_correction))
     print("binning", str(params.binning))
     print("rot axis", str(params.axis))
@@ -62,25 +64,29 @@ def tomo(params):
     print("rec method", str(params.method))
     print("rec iteration", str(params.num_iterations))
     print("full reconstruction", str(params.full_reconstruction))
- 
-    fname = str(params.last_file)
-    start = params.slice_number
-    end = start + 1
 
+    print("XXXXXXXXXXXXXXXXXXXXXXXXX")
+    print("OK")
+    fname = str(params.last_file)
+
+    # Read raw data.
+    if  (params.full_reconstruction == False) : 
+        start = params.slice_start
+        end = start + 1
     print("START-END", start, end)
-     # Read raw data.
+
     proj, flat, dark, theta = dxchange.read_aps_32id(fname, sino=(start, end))
 
     print(proj.shape)
     print(flat.shape)
     print(dark.shape)
- 
+
     # Flat-field correction of raw data.
     data = tomopy.normalize(proj, flat, dark)
     print("NORMALIZED")
 
-    #data = tomopy.downsample(data, level=int(params.binning))
-    #print("BINNING: ", params.binning)
+    data = tomopy.downsample(data, level=int(params.binning))
+    print("BINNING: ", params.binning)
 
     # remove stripes    
     #data = tomopy.prep.stripe.remove_stripe_fw(data,level=5,wname='sym16',sigma=1,pad=True)
@@ -89,7 +95,7 @@ def tomo(params):
     #data = tomopy.prep.phase.retrieve_phase(data,pixel_size=detector_pixel_size_x,dist=sample_detector_distance,energy=monochromator_energy,alpha=8e-3,pad=True)
 
     # Set rotation center.
-    rot_center = params.axis/float(params.binning)
+    rot_center = params.axis/np.power(2, float(params.binning))
     print ("ROT:", rot_center)
 
     data = tomopy.minus_log(data)
@@ -103,7 +109,7 @@ def tomo(params):
     #rec = tomopy.circ_mask(rec, axis=0, ratio=0.95)
 
     # Write data as stack of TIFs.
-    dxchange.write_tiff_stack(rec, fname='recon_dir/aps_nik')
+    dxchange.write_tiff_stack(rec, fname='recon_dir/aps_nik', overwrite=True)
 
    #width, height = get_projection_reader(params)
 
@@ -115,4 +121,6 @@ def tomo(params):
     #    axis /= params.resize
 
     #LOG.debug("Input dimensions: {}x{} pixels".format(width, height))
+    if  (params.full_reconstruction == False) :
+        return rec
 

@@ -207,15 +207,19 @@ SECTIONS['reconstruction'] = {
         'metavar': 'PATH'}}
 
 SECTIONS['tomographic-reconstruction'] = {
-    'slice-number': {
+    'slice-start': {
         'type': positive_int,
         'default': 1,
-        'help': "Slice to reconstruct"},
+        'help': "Start slice to reconstruct"},
+    'slice-end': {
+        'type': positive_int,
+        'default': 2,
+        'help': "End slice to reconstruct"},
     'binning': {
         'type': str,
         'default': '2',
-        'help': "Reconstruction binning factor",
-        'choices': ['1', '2', '4', '8']},
+        'help': "Reconstruction binning factor as power(2, choice)",
+        'choices': ['0', '1', '2', '3']},
     'axis': {
         'default': None,
         'type': float,

@@ -82,7 +82,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.axis_view_widget.setVisible(False)
 
         self.get_values_from_params()
-
+        self.ui.binning_box.setEnabled(False)
+        self.ui.slice_start.setEnabled(False)
+        self.ui.slice_end.setEnabled(False)
         self.axis_calibration = None
     
         # set up run-time widgets
@@ -106,7 +108,10 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.ffc_options.currentIndexChanged.connect(self.change_ffc_options)
         self.ui.method_box.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
-        self.ui.slice_number.valueChanged.connect(lambda value: self.change_value('slice_number', value))
+        #self.ui.slice_start.valueChanged.connect(lambda value: self.change_value('slice_start', value))
+        #self.ui.slice_end.valueChanged.connect(lambda value: self.change_value('slice_end', value))
+        self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
+        self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
 
@@ -124,7 +129,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         root_logger.handlers = [log_handler]
 
     def slice_box_clicked(self):
-        self.ui.slice_number.setEnabled(self.ui.slice_box.isChecked())
+        self.ui.slice_start.setEnabled(self.ui.slice_box.isChecked())
 
     def output_log(self, record):
         self.ui.text_browser.append(record)
@@ -135,15 +140,20 @@ class ApplicationWindow(QtGui.QMainWindow):
     def dx_file_name_clicked(self, checked):
         path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
 
-        data_size = util.read_dx_dims(str(path), 'data')
-        data_dark_size = util.read_dx_dims(str(path), 'data_dark')
-        data_white_size = util.read_dx_dims(str(path), 'data_white')
-        self.ui.label_data_size.setText(str(data_size))
-        self.ui.label_data_dark_size.setText(str(data_dark_size))
-        self.ui.label_data_white_size.setText(str(data_white_size))
+        self.data_size = util.read_dx_dims(str(path), 'data')
+        self.data_dark_size = util.read_dx_dims(str(path), 'data_dark')
+        self.data_white_size = util.read_dx_dims(str(path), 'data_white')
+        self.ui.label_data_size.setText(str(self.data_size))
+        self.ui.label_data_dark_size.setText(str(self.data_dark_size))
+        self.ui.label_data_white_size.setText(str(self.data_white_size))
 
-        self.ui.slice_number.setValue(data_size[1]/2)
-        self.ui.slice_number.setRange(0, data_size[1])
+        self.dsize = (self.data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
+
+        self.ui.slice_start.setRange(0, self.dsize)
+        self.ui.slice_start.setValue(self.dsize/2)
+        self.ui.slice_start.setRange(0, self.dsize)
+        self.ui.slice_end.setRange(self.dsize/2+1, self.dsize)
+        self.ui.slice_end.setValue(self.dsize/2+1)
 
         self.ui.dx_file_name_line.setText(path)
         self.ui.input_path_line.setText(path)
@@ -154,6 +164,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.params.last_file = set_last_file(path, self.ui.dx_file_name_line, self.params.last_file)
         self.params.last_dir = set_last_dir(path, self.ui.input_path_line, self.params.last_dir)  
         self.params.output_dir = set_output_dir(path, self.ui.output_path_line, self.params.output_dir)
+        self.ui.binning_box.setEnabled(True)
+        self.ui.slice_start.setEnabled(True)
+        self.ui.slice_end.setEnabled(True)
 
     def calibrate_dx(self):
         fname = str(self.ui.dx_file_name_line.text())
@@ -198,6 +211,16 @@ class ApplicationWindow(QtGui.QMainWindow):
     def change_value(self, name, value):
         setattr(self.params, name, value)
 
+    def change_start(self, name, value):
+        setattr(self.params, name, value)
+        self.ui.slice_end.setRange(value+1, self.dsize)
+#        self.change_end('slice_end', value+1)
+
+
+    def change_end(self, name, value):
+        setattr(self.params, name, value)
+
+
     def on_ffc_box_clicked(self):
         checked = self.ui.ffc_box.isChecked()
         self.ui.preprocessing_container.setVisible(checked)
@@ -211,17 +234,14 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.dx_file_name_line.setText(self.params.last_file or '.')
         self.ui.output_path_line.setText(self.params.output_dir or '.')
         self.ui.angle_step.setValue(self.params.angle if self.params.angle else 0.0)
-        self.ui.slice_number.setValue(self.params.slice_number if self.params.slice_number else 1)
+        self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
+        self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
         self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)
 
         if self.params.ffc_correction:
             self.ui.ffc_box.setChecked(True)
 
-
-        if self.params.slice_number > 0 :
-            self.ui.slice_box.setChecked(True)
-        else:
-            self.ui.slice_box.setChecked(False)
+        self.ui.slice_box.setChecked(True)
 
         if self.params.method == "gridrec":
             self.ui.method_box.setCurrentIndex(0)
@@ -236,13 +256,13 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.change_method()
 
-        if self.params.binning == "1":
+        if self.params.binning == "0":
             self.ui.binning_box.setCurrentIndex(0)
-        elif self.params.binning == "2":
+        elif self.params.binning == "1":
             self.ui.binning_box.setCurrentIndex(1)
-        elif self.params.binning == "4":
+        elif self.params.binning == "2":
             self.ui.binning_box.setCurrentIndex(2)
-        elif self.params.binning == "8":
+        elif self.params.binning == "3":
             self.ui.binning_box.setCurrentIndex(3)
 
         self.change_binning()
@@ -262,7 +282,15 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.ui.iterations.setValue(self.params.num_iterations)
 
     def change_binning(self):
-        self.params.binning = str(self.ui.binning_box.currentText()).lower()
+        self.params.binning = str(self.ui.binning_box.currentIndex())
+        fname = str(self.ui.dx_file_name_line.text())
+        data_size = util.read_dx_dims(str(fname), 'data')
+        dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
+        self.ui.slice_start.setRange(0, dsize)
+        self.ui.slice_start.setValue(dsize/2)
+        self.ui.slice_start.setRange(0, dsize)
+        self.ui.slice_end.setRange(dsize/2+1, dsize)
+        self.ui.slice_end.setValue(dsize/2+1)
 
     def closeEvent(self, event):
         try:
@@ -307,12 +335,15 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.on_save_as()
 
     def on_slice_box_clicked(self):
-        self.ui.slice_number.setEnabled(self.ui.slice_box.isChecked())
+        self.ui.slice_start.setEnabled(self.ui.slice_box.isChecked())
+        self.ui.slice_end.setEnabled(self.ui.slice_box.isChecked())
         if self.ui.slice_box.isChecked():
-            self.params.slice_number = self.ui.slice_number.value()
             self.params.full_reconstruction = False
         else:
             self.params.full_reconstruction = True
+    
+        self.params.slice_start = self.ui.slice_start.value()
+        self.params.slice_end = self.ui.slice_end.value()
 
     def change_ffc_options(self):
         self.params.normalization_mode = str(self.ui.ffc_options.currentText()).lower()

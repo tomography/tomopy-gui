@@ -69,7 +69,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_widgetPage1_2">
        <attribute name="title">
@@ -666,7 +666,7 @@
               </widget>
              </item>
              <item row="0" column="3">
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="slice_end_label">
                <property name="text">
                 <string>End</string>
                </property>
@@ -688,7 +688,7 @@
              <item row="0" column="2">
               <widget class="QSpinBox" name="slice_start">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -702,6 +702,60 @@
                <property name="maximum">
                 <number>4096</number>
                </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="filter_label">
+               <property name="text">
+                <string>Filter:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QComboBox" name="filter_box">
+               <item>
+                <property name="text">
+                 <string>none</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>shepp</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>cosine</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>hann</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>hamming</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>ramlak</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>parzen</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>butterworth</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>

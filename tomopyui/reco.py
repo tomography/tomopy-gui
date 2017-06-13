@@ -62,21 +62,24 @@ def tomo(params):
     print("rec output dir", str(params.output_dir))
     print("raw data file dir", str(params.last_file))
     print("rec method", str(params.method))
+    print("rec filter", str(params.filter))
     print("rec iteration", str(params.num_iterations))
     print("full reconstruction", str(params.full_reconstruction))
-
     print("XXXXXXXXXXXXXXXXXXXXXXXXX")
-    print("OK")
     fname = str(params.last_file)
+
+    start = params.slice_start
+    end = params.slice_end
 
     # Read raw data.
     if  (params.full_reconstruction == False) : 
-        start = params.slice_start
         end = start + 1
+    
     print("START-END", start, end)
 
+    print("3:OK")
     proj, flat, dark, theta = dxchange.read_aps_32id(fname, sino=(start, end))
-
+    LOG.info('Data successfully imported: %s', fname)
     print(proj.shape)
     print(flat.shape)
     print(dark.shape)
@@ -102,14 +105,22 @@ def tomo(params):
     print("MINUS LOG")
 
     # Reconstruct object using Gridrec algorithm.
-    rec = tomopy.recon(data, theta, center=rot_center, algorithm='gridrec')
+    if (str(params.method) == 'sirt'):
+        print("SIRT")
+        print("Iteration: ", params.num_iterations)
+        rec = tomopy.recon(data, theta,  center=rot_center, algorithm='sirt', num_iter=params.num_iterations)
+    else:
+        print("gridrec")
+        rec = tomopy.recon(data, theta, center=rot_center, algorithm='gridrec', filter_name=params.filter)
+
     print("REC:", rec.shape)
 
     # Mask each reconstructed slice with a circle.
-    #rec = tomopy.circ_mask(rec, axis=0, ratio=0.95)
+    rec = tomopy.circ_mask(rec, axis=0, ratio=0.95)
 
     # Write data as stack of TIFs.
-    dxchange.write_tiff_stack(rec, fname='recon_dir/aps_nik', overwrite=True)
+    fname = str(params.output_dir) + 'reco_'
+    dxchange.write_tiff_stack(rec, fname=fname, overwrite=True)
 
    #width, height = get_projection_reader(params)
 

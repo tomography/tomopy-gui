@@ -220,6 +220,11 @@ SECTIONS['tomographic-reconstruction'] = {
         'default': '2',
         'help': "Reconstruction binning factor as power(2, choice)",
         'choices': ['0', '1', '2', '3']},
+    'filter': {
+        'default': 'none',
+        'type': str,
+        'help': "Reconstruction filter",
+        'choices': ['none', 'shepp', 'cosine', 'hann', 'hamming', 'ramlak', 'parzen', 'butterworth']},
     'axis': {
         'default': None,
         'type': float,

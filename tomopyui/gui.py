@@ -134,7 +134,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         # connect signals
         self.overlap_viewer.slider.valueChanged.connect(self.axis_slider_changed)
-        self.ui.slice_box.clicked.connect(self.slice_box_clicked)
+        self.ui.slice_box.clicked.connect(self.on_slice_box_clicked)
         
         self.ui.dx_file_select.clicked.connect(self.dx_file_select_clicked)
         self.ui.dx_file_load.clicked.connect(self.dx_file_load_clicked)
@@ -149,6 +149,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.ffc_options.currentIndexChanged.connect(self.change_ffc_options)
         self.ui.method_box.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
+        self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
         self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
@@ -167,8 +168,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         root_logger.setLevel(logging.DEBUG)
         root_logger.handlers = [log_handler]
 
-    def slice_box_clicked(self):
-        self.ui.slice_start.setEnabled(self.ui.slice_box.isChecked())
 
     def output_log(self, record):
         self.ui.text_browser.append(record)
@@ -280,12 +279,33 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.ui.binning_box.setCurrentIndex(3)
 
         self.change_binning()
+
+        if self.params.filter == "none":
+            self.ui.filter_box.setCurrentIndex(0)
+        elif self.params.filter == "shepp":
+            self.ui.filter_box.setCurrentIndex(1)
+        elif self.params.filter == "cosine":
+            self.ui.filter_box.setCurrentIndex(2)
+        elif self.params.filter == "hann":
+            self.ui.filter_box.setCurrentIndex(3)
+        elif self.params.filter == "hamming":
+            self.ui.filter_box.setCurrentIndex(4)
+        elif self.params.filter == "ramlak":
+            self.ui.filter_box.setCurrentIndex(5)
+        elif self.params.filter == "parzen":
+            self.ui.filter_box.setCurrentIndex(6)
+        elif self.params.filter == "butterworth":
+            self.ui.filter_box.setCurrentIndex(7)
+
+        self.change_filter()
         
         self.ui.on_slice_box_clicked()
         self.ui.minus_log_box.setChecked(self.params.minus_log)
 
     def change_method(self):
         self.params.method = str(self.ui.method_box.currentText()).lower()
+        is_gridrec = self.params.method == 'gridrec'
+        is_fbp = self.params.method == 'fbp'
         is_mlem = self.params.method == 'mlem'
         is_sirt = self.params.method == 'sirt'
         is_sartfbp = self.params.method == 'sartfbp'
@@ -294,6 +314,9 @@ class ApplicationWindow(QtGui.QMainWindow):
             w.setVisible(is_mlem or is_sirt or is_sartfbp)
         if (is_mlem or is_sirt or is_sartfbp) :
             self.ui.iterations.setValue(self.params.num_iterations)
+
+        for w in (self.ui.filter_box, self.ui.filter_label):
+            w.setVisible(is_gridrec or is_fbp)
 
     def change_binning(self):
         self.params.binning = str(self.ui.binning_box.currentIndex())
@@ -304,6 +327,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_start.setValue(dsize/2)
         self.ui.slice_end.setRange(dsize/2+1, dsize)
         self.ui.slice_end.setValue(dsize/2+1)
+
+    def change_filter(self):
+        self.params.filter = str(self.ui.filter_box.currentText()).lower()
 
     def closeEvent(self, event):
         try:
@@ -348,8 +374,8 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.on_save_as()
 
     def on_slice_box_clicked(self):
-        self.ui.slice_start.setEnabled(self.ui.slice_box.isChecked())
-        self.ui.slice_end.setEnabled(self.ui.slice_box.isChecked())
+        self.ui.slice_end.setVisible(not self.ui.slice_box.isChecked())
+        self.ui.slice_end_label.setVisible(not self.ui.slice_box.isChecked())
         if self.ui.slice_box.isChecked():
             self.params.full_reconstruction = False
         else:

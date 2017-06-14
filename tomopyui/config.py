@@ -83,7 +83,8 @@ SECTIONS['reading'] = {
     'resize': {
         'type': positive_int,
         'default': None,
-        'help': 'Bin pixels before processing'}}
+        'help': 'Bin pixels before processing'},
+        }
 
 SECTIONS['flat-correction'] = {
     'projections': {
@@ -373,7 +374,12 @@ SECTIONS['gui'] = {
     'num-flats': {
         'default': 0,
         'type': int,
-        'help': "Number of flats for ffc correction."}}
+        'help': "Number of flats for ffc correction."},
+    'manual': {
+        'default': False,
+        'help': "Allow manual entry for proj, dark, white and theta ranges",
+        'action': 'store_true'},
+    }
 
 SECTIONS['estimate'] = {
     'estimate-method': {

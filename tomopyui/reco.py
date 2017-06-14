@@ -91,8 +91,9 @@ def tomo(params):
     data = tomopy.downsample(data, level=int(params.binning))
     print("BINNING: ", params.binning)
 
-    # remove stripes    
-    #data = tomopy.prep.stripe.remove_stripe_fw(data,level=5,wname='sym16',sigma=1,pad=True)
+    # remove stripes
+    print("STRIPE  $$$$$$$$$$$$$$$$$$$$$$")    
+    data = tomopy.remove_stripe_fw(data,level=5,wname='sym16',sigma=1,pad=True)
 
     # phase retrieval
     #data = tomopy.prep.phase.retrieve_phase(data,pixel_size=detector_pixel_size_x,dist=sample_detector_distance,energy=monochromator_energy,alpha=8e-3,pad=True)

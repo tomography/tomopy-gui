@@ -135,6 +135,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         # connect signals
         self.overlap_viewer.slider.valueChanged.connect(self.axis_slider_changed)
         self.ui.slice_box.clicked.connect(self.on_slice_box_clicked)
+        self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         
         self.ui.dx_file_select.clicked.connect(self.dx_file_select_clicked)
         self.ui.dx_file_load.clicked.connect(self.dx_file_load_clicked)
@@ -147,6 +148,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
         self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
         self.ui.ffc_options.currentIndexChanged.connect(self.change_ffc_options)
+        self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         self.ui.method_box.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
         self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
@@ -239,6 +241,13 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.preprocessing_container.setVisible(checked)
         self.params.ffc_correction = checked
 
+    def on_manual_box_clicked(self):
+        checked = self.ui.manual_box.isChecked()
+
+        #for w in (self.ui.start_label, self.ui.end_label):
+        #    w.setVisible(not checked)
+        self.params.manual = checked
+
     def get_values_from_params(self):
         self.last_dir = self.params.last_dir
         self.last_file = self.params.last_file
@@ -253,6 +262,10 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         if self.params.ffc_correction:
             self.ui.ffc_box.setChecked(True)
+
+        if self.params.manual:
+            self.ui.manual_box.setChecked(True)
+        self.on_manual_box_clicked()
 
         self.ui.slice_box.setChecked(True)
 
@@ -383,6 +396,19 @@ class ApplicationWindow(QtGui.QMainWindow):
     
         self.params.slice_start = self.ui.slice_start.value()
         self.params.slice_end = self.ui.slice_end.value()
+
+    def on_manual_box_clicked(self):
+        self.ui.data_start_label.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_end_label.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_dark_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_dark_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_white_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_white_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.theta_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.theta_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.theta_unit_label.setVisible(self.ui.manual_box.isChecked())
 
     def change_ffc_options(self):
         self.params.normalization_mode = str(self.ui.ffc_options.currentText()).lower()

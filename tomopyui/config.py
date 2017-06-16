@@ -3,7 +3,7 @@ import sys
 import logging
 import ConfigParser as configparser
 from collections import OrderedDict
-from tofu.util import positive_int, tupleize, range_list
+#from tofu.util import positive_int, tupleize, range_list
 
 
 LOG = logging.getLogger(__name__)

@@ -334,8 +334,11 @@ class ApplicationWindow(QtGui.QMainWindow):
     def change_binning(self):
         self.params.binning = str(self.ui.binning_box.currentIndex())
         fname = str(self.ui.dx_file_name_line.text())
-        data_size = util.read_dx_dims(str(fname), 'data')
-        dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
+        try:
+            data_size = util.read_dx_dims(str(fname), 'data')
+            dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
+        except:
+            dsize = 1024
         self.ui.slice_start.setRange(0, dsize)
         self.ui.slice_start.setValue(dsize/2)
         self.ui.slice_end.setRange(dsize/2+1, dsize)

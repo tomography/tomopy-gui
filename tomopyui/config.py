@@ -4,7 +4,7 @@ import logging
 import ConfigParser as configparser
 from collections import OrderedDict
 #from tofu.util import positive_int, tupleize, range_list
-
+import tomopyui.util as util
 
 LOG = logging.getLogger(__name__)
 NAME = "tomopyui.conf"
@@ -28,7 +28,7 @@ SECTIONS['general'] = {
         'metavar': 'PATH'},
     'output-bitdepth': {
         'default': 32,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Bit depth of output, either 8, 16 or 32",
         'metavar': 'BITDEPTH'},
     'output-minimum': {
@@ -48,40 +48,40 @@ SECTIONS['general'] = {
         'metavar': 'FILE'},
     'width': {
         'default': None,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Input width"}}
 
 SECTIONS['reading'] = {
     'y': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 0,
         'help': 'Vertical coordinate from where to start reading the input image'},
     'height': {
         'default': None,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Number of rows which will be read"},
     'bitdepth': {
         'default': 32,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Bit depth of raw files"},
     'y-step': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 1,
         'help': "Read every \"step\" row from the input"},
     'start': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 0,
         'help': 'Offset to the first read file'},
     'number': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': None,
         'help': 'Number of files to read'},
     'step': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 1,
         'help': 'Read every \"step\" file'},
     'resize': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': None,
         'help': 'Bin pixels before processing'},
         }
@@ -151,11 +151,11 @@ SECTIONS['retrieve-phase'] = {
         'help': "Regularization rate (typical values between [2, 3])"},
     'retrieval-padded-width': {
         'default': 0,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Padded width used for phase retrieval"},
     'retrieval-padded-height': {
         'default': 0,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Padded height used for phase retrieval"},
     'retrieval-padding-mode': {
         'choices': ['none', 'clamp', 'clamp_to_edge', 'repeat'],
@@ -168,7 +168,7 @@ SECTIONS['retrieve-phase'] = {
 
 SECTIONS['sinos'] = {
     'pass-size': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 0,
         'help': 'Number of sinograms to process per pass'}}
 
@@ -209,11 +209,11 @@ SECTIONS['reconstruction'] = {
 
 SECTIONS['tomographic-reconstruction'] = {
     'slice-start': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 1,
         'help': "Start slice to reconstruct"},
     'slice-end': {
-        'type': positive_int,
+        'type': util.positive_int,
         'default': 2,
         'help': "End slice to reconstruct"},
     'binning': {
@@ -248,84 +248,22 @@ SECTIONS['tomographic-reconstruction'] = {
         'help': "Reconstruction method",
         'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sartfbp']}}
 
-SECTIONS['laminographic-reconstruction'] = {
-    'dry-run': {
-        'default': False,
-        'help': "Reconstruct without writing data",
-        'action': 'store_true'},
-    'axis': {
-        'default': None,
-        'required': True,
-        'type': tupleize(2, float),
-        'help': "Axis position"},
-    'x-region': {
-        'default': "0,-1,1",
-        'type': tupleize(3, int),
-        'help': "X region as from,to,step"},
-    'y-region': {
-        'default': "0,-1,1",
-        'type': tupleize(3, int),
-        'help': "Y region as from,to,step"},
-    'z': {
-        'default': 0,
-        'type': int,
-        'help': "Z coordinate of the reconstructed slice"},
-    'z-parameter': {
-        'default': 'z',
-        'type': str,
-        'choices': ['z', 'x-center', 'lamino-angle', 'roll-angle'],
-        'help': "Parameter to vary along the reconstructed z-axis"},
-    'region': {
-        'default': "0,-1,1",
-        'type': tupleize(3, float),
-        'help': "Z-axis parameter region as from,to,step"},
-    'overall-angle': {
-        'default': None,
-        'type': float,
-        'help': "The total angle over which projections were taken in degrees"},
-    'lamino-angle': {
-        'default': None,
-        'required': True,
-        'type': float,
-        'help': "The laminographic angle in degrees"},
-    'roll-angle': {
-        'default': 0.0,
-        'type': float,
-        'help': "Sample angular misalignment to the side (roll) in degrees, positive angles mean\
-        clockwise misalignment"},
-    'slices-per-device': {
-        'default': None,
-        'type': positive_int,
-        'help': "Number of slices computed by one computing device"},
-    'transpose-input': {
-        'default': False,
-        'action': 'store_true',
-        'help': "Transpose projections before they are backprojected (after phase retrieval)"},
-    'only-bp': {
-        'default': False,
-        'action': 'store_true',
-        'help': "Do only backprojection with no other processing steps"},
-    'lamino-padding-mode': {
-        'choices': ['none', 'clamp', 'clamp_to_edge', 'repeat'],
-        'default': 'clamp',
-        'help': "Padded values assignment for the filtered projection"}}
-
 SECTIONS['ir'] = {
     'num-iterations': {
         'default': 10,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Maximum number of iterations"}}
 
 SECTIONS['gridrec'] = {
     'gridrec-crop-width': {
         'default': None,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Width of final slice"}}
 
 SECTIONS['fbp'] = {
     'fbp-crop-width': {
         'default': None,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Width of final slice"}}
 
 SECTIONS['sirt'] = {
@@ -391,19 +329,19 @@ SECTIONS['estimate'] = {
 SECTIONS['perf'] = {
     'num-runs': {
         'default': 3,
-        'type': positive_int,
+        'type': util.positive_int,
         'help': "Number of runs"},
     'width-range': {
         'default': '1024',
-        'type': range_list,
+        'type': util.range_list,
         'help': "Width or range of widths of generated projections"},
     'height-range': {
         'default': '1024',
-        'type': range_list,
+        'type': util.range_list,
         'help': "Height or range of heights of generated projections"},
     'num-projection-range': {
         'default': '512',
-        'type': range_list,
+        'type': util.range_list,
         'help': "Number or range of number of projections"}}
 
 TOMO_PARAMS = ('flat-correction', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')

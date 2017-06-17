@@ -37,7 +37,6 @@ def set_gui_startup(self, path):
 
         self.ui.dx_file_name_line.setText(path)
         self.ui.input_path_line.setText(path)
-        self.on_show_projection_clicked()
 
         self.last_file = os.path.dirname(str(path))
 
@@ -48,9 +47,11 @@ def set_gui_startup(self, path):
         self.ui.preprocessing_container.setVisible(True)
         self.ui.reconstruction_container.setVisible(True)
         self.ui.output_container.setVisible(True)
-        self.ui.ffc_box.setEnabled(True)
         self.ui.ffc_box.setVisible(True)
+        self.on_ffc_box_clicked()
         self.ui.calibrate_dx.setVisible(True)
+
+        self.on_show_projection_clicked()
 
 def set_last_file(path, line_edit, last_file):
     if os.path.exists(str(path)):
@@ -194,9 +195,15 @@ class ApplicationWindow(QtGui.QMainWindow):
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
         self.ui.angle_step.setValue((theta[1] - theta[0]).astype(np.float))
 
-        first = proj[0,:,:].astype(np.float)
+        if self.params.ffc_correction:
+            first = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
+        else:
+            first = proj[0,:,:].astype(np.float)
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(last_ind[0]-1, last_ind[0]))
-        last = proj[0,:,:].astype(np.float)
+        if self.params.ffc_correction:
+            last = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
+        else:
+            last = proj[0,:,:].astype(np.float)
 
         with spinning_cursor():
             self.axis_calibration = tomopyui.process.AxisCalibration(first, last)
@@ -223,7 +230,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.slice_dock.setWidget(self.slice_viewer)
             self.ui.slice_dock.setVisible(True)
         else:
-            self.slice_viewer.load_files(path)
+            self.slice_viewer.load_files(path, self.params.ffc_correction)
 
     def change_value(self, name, value):
         setattr(self.params, name, value)
@@ -262,7 +269,8 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         if self.params.ffc_correction:
             self.ui.ffc_box.setChecked(True)
-
+        self.on_ffc_box_clicked()
+        
         if self.params.manual:
             self.ui.manual_box.setChecked(True)
         self.on_manual_box_clicked()

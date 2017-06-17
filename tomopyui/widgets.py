@@ -54,10 +54,13 @@ class ImageViewer(QtGui.QWidget):
         self.main_layout.addWidget(self.slider)
         self.setLayout(self.main_layout)
         self.filenames = None
+        self.ffc_correction = False
 
-    def load_files(self, filenames):
+    def load_files(self, filenames, ffc_correction):
         """Load *filenames* for display."""
         self.filenames = filenames
+        self.ffc_correction = ffc_correction
+        
         proj, flat, dark, theta = dx.read_aps_32id(filenames, proj=(0, 1))
         print (proj.shape)
         print (flat.shape)
@@ -75,7 +78,10 @@ class ImageViewer(QtGui.QWidget):
         if self.filenames:
             pos = self.slider.value()
             proj, flat, dark, theta = dx.read_aps_32id(self.filenames, proj=(pos, pos+1))
-            image = proj[0,:,:].astype(np.float)
+            if self.ffc_correction:
+                image = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
+            else:
+                image = proj[0,:,:].astype(np.float)
             self.image_item.setImage(image)
 
 

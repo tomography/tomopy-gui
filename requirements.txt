@@ -1,0 +1,6 @@
+python
+numpy
+pyqt4
+dxchange
+tomopy
+pyopengl

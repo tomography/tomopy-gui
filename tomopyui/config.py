@@ -102,7 +102,7 @@ SECTIONS['flat-correction'] = {
         'type': float,
         'help': "Scaling dark"},
     'normalization-mode': {
-        'default': "Average",
+        'default': "default",
         'type': str,
         'help': "Flat-field correction options: Average (darks) or median (flats)"},
     'fix-nan-and-inf': {
@@ -305,9 +305,22 @@ SECTIONS['gui'] = {
         'default': False,
         'help': "Show 3D slices with pyqtgraph",
         'action': 'store_true'},
+    'pre-processing': {
+        'default': False,
+        'help': "Enable pre-proces correction",
+        'action': 'store_true'},
     'ffc-correction': {
         'default': False,
-        'help': "Enable darks or flats correction",
+        'help': "Enable flats correction",
+        'action': 'store_true'},
+    'ffc-options': {
+        'default': 'default',
+        'type': str,
+        'help': "Reconstruction method",
+        'choices': ['default', 'background', 'roi']},
+    'phase-correction': {
+        'default': False,
+        'help': "Enable phase retrieval correction",
         'action': 'store_true'},
     'num-flats': {
         'default': 0,
@@ -316,8 +329,7 @@ SECTIONS['gui'] = {
     'manual': {
         'default': False,
         'help': "Allow manual entry for proj, dark, white and theta ranges",
-        'action': 'store_true'},
-    }
+        'action': 'store_true'}}
 
 SECTIONS['estimate'] = {
     'estimate-method': {

@@ -49,7 +49,10 @@ def set_gui_startup(self, path):
         self.ui.output_container.setVisible(True)
         self.ui.ffc_box.setVisible(True)
         self.on_ffc_box_clicked()
+        self.on_pre_processing_box_clicked()
         self.ui.calibrate_dx.setVisible(True)
+        
+        self.ui.pre_processing_box.setVisible(True)
 
         self.on_show_projection_clicked()
 
@@ -121,6 +124,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.reconstruction_container.setVisible(False)
         self.ui.output_container.setVisible(False)
         self.ui.ffc_box.setVisible(False)
+        self.ui.pre_processing_box.setVisible(False)
         self.ui.calibrate_dx.setVisible(False)
         self.axis_calibration = None
     
@@ -147,8 +151,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.calibrate_dx.clicked.connect(self.on_calibrate_dx)
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
+        self.ui.ffc_box.clicked.connect(self.on_pre_processing_box_clicked)
         self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
-        self.ui.ffc_options.currentIndexChanged.connect(self.change_ffc_options)
+        self.ui.ffc_options_box.currentIndexChanged.connect(self.change_ffc_options)
         self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         self.ui.method_box.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
@@ -157,6 +162,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
+        self.ui.phase_correction_box.clicked.connect(self.on_phase_correction_box_clicked)
 
         self.ui.open_action.triggered.connect(self.on_open_from)
         self.ui.save_action.triggered.connect(self.on_save_as)
@@ -245,8 +251,16 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def on_ffc_box_clicked(self):
         checked = self.ui.ffc_box.isChecked()
-        self.ui.preprocessing_container.setVisible(checked)
         self.params.ffc_correction = checked
+
+    def on_pre_processing_box_clicked(self):
+        checked = self.ui.pre_processing_box.isChecked()
+        self.ui.preprocessing_container.setVisible(checked)
+        self.params.pre_processing = checked
+
+    def on_phase_correction_box_clicked(self):
+        checked = self.ui.phase_correction_box.isChecked()
+        self.params.phase_correction = checked 
 
     def on_manual_box_clicked(self):
         checked = self.ui.manual_box.isChecked()
@@ -270,12 +284,29 @@ class ApplicationWindow(QtGui.QMainWindow):
         if self.params.ffc_correction:
             self.ui.ffc_box.setChecked(True)
         self.on_ffc_box_clicked()
+
+        if self.params.pre_processing:
+            self.ui.pre_processing_box.setChecked(True)
+        self.on_pre_processing_box_clicked()
+
+        if self.params.phase_correction:
+            self.ui.phase_correction_box.setChecked(True)
+        self.on_phase_correction_box_clicked()
         
         if self.params.manual:
             self.ui.manual_box.setChecked(True)
         self.on_manual_box_clicked()
 
         self.ui.slice_box.setChecked(True)
+
+        if self.params.ffc_options == "default":
+            self.ui.ffc_options_box.setCurrentIndex(0)
+        elif self.params.ffc_options == "background":
+            self.ui.ffc_options_box.setCurrentIndex(1)
+        elif self.params.ffc_options == "roi":
+            self.ui.ffc_options_box.setCurrentIndex(2)
+
+        self.change_ffc_options()
 
         if self.params.method == "gridrec":
             self.ui.method_box.setCurrentIndex(0)
@@ -323,6 +354,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.on_slice_box_clicked()
         self.ui.minus_log_box.setChecked(self.params.minus_log)
 
+    def change_ffc_options(self):
+        self.params.ffc_options = str(self.ui.ffc_options_box.currentText()).lower()
+
     def change_method(self):
         self.params.method = str(self.ui.method_box.currentText()).lower()
         is_gridrec = self.params.method == 'gridrec'
@@ -354,6 +388,12 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def change_filter(self):
         self.params.filter = str(self.ui.filter_box.currentText()).lower()
+
+    def change_axis_spin(self):
+        if self.ui.axis_spin.value() == 0:
+            self.params.axis = None
+        else:
+            self.params.axis = self.ui.axis_spin.value()
 
     def closeEvent(self, event):
         try:
@@ -420,15 +460,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.theta_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_end.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_unit_label.setVisible(self.ui.manual_box.isChecked())
-
-    def change_ffc_options(self):
-        self.params.normalization_mode = str(self.ui.ffc_options.currentText()).lower()
-
-    def change_axis_spin(self):
-        if self.ui.axis_spin.value() == 0:
-            self.params.axis = None
-        else:
-            self.params.axis = self.ui.axis_spin.value()
 
     def on_reconstruct(self):
         with spinning_cursor():

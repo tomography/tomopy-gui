@@ -98,6 +98,9 @@ def tomo(params):
     # phase retrieval
     #data = tomopy.prep.phase.retrieve_phase(data,pixel_size=detector_pixel_size_x,dist=sample_detector_distance,energy=monochromator_energy,alpha=8e-3,pad=True)
 
+    # Find rotation center
+    #rot_center = tomopy.find_center(proj, theta, init=290, ind=0, tol=0.5)
+
     # Set rotation center.
     rot_center = params.axis/np.power(2, float(params.binning))
     print ("ROT:", rot_center)

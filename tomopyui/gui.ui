@@ -69,7 +69,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_widgetPage1_2">
        <attribute name="title">
@@ -84,22 +84,6 @@
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <layout class="QGridLayout" name="gridLayout_4">
-             <item row="1" column="0">
-              <widget class="QCheckBox" name="ffc_box">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string notr="true"/>
-               </property>
-               <property name="text">
-                <string>Flat-field correct</string>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="5">
               <spacer name="horizontalSpacer_2">
                <property name="orientation">
@@ -112,6 +96,22 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="pre_processing_box">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string notr="true"/>
+               </property>
+               <property name="text">
+                <string>pre-processing</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -343,7 +343,7 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>Flat-field correction</string>
+           <string>Pre-processing</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
@@ -392,39 +392,6 @@
                </item>
               </layout>
              </item>
-             <item row="0" column="1">
-              <widget class="QComboBox" name="ffc_options">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <item>
-                <property name="text">
-                 <string>Normalize</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Normalize_BG</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Normalize_NF</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Normalize_ROI</string>
-                </property>
-               </item>
-              </widget>
-             </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_3">
                <property name="minimumSize">
@@ -450,10 +417,45 @@
                 </size>
                </property>
                <property name="text">
-                <string>Method:</string>
+                <string>Normalize</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="ffc_options_box">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <item>
+                <property name="text">
+                 <string>default</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>background</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>roi</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="phase_correction_box">
+               <property name="text">
+                <string>phase retrieval</string>
                </property>
               </widget>
              </item>
@@ -964,6 +966,13 @@
                 <widget class="QPushButton" name="dx_file_load">
                  <property name="text">
                   <string>Reload</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="ffc_box">
+                 <property name="text">
+                  <string>Flat-field corrected</string>
                  </property>
                 </widget>
                </item>

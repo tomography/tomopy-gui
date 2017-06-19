@@ -199,7 +199,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             last_ind = util.read_dx_dims(str(fname), 'data')
     
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
-        self.ui.angle_step.setValue((theta[1] - theta[0]).astype(np.float))
+        self.ui.theta_step.setText(str((theta[1] - theta[0]).astype(np.float))) #SSS
 
         if self.params.ffc_correction:
             first = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
@@ -276,7 +276,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.input_path_line.setText(self.params.last_file or '.')
         self.ui.dx_file_name_line.setText(self.params.last_file or '.')
         self.ui.output_path_line.setText(self.params.output_dir or '.')
-        self.ui.angle_step.setValue(self.params.angle if self.params.angle else 0.0)
+        self.ui.theta_step.setText(str(self.params.angle) if self.params.angle else str(0.0))
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
         self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)

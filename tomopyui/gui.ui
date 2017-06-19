@@ -69,7 +69,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_widgetPage1_2">
        <attribute name="title">
@@ -188,28 +188,6 @@
              <property name="horizontalSpacing">
               <number>6</number>
              </property>
-             <item row="0" column="3">
-              <widget class="QDoubleSpinBox" name="axis_spin">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string notr="true"/>
-               </property>
-               <property name="suffix">
-                <string> px</string>
-               </property>
-               <property name="maximum">
-                <double>8192.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.500000000000000</double>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="4">
               <widget class="QLabel" name="angle_label">
                <property name="sizePolicy">
@@ -232,6 +210,28 @@
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QDoubleSpinBox" name="axis_spin">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string notr="true"/>
+               </property>
+               <property name="suffix">
+                <string> px</string>
+               </property>
+               <property name="maximum">
+                <double>8192.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.500000000000000</double>
                </property>
               </widget>
              </item>
@@ -285,6 +285,25 @@
                </property>
               </widget>
              </item>
+             <item row="0" column="7">
+              <widget class="QDoubleSpinBox" name="angle_offset">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string notr="true"/>
+               </property>
+               <property name="suffix">
+                <string> rad</string>
+               </property>
+               <property name="decimals">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="5">
               <widget class="QDoubleSpinBox" name="angle_step">
                <property name="sizePolicy">
@@ -304,25 +323,6 @@
                </property>
                <property name="maximum">
                 <double>361.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="7">
-              <widget class="QDoubleSpinBox" name="angle_offset">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string notr="true"/>
-               </property>
-               <property name="suffix">
-                <string> rad</string>
-               </property>
-               <property name="decimals">
-                <number>10</number>
                </property>
               </widget>
              </item>
@@ -989,6 +989,16 @@
             <layout class="QVBoxLayout" name="verticalLayout_12">
              <item>
               <layout class="QGridLayout" name="gridLayout_6">
+               <item row="5" column="1">
+                <widget class="QLabel" name="label_10">
+                 <property name="text">
+                  <string>Theta step</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
                <item row="2" column="3">
                 <widget class="QSpinBox" name="data_dark_end"/>
                </item>
@@ -1056,7 +1066,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="5" column="1">
+               <item row="6" column="1">
                 <widget class="QLabel" name="label_8">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1071,14 +1081,17 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>Center:</string>
+                  <string>Center</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="4">
+               <item row="1" column="2">
+                <widget class="QSpinBox" name="data_start"/>
+               </item>
+               <item row="6" column="4">
                 <widget class="QLabel" name="axis_num">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1097,6 +1110,9 @@
                  </property>
                 </widget>
                </item>
+               <item row="3" column="3">
+                <widget class="QSpinBox" name="data_white_end"/>
+               </item>
                <item row="0" column="2">
                 <widget class="QLabel" name="data_start_label">
                  <property name="text">
@@ -1107,11 +1123,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QSpinBox" name="data_start"/>
-               </item>
-               <item row="3" column="3">
-                <widget class="QSpinBox" name="data_white_end"/>
+               <item row="1" column="3">
+                <widget class="QSpinBox" name="data_end"/>
                </item>
                <item row="0" column="4">
                 <spacer name="horizontalSpacer_3">
@@ -1126,18 +1139,15 @@
                  </property>
                 </spacer>
                </item>
+               <item row="2" column="2">
+                <widget class="QSpinBox" name="data_dark_start"/>
+               </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="manual_box">
                  <property name="text">
                   <string>Manual</string>
                  </property>
                 </widget>
-               </item>
-               <item row="1" column="3">
-                <widget class="QSpinBox" name="data_end"/>
-               </item>
-               <item row="2" column="2">
-                <widget class="QSpinBox" name="data_dark_start"/>
                </item>
                <item row="4" column="1">
                 <widget class="QLabel" name="theta_label">
@@ -1179,6 +1189,13 @@
                 <widget class="QLabel" name="theta_unit_label">
                  <property name="text">
                   <string>degree</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="4">
+                <widget class="QLabel" name="theta_step">
+                 <property name="text">
+                  <string/>
                  </property>
                 </widget>
                </item>

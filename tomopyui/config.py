@@ -356,9 +356,9 @@ SECTIONS['perf'] = {
         'type': util.range_list,
         'help': "Number or range of number of projections"}}
 
-TOMO_PARAMS = ('flat-correction', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')
+TOMO_PARAMS = ('flat-correction', 'retrieve-phase', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')
 
-LAMINO_PARAMS = ('flat-correction', 'reconstruction', 'laminographic-reconstruction', 'retrieve-phase')
+LAMINO_PARAMS = ('flat-correction', 'reconstruction', 'laminographic-reconstruction')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',

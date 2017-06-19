@@ -23,9 +23,16 @@ def set_gui_startup(self, path):
         data_size = util.read_dx_dims(str(path), 'data')
         data_dark_size = util.read_dx_dims(str(path), 'data_dark')
         data_white_size = util.read_dx_dims(str(path), 'data_white')
+        theta_size = util.read_dx_dims(str(path), 'theta')
         self.ui.label_data_size.setText(str(data_size))
         self.ui.label_data_dark_size.setText(str(data_dark_size))
         self.ui.label_data_white_size.setText(str(data_white_size))
+        self.ui.label_theta_size.setText(str(theta_size))
+
+
+        fname = str(self.ui.dx_file_name_line.text())
+        proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
+        self.ui.theta_step.setText(str((180.0 / np.pi * (theta[1] - theta[0]).astype(np.float)))) #$$$
 
         self.dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
 
@@ -160,6 +167,11 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
         self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
+
+        self.ui.pixel_size_box.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
+        self.ui.distance_box.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
+        self.ui.energy_box.valueChanged.connect(lambda value: self.change_value('energy', value))
+
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
         self.ui.phase_correction_box.clicked.connect(self.on_phase_correction_box_clicked)
@@ -199,7 +211,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             last_ind = util.read_dx_dims(str(fname), 'data')
     
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
-        self.ui.theta_step.setText(str((180.0 / np.pi * theta[1] - theta[0]).astype(np.float)))
+        ##self.ui.theta_step.setText(str((180.0 / np.pi * theta[1] - theta[0]).astype(np.float)))
 
         if self.params.ffc_correction:
             first = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
@@ -240,6 +252,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def change_value(self, name, value):
         setattr(self.params, name, value)
+        print(name, value)
 
     def change_start(self, name, value):
         setattr(self.params, name, value)
@@ -261,6 +274,12 @@ class ApplicationWindow(QtGui.QMainWindow):
     def on_phase_correction_box_clicked(self):
         checked = self.ui.phase_correction_box.isChecked()
         self.params.phase_correction = checked 
+        self.ui.pixel_size_label.setVisible(checked)
+        self.ui.pixel_size_box.setVisible(checked)
+        self.ui.distance_label.setVisible(checked)
+        self.ui.distance_box.setVisible(checked)
+        self.ui.energy_label.setVisible(checked)
+        self.ui.energy_box.setVisible(checked)
 
     def on_manual_box_clicked(self):
         checked = self.ui.manual_box.isChecked()
@@ -280,6 +299,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
         self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)
+        self.ui.pixel_size_box.setValue(self.params.pixel_size if self.params.pixel_size else 1.0)
+        self.ui.distance_box.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
+        self.ui.energy_box.setValue(self.params.energy if self.params.energy else 10.0)
 
         if self.params.ffc_correction:
             self.ui.ffc_box.setChecked(True)
@@ -397,7 +419,12 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def closeEvent(self, event):
         try:
-            sections = config.TOMO_PARAMS + ('gui',)
+            print(self.params.propagation_distance)
+            print(self.params.energy)
+            print(self.params.pixel_size)
+
+            sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
+            print(sections)
             config.write('tomopyui.conf', args=self.params, sections=sections)
         except IOError as e:
             self.gui_warn(str(e))
@@ -428,15 +455,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         message = "GUI is part of ufo-reconstruct {}.".format(__version__)
         QtGui.QMessageBox.about(self, "About ufo-reconstruct", message)
 
-    def closeEvent(self, event):
-        try:
-            sections = config.TOMO_PARAMS + ('gui',)
-            print (sections)
-            config.write('tomopyui.conf', args=self.params, sections=sections)
-        except IOError as e:
-            self.gui_warn(str(e))
-            self.on_save_as()
-
     def on_slice_box_clicked(self):
         self.ui.slice_end.setVisible(not self.ui.slice_box.isChecked())
         self.ui.slice_end_label.setVisible(not self.ui.slice_box.isChecked())
@@ -459,7 +477,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.data_white_end.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_end.setVisible(self.ui.manual_box.isChecked())
-        self.ui.theta_unit_label.setVisible(self.ui.manual_box.isChecked())
+        #self.ui.theta_unit_label.setVisible(self.ui.manual_box.isChecked())
 
     def on_reconstruct(self):
         with spinning_cursor():

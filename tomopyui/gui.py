@@ -199,7 +199,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             last_ind = util.read_dx_dims(str(fname), 'data')
     
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
-        self.ui.theta_step.setText(str((theta[1] - theta[0]).astype(np.float))) #SSS
+        self.ui.theta_step.setText(str((180.0 / np.pi * theta[1] - theta[0]).astype(np.float)))
 
         if self.params.ffc_correction:
             first = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)

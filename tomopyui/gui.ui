@@ -1185,15 +1185,15 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="4">
-                <widget class="QLabel" name="theta_unit_label">
+               <item row="5" column="4">
+                <widget class="QLabel" name="theta_step">
                  <property name="text">
-                  <string>degree</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="4">
-                <widget class="QLabel" name="theta_step">
+               <item row="4" column="4">
+                <widget class="QLabel" name="label_theta_size">
                  <property name="text">
                   <string/>
                  </property>

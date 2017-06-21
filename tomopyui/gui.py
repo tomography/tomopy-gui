@@ -63,6 +63,17 @@ def set_gui_startup(self, path):
 
         self.on_show_projection_clicked()
 
+def get_filtered_filenames(path, exts=['.tif', '.tiff']):
+    result = []
+
+    try:
+        for ext in exts:
+            result += [os.path.join(path, f) for f in os.listdir(path) if f.endswith(ext)]
+    except OSError:
+        return []
+
+    return sorted(result)
+
 def set_last_file(path, line_edit, last_file):
     if os.path.exists(str(path)):
         line_edit.clear()
@@ -121,6 +132,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.show()
 
         self.ui.tab_widget.setCurrentIndex(0)
+        self.ui.projection_dock.setVisible(False)
         self.ui.slice_dock.setVisible(False)
         self.ui.volume_dock.setVisible(False)
         self.ui.axis_view_widget.setVisible(False)
@@ -136,11 +148,14 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.axis_calibration = None
     
         # set up run-time widgets
-        self.slice_viewer = tomopyui.widgets.ImageViewer()
+        self.projection_viewer = tomopyui.widgets.ProjectionViewer()
+        self.slice_viewer = None
+        #self.slice_viewer = tomopyui.widgets.SliceViewer()
         self.volume_viewer = tomopyui.widgets.VolumeViewer()
         self.overlap_viewer = tomopyui.widgets.OverlapViewer()
 
         self.ui.overlap_layout.addWidget(self.overlap_viewer)
+        self.ui.projection_dock.setWidget(self.projection_viewer)
         self.ui.slice_dock.setWidget(self.slice_viewer)
         self.ui.volume_dock.setWidget(self.volume_viewer)
 
@@ -237,18 +252,27 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.axis_spin.setValue(self.axis_calibration.axis)
 
     def on_show_slices_clicked(self):
-        self.on_show_projection_clicked()
-
-    def on_show_projection_clicked(self):
-        path = str(self.ui.dx_file_name_line.text())
-        self.ui.slice_dock.setVisible(True)
-
+        path = str(self.ui.output_path_line.text())
+        filenames = get_filtered_filenames(path)
+        print(path)
+        print(filenames)
         if not self.slice_viewer:
-            self.slice_viewer = tomopyui.widgets.ImageViewer(path)
+            self.slice_viewer = tomopyui.widgets.SliceViewer(filenames)
             self.slice_dock.setWidget(self.slice_viewer)
             self.ui.slice_dock.setVisible(True)
         else:
-            self.slice_viewer.load_files(path, self.params.ffc_correction)
+            self.slice_viewer.load_files(filenames)
+
+    def on_show_projection_clicked(self):
+        path = str(self.ui.dx_file_name_line.text())
+        self.ui.projection_dock.setVisible(True)
+
+        if not self.projection_viewer:
+            self.projection_viewer = tomopyui.widgets.ProjectionViewer(path)
+            self.projection_dock.setWidget(self.projection_viewer)
+            self.ui.projection_dock.setVisible(True)
+        else:
+            self.projection_viewer.load_files(path, self.params.ffc_correction)
 
     def change_value(self, name, value):
         setattr(self.params, name, value)

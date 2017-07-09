@@ -56,7 +56,7 @@ def tomo(params):
     print("XXXXXXXXXXXXXXXXXXXXXXXXX")
     print("slice:", str(params.slice_start))
     print("slice:", str(params.slice_end))
-    print("normalize", str(params.ffc_correction))
+    #print("normalize", str(params.ffc_correction))
     print("binning", str(params.binning))
     print("rot axis", str(params.axis))
     print("rec output dir", str(params.output_dir))
@@ -77,7 +77,6 @@ def tomo(params):
     
     print("START-END", start, end)
 
-    print("3:OK")
     proj, flat, dark, theta = dxchange.read_aps_32id(fname, sino=(start, end))
     LOG.info('Data successfully imported: %s', fname)
     print(proj.shape)
@@ -92,8 +91,8 @@ def tomo(params):
     print("BINNING: ", params.binning)
 
     # remove stripes
-    print("STRIPE  $$$$$$$$$$$$$$$$$$$$$$")    
     data = tomopy.remove_stripe_fw(data,level=5,wname='sym16',sigma=1,pad=True)
+    print("REMOVE STRIPE")    
 
     # phase retrieval
     #data = tomopy.prep.phase.retrieve_phase(data,pixel_size=detector_pixel_size_x,dist=sample_detector_distance,energy=monochromator_energy,alpha=8e-3,pad=True)
@@ -126,16 +125,6 @@ def tomo(params):
     fname = str(params.output_dir) + 'reco_'
     dxchange.write_tiff_stack(rec, fname=fname, overwrite=True)
 
-   #width, height = get_projection_reader(params)
-
-    #axis = params.axis or width / 2.0
-
-    #if params.resize:
-    #    width /= params.resize
-    #    height /= params.resize
-    #    axis /= params.resize
-
-    #LOG.debug("Input dimensions: {}x{} pixels".format(width, height))
     if  (params.full_reconstruction == False) :
         return rec
 

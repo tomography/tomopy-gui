@@ -20,17 +20,22 @@ LOG = logging.getLogger(__name__)
 
 
 def set_gui_startup(self, path):
-        data_size = util.read_dx_dims(str(path), 'data')
-        data_dark_size = util.read_dx_dims(str(path), 'data_dark')
-        data_white_size = util.read_dx_dims(str(path), 'data_white')
-        theta_size = util.read_dx_dims(str(path), 'theta')
+        data_size = util.get_dx_dims(str(path), 'data')
+        data_dark_size = util.get_dx_dims(str(path), 'data_dark')
+        data_white_size = util.get_dx_dims(str(path), 'data_white')
+        theta_size = util.get_dx_dims(str(path), 'theta')
+        print(data_size)
         self.ui.label_data_size.setText(str(data_size))
         self.ui.label_data_dark_size.setText(str(data_dark_size))
         self.ui.label_data_white_size.setText(str(data_white_size))
         self.ui.label_theta_size.setText(str(theta_size))
 
+        self.ui.dx_file_name_line.setText(path)
+        self.ui.input_path_line.setText(path)
+        self.last_file = os.path.dirname(str(path))
 
         fname = str(self.ui.dx_file_name_line.text())
+
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
         self.ui.theta_step.setText(str((180.0 / np.pi * (theta[1] - theta[0]).astype(np.float)))) #$$$
 
@@ -42,10 +47,6 @@ def set_gui_startup(self, path):
         self.ui.slice_end.setRange(self.dsize/2+1, self.dsize)
         self.ui.slice_end.setValue(self.dsize/2+1)
 
-        self.ui.dx_file_name_line.setText(path)
-        self.ui.input_path_line.setText(path)
-
-        self.last_file = os.path.dirname(str(path))
 
         self.params.last_file = set_last_file(path, self.ui.dx_file_name_line, self.params.last_file)
         self.params.last_dir = set_last_dir(path, self.ui.input_path_line, self.params.last_dir)  
@@ -150,9 +151,11 @@ class ApplicationWindow(QtGui.QMainWindow):
         # set up run-time widgets
         self.projection_viewer = tomopyui.widgets.ProjectionViewer()
         self.slice_viewer = None
-        #self.slice_viewer = tomopyui.widgets.SliceViewer()
-        self.volume_viewer = tomopyui.widgets.VolumeViewer()
+        self.volume_viewer = None
         self.overlap_viewer = tomopyui.widgets.OverlapViewer()
+        #self.slice_viewer = tomopyui.widgets.SliceViewer()
+        #self.volume_viewer = tomopyui.widgets.VolumeViewer()
+        #self.overlap_viewer = tomopyui.widgets.OverlapViewer()
 
         self.ui.overlap_layout.addWidget(self.overlap_viewer)
         self.ui.projection_dock.setWidget(self.projection_viewer)
@@ -221,9 +224,9 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def on_calibrate_dx(self):
         fname = str(self.ui.dx_file_name_line.text())
-        last_ind = util.read_dx_dims(str(fname), 'theta')
+        last_ind = util.get_dx_dims(str(fname), 'theta')
         if (last_ind == None):
-            last_ind = util.read_dx_dims(str(fname), 'data')
+            last_ind = util.get_dx_dims(str(fname), 'data')
     
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
         ##self.ui.theta_step.setText(str((180.0 / np.pi * theta[1] - theta[0]).astype(np.float)))
@@ -254,8 +257,8 @@ class ApplicationWindow(QtGui.QMainWindow):
     def on_show_slices_clicked(self):
         path = str(self.ui.output_path_line.text())
         filenames = get_filtered_filenames(path)
-        print(path)
-        print(filenames)
+        #LOG.warn("Shape {} of {} is different to {} of {}".format(self.first.shape, self.first, self.second.shape, self.second))
+        LOG.warn("Loading {}".format(filenames))
         if not self.slice_viewer:
             self.slice_viewer = tomopyui.widgets.SliceViewer(filenames)
             self.slice_dock.setWidget(self.slice_viewer)
@@ -423,7 +426,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.params.binning = str(self.ui.binning_box.currentIndex())
         fname = str(self.ui.dx_file_name_line.text())
         try:
-            data_size = util.read_dx_dims(str(fname), 'data')
+            data_size = util.get_dx_dims(str(fname), 'data')
             dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
         except:
             dsize = 1024
@@ -450,6 +453,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
             print(sections)
             config.write('tomopyui.conf', args=self.params, sections=sections)
+            config.write(str(self.params.last_dir)+'.conf', args=self.params, sections=sections)
         except IOError as e:
             self.gui_warn(str(e))
             self.on_save_as()
@@ -476,8 +480,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.get_values_from_params()
 
     def on_about(self):
-        message = "GUI is part of ufo-reconstruct {}.".format(__version__)
-        QtGui.QMessageBox.about(self, "About ufo-reconstruct", message)
+        message = "GUI is part of tomopy {}.".format(__version__)
+        QtGui.QMessageBox.about(self, "About tomopy", message)
 
     def on_slice_box_clicked(self):
         self.ui.slice_end.setVisible(not self.ui.slice_box.isChecked())
@@ -521,7 +525,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             if (is_mlem or is_sirt or is_sartfbp) :
                 self.params.num_iterations = self.ui.iterations.value()
             
-            data_size = util.read_dx_dims(str(self.ui.input_path_line.text()), 'data')
+            data_size = util.get_dx_dims(str(self.ui.input_path_line.text()), 'data')
 
             try:
                  reco.tomo(self.params)

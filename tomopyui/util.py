@@ -1,7 +1,7 @@
 import h5py
 import dxchange
 
-def read_dx_dims(fname, dataset):
+def get_dx_dims(fname, dataset):
     """
     Read array size of a specific group of Data Exchange file.
     Parameters

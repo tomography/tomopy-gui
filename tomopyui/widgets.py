@@ -17,7 +17,6 @@ def remove_extrema(data):
     data[data < lower] = lower
     return data
 
-
 def create_volume(data):
     gradient = (data - np.roll(data, 1))**2
     cmin = gradient.min()
@@ -67,14 +66,9 @@ class ProjectionViewer(QtGui.QWidget):
         self.ffc_correction = ffc_correction
 
         proj, flat, dark, theta = dx.read_aps_32id(filenames, proj=(0, 1))
-        print (proj.shape)
-        print (flat.shape)
-        print (dark.shape)
-        print (theta.shape)
-        print (util.read_dx_dims(str(filenames), 'data')[0])
 
         #self.slider.setRange(0, len(theta) - 1)
-        self.slider.setRange(0, util.read_dx_dims(str(filenames), 'data')[0] - 1)
+        self.slider.setRange(0, util.get_dx_dims(str(filenames), 'data')[0] - 1)
         self.slider.setSliderPosition(0)
         self.update_image()
 

@@ -130,8 +130,8 @@ SECTIONS['flat-correction'] = {
 
 SECTIONS['retrieve-phase'] = {
     'retrieval-method': {
-        'choices': ['tie', 'ctf', 'ctfhalfsin', 'qp', 'qphalfsine', 'qp2'],
-        'default': 'tie',
+        'choices': ['default'],
+        'default': 'default',
         'help': "Phase retrieval method"},
     'energy': {
         'default': None,
@@ -145,26 +145,20 @@ SECTIONS['retrieve-phase'] = {
         'default': 1e-6,
         'type': float,
         'help': "Pixel size [m]"},
-    'regularization-rate': {
-        'default': 2,
-        'type': float,
-        'help': "Regularization rate (typical values between [2, 3])"},
-    'retrieval-padded-width': {
+    'alpha': {
         'default': 0,
-        'type': util.positive_int,
-        'help': "Padded width used for phase retrieval"},
-    'retrieval-padded-height': {
-        'default': 0,
-        'type': util.positive_int,
-        'help': "Padded height used for phase retrieval"},
-    'retrieval-padding-mode': {
-        'choices': ['none', 'clamp', 'clamp_to_edge', 'repeat'],
-        'default': 'clamp_to_edge',
-        'help': "Padded values assignment"},
-    'thresholding-rate': {
-        'default': 0.01,
         'type': float,
-        'help': "Thresholding rate (typical values between [0.01, 0.1])"}}
+        'help': "Regularization parameter"},
+    'pad': {
+        'default': False,
+        'help': "Extend the size of the projections by padding with zeros."},
+    'ncore': {
+        'default': None,
+        'help': "Number of cores that will be assigned to jobs"},
+    'nchunk': {
+        'default': None,
+        'help': "Chunk size for each core"}}
+
 
 SECTIONS['sinos'] = {
     'pass-size': {
@@ -173,33 +167,11 @@ SECTIONS['sinos'] = {
         'help': 'Number of sinograms to process per pass'}}
 
 SECTIONS['reconstruction'] = {
-    'sinograms': {
-        'default': None,
+    'last-file': {
+        'default': '.',
         'type': str,
-        'help': "Location with sinograms",
+        'help': "Name of the last file used",
         'metavar': 'PATH'},
-    'angle': {
-        'default': None,
-        'type': float,
-        'help': "Angle step between projections in radians"},
-    'enable-tracing': {
-        'default': False,
-        'help': "Enable tracing and store result in .PID.json",
-        'action': 'store_true'},
-    'remotes': {
-        'default': None,
-        'type': str,
-        'help': "Addresses to remote ufo-nodes",
-        'nargs': '+'},
-    'projection-filter': {
-        'default': 'ramp-fromreal',
-        'type': str,
-        'help': "Projection filter",
-        'choices': ['ramp', 'ramp-fromreal', 'butterworth', 'faris-byer']},
-    'projection-padding-mode': {
-        'choices': ['none', 'clamp', 'clamp_to_edge', 'repeat'],
-        'default': 'clamp_to_edge',
-        'help': "Padded values assignment"},
     'output-dir': {
         'default': '.',
         'type': str,
@@ -210,15 +182,19 @@ SECTIONS['reconstruction'] = {
 SECTIONS['tomographic-reconstruction'] = {
     'slice-start': {
         'type': util.positive_int,
-        'default': 1,
+        'default': 0,
         'help': "Start slice to reconstruct"},
     'slice-end': {
         'type': util.positive_int,
-        'default': 2,
+        'default': 1,
         'help': "End slice to reconstruct"},
+    'angle': {
+        'default': None,
+        'type': float,
+        'help': "Angle step between projections in radians"},
     'binning': {
         'type': str,
-        'default': '2',
+        'default': '0',
         'help': "Reconstruction binning factor as power(2, choice)",
         'choices': ['0', '1', '2', '3']},
     'filter': {
@@ -227,9 +203,9 @@ SECTIONS['tomographic-reconstruction'] = {
         'help': "Reconstruction filter",
         'choices': ['none', 'shepp', 'cosine', 'hann', 'hamming', 'ramlak', 'parzen', 'butterworth']},
     'axis': {
-        'default': None,
+        'default': 1024,
         'type': float,
-        'help': "Axis position"},
+        'help': "Rotation axis position"},
     'dry-run': {
         'default': False,
         'help': "Reconstruct without writing data",
@@ -288,11 +264,6 @@ SECTIONS['gui'] = {
         'type': str,
         'help': "Path of the last used directory",
         'metavar': 'PATH'},
-    'last-file': {
-        'default': '.',
-        'type': str,
-        'help': "Name of the last file used",
-        'metavar': 'PATH'},
     'enable-cropping': {
         'default': False,
         'help': "Enable cropping width",
@@ -330,31 +301,6 @@ SECTIONS['gui'] = {
         'default': False,
         'help': "Allow manual entry for proj, dark, white and theta ranges",
         'action': 'store_true'}}
-
-SECTIONS['estimate'] = {
-    'estimate-method': {
-        'type': str,
-        'default': 'correlation',
-        'help': 'Rotation axis estimation algorithm',
-        'choices': ['reconstruction', 'correlation']}}
-
-SECTIONS['perf'] = {
-    'num-runs': {
-        'default': 3,
-        'type': util.positive_int,
-        'help': "Number of runs"},
-    'width-range': {
-        'default': '1024',
-        'type': util.range_list,
-        'help': "Width or range of widths of generated projections"},
-    'height-range': {
-        'default': '1024',
-        'type': util.range_list,
-        'help': "Height or range of heights of generated projections"},
-    'num-projection-range': {
-        'default': '512',
-        'type': util.range_list,
-        'help': "Number or range of number of projections"}}
 
 TOMO_PARAMS = ('flat-correction', 'retrieve-phase', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')
 

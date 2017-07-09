@@ -71,7 +71,7 @@ def tomo(params):
     start = params.slice_start
     end = params.slice_end
 
-    # Read raw data.
+   # Read raw data.
     if  (params.full_reconstruction == False) : 
         end = start + 1
     

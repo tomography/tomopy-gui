@@ -25,12 +25,6 @@ def run_tomo(args):
     from tomopyui import reco
     reco.tomo(args)
 
-
-# def run_lamino(args):
-#     from tofu import lamino
-#     lamino.lamino(args)
-
-
 # def run_flat_correct(args):
 #     from tofu import preprocess
 #     preprocess.run_flat_correct(args)
@@ -152,7 +146,6 @@ def main():
     sino_params = ('flat-correction', 'sinos')
     reco_params = ('flat-correction', 'reconstruction')
     tomo_params = config.TOMO_PARAMS
-    lamino_params = config.LAMINO_PARAMS
     gui_params = tomo_params + ('gui', )
 
     print(tomo_params)
@@ -162,7 +155,6 @@ def main():
         # ('flatcorrect', run_flat_correct, ('flat-correction',),         "Run flat field correction"),
         # ('sinos',       run_sinos,      sino_params,                    "Generate sinograms from projections"),
         ('tomo',        run_tomo,       tomo_params,                    "Run tomographic reconstruction"),
-        #('lamino',      run_lamino,     lamino_params,                  "Run laminographic reconstruction"),
         ('gui',         gui,            tomo_params + ('gui',),         "GUI for tomographic reconstruction"),
         # ('estimate',    estimate,       tomo_params + ('estimate',),    "Estimate center of rotation"),
         # ('perf',        perf,           tomo_params + ('perf',),        "Check reconstruction performance"),

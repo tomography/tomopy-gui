@@ -304,11 +304,9 @@ SECTIONS['gui'] = {
 
 TOMO_PARAMS = ('flat-correction', 'retrieve-phase', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')
 
-LAMINO_PARAMS = ('flat-correction', 'reconstruction', 'laminographic-reconstruction')
-
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',
-              'Laminographic reconstruction', 'Filtered backprojection',
+              'Filtered backprojection',
               'Direct Fourier Inversion', 'Iterative reconstruction',
               'SART', 'SBTV', 'GUI settings', 'Estimation', 'Performance')
 

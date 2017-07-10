@@ -8,10 +8,10 @@ import argparse
 import logging
 import time
 import re
-from tomopyui import config #, __version__
+from topy import config #, __version__
 
 
-LOG = logging.getLogger('tomopyui')
+LOG = logging.getLogger('topy')
 
 
 def init(args):
@@ -22,7 +22,7 @@ def init(args):
 
 
 def run_rec(args):
-    from tomopyui import reco
+    from topy import reco
     reco.tomo(args)
 
 # def run_flat_correct(args):
@@ -73,7 +73,7 @@ def run_rec(args):
 
 def gui(args):
     try:
-        from tomopyui import gui
+        from topy import gui
         gui.main(args)
     except ImportError as e:
         LOG.error(str(e))

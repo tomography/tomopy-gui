@@ -4,11 +4,11 @@ import logging
 import pkg_resources
 import tifffile
 import dxchange as dx
-import tomopyui.widgets
-import tomopyui.process
-import tomopyui.util as util
-import tomopyui.config as config
-import tomopyui.reco as reco
+import topy.widgets
+import topy.process
+import topy.util as util
+import topy.config as config
+import topy.reco as reco
 
 from argparse import ArgumentParser
 import numpy as np
@@ -155,13 +155,13 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.axis_calibration = None
     
         # set up run-time widgets
-        self.projection_viewer = tomopyui.widgets.ProjectionViewer()
+        self.projection_viewer = topy.widgets.ProjectionViewer()
         self.slice_viewer = None
         self.volume_viewer = None
-        self.overlap_viewer = tomopyui.widgets.OverlapViewer()
-        #self.slice_viewer = tomopyui.widgets.SliceViewer()
-        #self.volume_viewer = tomopyui.widgets.VolumeViewer()
-        #self.overlap_viewer = tomopyui.widgets.OverlapViewer()
+        self.overlap_viewer = topy.widgets.OverlapViewer()
+        #self.slice_viewer = topy.widgets.SliceViewer()
+        #self.volume_viewer = topy.widgets.VolumeViewer()
+        #self.overlap_viewer = topy.widgets.OverlapViewer()
 
         self.ui.overlap_layout.addWidget(self.overlap_viewer)
         self.ui.projection_dock.setWidget(self.projection_viewer)
@@ -248,7 +248,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             last = proj[0,:,:].astype(np.float)
 
         with spinning_cursor():
-            self.axis_calibration = tomopyui.process.AxisCalibration(first, last)
+            self.axis_calibration = topy.process.AxisCalibration(first, last)
 
         position = self.axis_calibration.position
         self.overlap_viewer.set_images(first, last)
@@ -265,7 +265,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         filenames = get_filtered_filenames(path)
         LOG.warn("Loading {}".format(filenames))
         if not self.slice_viewer:
-            self.slice_viewer = tomopyui.widgets.SliceViewer(filenames)
+            self.slice_viewer = topy.widgets.SliceViewer(filenames)
             self.slice_dock.setWidget(self.slice_viewer)
             self.ui.slice_dock.setVisible(True)
         else:
@@ -276,7 +276,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.projection_dock.setVisible(True)
 
         if not self.projection_viewer:
-            self.projection_viewer = tomopyui.widgets.ProjectionViewer(path)
+            self.projection_viewer = topy.widgets.ProjectionViewer(path)
             self.projection_dock.setWidget(self.projection_viewer)
             self.ui.projection_dock.setVisible(True)
         else:
@@ -458,7 +458,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
             print(sections)
-            config.write('tomopyui.conf', args=self.params, sections=sections)
+            config.write('topy.conf', args=self.params, sections=sections)
             config.write(str(self.params.last_dir)+'.conf', args=self.params, sections=sections)
         except IOError as e:
             self.gui_warn(str(e))
@@ -466,10 +466,10 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def on_save_as(self):
         if os.path.exists(self.params.last_file):
-            config_file = str(self.params.last_file + "/tomopyui.conf")
+            config_file = str(self.params.last_file + "/topy.conf")
             print (config_file)
         else:
-            config_file = str(os.getenv('HOME') + "tomopyui.conf")
+            config_file = str(os.getenv('HOME') + "topy.conf")
             print (config_file)
         save_config = QtGui.QFileDialog.getSaveFileName(self, 'Save as ...', config_file)
         if save_config:

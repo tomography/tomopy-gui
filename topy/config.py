@@ -3,11 +3,11 @@ import sys
 import logging
 import ConfigParser as configparser
 from collections import OrderedDict
-import tomopyui.util as util
+import topy.util as util
 import numpy as np
 
 LOG = logging.getLogger(__name__)
-NAME = "tomopyui.conf"
+NAME = "topy.conf"
 SECTIONS = OrderedDict()
 
 SECTIONS['general'] = {

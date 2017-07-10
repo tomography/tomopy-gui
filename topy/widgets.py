@@ -4,7 +4,7 @@ import logging
 import numpy as np
 from PyQt4 import QtGui, QtCore
 import dxchange as dx
-import tomopyui.util as util
+import topy.util as util
 import tifffile
 
 LOG = logging.getLogger(__name__)

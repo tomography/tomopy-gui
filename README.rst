@@ -7,11 +7,13 @@ an open-source Python package for tomographic data
 processing and image reconstruction.
 
 
-## About
+About
+=====
 
 This repository contains a customized version of `tofu <https://github.com/ufo-kit/tofu>`_'s data processing scripts to be used with the `tomopy <https://github.com/tomopy/tomopy>`_ framework. 
 
-## Installation
+Installation
+============
 
 Run
 
@@ -19,9 +21,11 @@ Run
 
 in a prepared virtualenv or as root for system-wide installation.
 
-## Usage
+Usage
+=====
 
-### Reconstruction
+Reconstruction
+--------------
 
 To do a tomographic reconstruction you simply call
 
@@ -41,9 +45,10 @@ You can also load reconstruction parameters from a configuration file called
 
     $ topy init
 
+GUI
+---
 
 Besides scripted reconstructions, one can also run a standalone GUI for both
 reconstruction and quick assessment of the reconstructed data via
 
     $ topy gui
-

@@ -19,6 +19,7 @@ from PyQt4 import QtGui, QtCore, uic
 LOG = logging.getLogger(__name__)
 
 
+
 def set_gui_startup(self, path):
         data_size = util.get_dx_dims(str(path), 'data')
         data_dark_size = util.get_dx_dims(str(path), 'data_dark')
@@ -37,13 +38,18 @@ def set_gui_startup(self, path):
         fname = str(self.ui.dx_file_name_line.text())
 
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
-        self.ui.theta_step.setText(str((180.0 / np.pi * (theta[1] - theta[0]).astype(np.float)))) #$$$
+        # self.ui.theta_step.setText(str((180.0 / np.pi * (theta[1] - theta[0]).astype(np.float)))) #$$$
+        self.ui.theta_step.setText(str(np.rad2deg((theta[1] - theta[0])))) #$$$
+        self.params.theta_start = theta[0]
+        self.params.theta_end = theta[-1]
+
+        self.ui.theta_start.setValue(np.rad2deg(theta[0]))
+        self.ui.theta_end.setValue(np.rad2deg(theta[-1]))
 
         self.dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
 
         self.ui.slice_start.setRange(0, self.dsize)
         self.ui.slice_start.setValue(self.dsize/2)
-        self.ui.slice_start.setRange(0, self.dsize)
         self.ui.slice_end.setRange(self.dsize/2+1, self.dsize)
         self.ui.slice_end.setValue(self.dsize/2+1)
 
@@ -257,12 +263,6 @@ class ApplicationWindow(QtGui.QMainWindow):
     def on_show_slices_clicked(self):
         path = str(self.ui.output_path_line.text())
         filenames = get_filtered_filenames(path)
-        print("****************")
-        print("****************")
-        print(filenames)
-        print("****************")
-        print("****************")
-       #LOG.warn("Shape {} of {} is different to {} of {}".format(self.first.shape, self.first, self.second.shape, self.second))
         LOG.warn("Loading {}".format(filenames))
         if not self.slice_viewer:
             self.slice_viewer = tomopyui.widgets.SliceViewer(filenames)
@@ -327,7 +327,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.input_path_line.setText(self.params.last_file or '.')
         self.ui.dx_file_name_line.setText(self.params.last_file or '.')
         self.ui.output_path_line.setText(self.params.output_dir or '.')
-        self.ui.theta_step.setText(str(self.params.angle) if self.params.angle else str(0.0))
+        self.ui.theta_start.setValue(self.params.theta_start if self.params.theta_start else 0.0)
+        self.ui.theta_end.setValue(self.params.theta_end if self.params.theta_end else np.pi)
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
         self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)

@@ -3,8 +3,8 @@ import sys
 import logging
 import ConfigParser as configparser
 from collections import OrderedDict
-#from tofu.util import positive_int, tupleize, range_list
 import tomopyui.util as util
+import numpy as np
 
 LOG = logging.getLogger(__name__)
 NAME = "tomopyui.conf"
@@ -20,85 +20,22 @@ SECTIONS['general'] = {
         'default': False,
         'help': 'Verbose output',
         'action': 'store_true'},
-    'output': {
-        'default': 'result-%05i.tif',
-        'type': str,
-        'help': "Path to location or format-specified file path "
-                "for storing reconstructed slices",
-        'metavar': 'PATH'},
-    'output-bitdepth': {
-        'default': 32,
-        'type': util.positive_int,
-        'help': "Bit depth of output, either 8, 16 or 32",
-        'metavar': 'BITDEPTH'},
-    'output-minimum': {
-        'default': None,
-        'type': float,
-        'help': "Minimum value that maps to zero",
-        'metavar': 'MIN'},
-    'output-maximum': {
-        'default': None,
-        'type': float,
-        'help': "Maximum input value that maps to largest output value",
-        'metavar': 'MAX'},
     'log': {
         'default': None,
         'type': str,
         'help': "File name of optional log",
-        'metavar': 'FILE'},
-    'width': {
-        'default': None,
-        'type': util.positive_int,
-        'help': "Input width"}}
-
-SECTIONS['reading'] = {
-    'y': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': 'Vertical coordinate from where to start reading the input image'},
-    'height': {
-        'default': None,
-        'type': util.positive_int,
-        'help': "Number of rows which will be read"},
-    'bitdepth': {
-        'default': 32,
-        'type': util.positive_int,
-        'help': "Bit depth of raw files"},
-    'y-step': {
-        'type': util.positive_int,
-        'default': 1,
-        'help': "Read every \"step\" row from the input"},
-    'start': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': 'Offset to the first read file'},
-    'number': {
-        'type': util.positive_int,
-        'default': None,
-        'help': 'Number of files to read'},
-    'step': {
-        'type': util.positive_int,
-        'default': 1,
-        'help': 'Read every \"step\" file'},
-    'resize': {
-        'type': util.positive_int,
-        'default': None,
-        'help': 'Bin pixels before processing'},
-        }
-
+        'metavar': 'FILE'}}
+ 
 SECTIONS['flat-correction'] = {
     'normalization-mode': {
-        'default': "default",
+        'choices': ['average', 'bg', 'roi'],
+        'default': "average",
         'type': str,
-        'help': "Flat-field correction options: Average (darks) or median (flats)"},
+        'help': "Flat-field correction method"},
     'fix-nan-and-inf': {
         'default': False,
         'help': "Fix nan and inf",
         'action': 'store_true'},
-    'absorptivity': {
-        'default': False,
-        'action': 'store_true',
-        'help': 'Do absorption correction'},
     'minus-log': {
         'default': True,
         'action': 'store_true',
@@ -118,7 +55,7 @@ SECTIONS['retrieve-phase'] = {
         'type': float,
         'help': "Sample <-> detector distance [m]"},
     'pixel-size': {
-        'default': 1e-6,
+        'default': None,
         'type': float,
         'help': "Pixel size [m]"},
     'alpha': {
@@ -135,14 +72,29 @@ SECTIONS['retrieve-phase'] = {
         'default': None,
         'help': "Chunk size for each core"}}
 
-
 SECTIONS['sinos'] = {
     'pass-size': {
         'type': util.positive_int,
         'default': 0,
         'help': 'Number of sinograms to process per pass'}}
 
-SECTIONS['reconstruction'] = {
+SECTIONS['reading'] = {
+    'slice-start': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Start slice to read for reconstruction"},
+    'slice-end': {
+        'type': util.positive_int,
+        'default': 1,
+        'help': "End slice to read for reconstruction"},
+    'theta_start': {
+        'default': 0,
+        'type': float,
+        'help': "Angle step between projections in radians"},
+    'theta_end': {
+        'default': np.pi,
+        'type': float,
+        'help': "Angle step between projections in radians"},
     'last-file': {
         'default': '.',
         'type': str,
@@ -155,19 +107,7 @@ SECTIONS['reconstruction'] = {
                 "for storing reconstructed slices",
         'metavar': 'PATH'}}
 
-SECTIONS['tomographic-reconstruction'] = {
-    'slice-start': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': "Start slice to reconstruct"},
-    'slice-end': {
-        'type': util.positive_int,
-        'default': 1,
-        'help': "End slice to reconstruct"},
-    'angle': {
-        'default': None,
-        'type': float,
-        'help': "Angle step between projections in radians"},
+SECTIONS['reconstruction'] = {
     'binning': {
         'type': str,
         'default': '0',
@@ -190,10 +130,6 @@ SECTIONS['tomographic-reconstruction'] = {
         'default': False,
         'help': "Full or one slice only reconstruction",
         'action': 'store_true'},
-    'offset': {
-        'default': 0.0,
-        'type': float,
-        'help': "Angle offset of first projection in radians"},
     'method': {
         'default': 'gridrec',
         'type': str,
@@ -216,11 +152,11 @@ SECTIONS['sartfbp'] = {
     'lambda': {
         'default': 0.1,
         'type': float,
-        'help': "Lambda"},
+        'help': "lambda (sartfbp)"},
     'mu': {
         'default': 0.5,
         'type': float,
-        'help': "mu"}}
+        'help': "mu (sartfbp)"}}
 
 SECTIONS['gui'] = {
     'last-dir': {
@@ -262,7 +198,7 @@ SECTIONS['gui'] = {
         'help': "Allow manual entry for proj, dark, white and theta ranges",
         'action': 'store_true'}}
 
-TOMO_PARAMS = ('flat-correction', 'retrieve-phase', 'reconstruction', 'tomographic-reconstruction', 'ir', 'sirt', 'sartfbp')
+TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'reconstruction', 'ir', 'sirt', 'sartfbp')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',
@@ -337,7 +273,7 @@ def config_to_list(config_name=NAME):
 
 class Params(object):
     def __init__(self, sections=()):
-        self.sections = sections + ('general', 'reading')
+        self.sections = sections + ('general', )
 
     def add_parser_args(self, parser):
         for section in self.sections:

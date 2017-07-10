@@ -124,7 +124,7 @@ def tomo(params):
     
     if (params.dry_run == False):
          # Write data as stack of TIFs.
-        fname = str(params.output_dir) + 'reco_'
+        fname = str(params.output_dir) + 'reco'
         dxchange.write_tiff_stack(rec, fname=fname, overwrite=True)
         print("REC SAVED:", fname)
 

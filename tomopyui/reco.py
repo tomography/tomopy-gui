@@ -116,14 +116,17 @@ def tomo(params):
         print("gridrec")
         rec = tomopy.recon(data, theta, center=rot_center, algorithm='gridrec', filter_name=params.filter)
 
-    print("REC:", rec.shape)
+    print("REC DONE:", rec.shape)
 
     # Mask each reconstructed slice with a circle.
     rec = tomopy.circ_mask(rec, axis=0, ratio=0.95)
 
-    # Write data as stack of TIFs.
-    fname = str(params.output_dir) + 'reco_'
-    dxchange.write_tiff_stack(rec, fname=fname, overwrite=True)
+    
+    if (params.dry_run == False):
+         # Write data as stack of TIFs.
+        fname = str(params.output_dir) + 'reco_'
+        dxchange.write_tiff_stack(rec, fname=fname, overwrite=True)
+        print("REC SAVED:", fname)
 
     if  (params.full_reconstruction == False) :
         return rec

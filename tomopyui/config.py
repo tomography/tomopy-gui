@@ -87,20 +87,6 @@ SECTIONS['reading'] = {
         }
 
 SECTIONS['flat-correction'] = {
-    'projections': {
-        'default': None,
-        'type': str,
-        'help': "Location with projections",
-        'metavar': 'PATH'},
-    'darks': {
-        'default': None,
-        'type': str,
-        'help': "Location with darks",
-        'metavar': 'PATH'},
-    'dark-scale': {
-        'default': 1,
-        'type': float,
-        'help': "Scaling dark"},
     'normalization-mode': {
         'default': "default",
         'type': str,
@@ -109,16 +95,6 @@ SECTIONS['flat-correction'] = {
         'default': False,
         'help': "Fix nan and inf",
         'action': 'store_true'},
-    'flats': {
-        'default': None,
-        'type': str,
-        'help': "Location with flats",
-        'metavar': 'PATH'},
-    'flats2': {
-        'default': None,
-        'type': str,
-        'help': "Location with flats 2 for interpolation correction",
-        'metavar': 'PATH'},
     'absorptivity': {
         'default': False,
         'action': 'store_true',
@@ -150,7 +126,7 @@ SECTIONS['retrieve-phase'] = {
         'type': float,
         'help': "Regularization parameter"},
     'pad': {
-        'default': False,
+        'default': True,
         'help': "Extend the size of the projections by padding with zeros."},
     'ncore': {
         'default': None,
@@ -230,18 +206,6 @@ SECTIONS['ir'] = {
         'type': util.positive_int,
         'help': "Maximum number of iterations"}}
 
-SECTIONS['gridrec'] = {
-    'gridrec-crop-width': {
-        'default': None,
-        'type': util.positive_int,
-        'help': "Width of final slice"}}
-
-SECTIONS['fbp'] = {
-    'fbp-crop-width': {
-        'default': None,
-        'type': util.positive_int,
-        'help': "Width of final slice"}}
-
 SECTIONS['sirt'] = {
     'relaxation-factor': {
         'default': 0.25,
@@ -264,10 +228,6 @@ SECTIONS['gui'] = {
         'type': str,
         'help': "Path of the last used directory",
         'metavar': 'PATH'},
-    'enable-cropping': {
-        'default': False,
-        'help': "Enable cropping width",
-        'action': 'store_true'},
     'show-2d': {
         'default': False,
         'help': "Show 2D slices with pyqtgraph",
@@ -302,7 +262,7 @@ SECTIONS['gui'] = {
         'help': "Allow manual entry for proj, dark, white and theta ranges",
         'action': 'store_true'}}
 
-TOMO_PARAMS = ('flat-correction', 'retrieve-phase', 'reconstruction', 'tomographic-reconstruction', 'ir', 'gridrec', 'fbp', 'sirt', 'sartfbp')
+TOMO_PARAMS = ('flat-correction', 'retrieve-phase', 'reconstruction', 'tomographic-reconstruction', 'ir', 'sirt', 'sartfbp')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',

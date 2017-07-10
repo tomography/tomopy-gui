@@ -257,7 +257,12 @@ class ApplicationWindow(QtGui.QMainWindow):
     def on_show_slices_clicked(self):
         path = str(self.ui.output_path_line.text())
         filenames = get_filtered_filenames(path)
-        #LOG.warn("Shape {} of {} is different to {} of {}".format(self.first.shape, self.first, self.second.shape, self.second))
+        print("****************")
+        print("****************")
+        print(filenames)
+        print("****************")
+        print("****************")
+       #LOG.warn("Shape {} of {} is different to {} of {}".format(self.first.shape, self.first, self.second.shape, self.second))
         LOG.warn("Loading {}".format(filenames))
         if not self.slice_viewer:
             self.slice_viewer = tomopyui.widgets.SliceViewer(filenames)

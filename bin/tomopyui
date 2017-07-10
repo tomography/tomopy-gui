@@ -21,7 +21,7 @@ def init(args):
         raise RuntimeError("{0} already exists".format(args.config))
 
 
-def run_tomo(args):
+def run_rec(args):
     from tomopyui import reco
     reco.tomo(args)
 
@@ -154,7 +154,7 @@ def main():
         ('init',        init,           (),                             "Create configuration file"),
         # ('flatcorrect', run_flat_correct, ('flat-correction',),         "Run flat field correction"),
         # ('sinos',       run_sinos,      sino_params,                    "Generate sinograms from projections"),
-        ('tomo',        run_tomo,       tomo_params,                    "Run tomographic reconstruction"),
+        ('rec',         run_rec,        tomo_params,                    "Run tomographic reconstruction"),
         ('gui',         gui,            tomo_params + ('gui',),         "GUI for tomographic reconstruction"),
         # ('estimate',    estimate,       tomo_params + ('estimate',),    "Estimate center of rotation"),
         # ('perf',        perf,           tomo_params + ('perf',),        "Check reconstruction performance"),

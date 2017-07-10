@@ -121,3 +121,4 @@ script
 ptycho.py
 *.autotools
 *.cproject
+*.conf

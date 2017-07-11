@@ -1,15 +1,16 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='tomoshell',
-    version='0.1',
+    name='ufot',
+    version=open('VERSION').read().strip(),
+    #version=__version__,
     author='Matthias Vogelgesang',
     author_email='matthias.vogelgesang@kit.edu',
     url='https://github.com/ufo-kit',
     packages=find_packages(),
-    package_data={'':['tomoshell.ui']},
-    scripts=['bin/tomoshell'],
-    description='Basic tomographic reconstruction GUI',
+    package_data={'':['gui.ui']},
+    scripts=['bin/ufot'],
+    description='tofu for tomopy',
     install_requires=['pyqtgraph'],
     zip_safe=False,
 )

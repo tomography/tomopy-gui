@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='topy',
+    name='ufot',
     version=open('VERSION').read().strip(),
     #version=__version__,
     author='Matthias Vogelgesang',
@@ -9,7 +9,7 @@ setup(
     url='https://github.com/ufo-kit',
     packages=find_packages(),
     package_data={'':['gui.ui']},
-    scripts=['bin/topy'],
+    scripts=['bin/ufot'],
     description='tofu for tomopy',
     install_requires=['pyqtgraph'],
     zip_safe=False,

@@ -1,7 +1,7 @@
-ToPy
+ufot
 ####
 
-**ToPy** is `tofu <https://github.com/ufo-kit/tofu>`_ for `tomopy <https://github.com/tomopy/tomopy>`_
+**ufot** is `tofu <https://github.com/ufo-kit/tofu>`_ for `tomopy <https://github.com/tomopy/tomopy>`_
 
 an open-source Python package for tomographic data 
 processing and image reconstruction.
@@ -29,7 +29,7 @@ Reconstruction
 
 To do a tomographic reconstruction you simply call
 
-    $ topy rec --last-file $PATH_TO_DATA_EXCHANGE_FILE
+    $ ufot rec --last-file $PATH_TO_DATA_EXCHANGE_FILE
 
 from the command line. To get correct results, you may need to append
 options such as `--axis/-a` to set the rotation axis position. 
@@ -38,12 +38,12 @@ options such as `--axis/-a` to set the rotation axis position.
 
 You can get a help for all options by running
 
-    $ topy rec -h
+    $ ufot rec -h
 
 You can also load reconstruction parameters from a configuration file called
-`topy.conf`. You may create a template with
+`ufot.conf`. You may create a template with
 
-    $ topy init
+    $ ufot init
 
 GUI
 ---
@@ -51,4 +51,4 @@ GUI
 Besides scripted reconstructions, one can also run a standalone GUI for both
 reconstruction and quick assessment of the reconstructed data via
 
-    $ topy gui
+    $ ufot gui

@@ -21,6 +21,8 @@ Run
 
 in a prepared virtualenv or as root for system-wide installation.
 
+.. warning:: If your python installation is in a location different from #!/usr/bin/env python please edit the first line of the bin/ufot file to match yours.
+
 Usage
 =====
 

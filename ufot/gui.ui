@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1018</width>
+    <width>1017</width>
     <height>1081</height>
    </rect>
   </property>
@@ -69,7 +69,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_widgetPage1_2">
        <attribute name="title">
@@ -268,7 +268,7 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QComboBox" name="ffc_options_box">
+              <widget class="QComboBox" name="ffc_method_box">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -280,7 +280,12 @@
                </property>
                <item>
                 <property name="text">
-                 <string>default</string>
+                 <string>none</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>average</string>
                 </property>
                </item>
                <item>
@@ -303,7 +308,7 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="option_label">
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -335,13 +340,6 @@
                </item>
               </layout>
              </item>
-             <item row="2" column="0">
-              <widget class="QCheckBox" name="phase_correction_box">
-               <property name="text">
-                <string>phase retrieval</string>
-               </property>
-              </widget>
-             </item>
              <item row="3" column="3">
               <widget class="QDoubleSpinBox" name="pixel_size_box">
                <property name="minimum">
@@ -356,7 +354,7 @@
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="ffc_method_label">
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -364,7 +362,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Normalize</string>
+                <string>Flat-field</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -473,6 +471,30 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item row="2" column="2">
+              <widget class="QComboBox" name="phase_method_box">
+               <item>
+                <property name="text">
+                 <string>none</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>paganin</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="phare_method_label">
+               <property name="text">
+                <string>Phase retrieval</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -987,7 +1009,7 @@
                <item row="1" column="1">
                 <widget class="QCheckBox" name="ffc_box">
                  <property name="text">
-                  <string>Flat-field corrected</string>
+                  <string>Flat-field</string>
                  </property>
                 </widget>
                </item>
@@ -1232,16 +1254,7 @@
              </sizepolicy>
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <property name="spacing">
@@ -1263,8 +1276,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1018</width>
-     <height>22</height>
+     <width>1017</width>
+     <height>27</height>
     </rect>
    </property>
    <property name="sizePolicy">

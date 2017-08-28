@@ -27,11 +27,6 @@ SECTIONS['general'] = {
         'metavar': 'FILE'}}
  
 SECTIONS['flat-correction'] = {
-    'normalization-mode': {
-        'choices': ['average', 'bg', 'roi'],
-        'default': "average",
-        'type': str,
-        'help': "Flat-field correction method"},
     'fix-nan-and-inf': {
         'default': False,
         'help': "Fix nan and inf",
@@ -176,15 +171,20 @@ SECTIONS['gui'] = {
         'default': False,
         'help': "Enable pre-proces correction",
         'action': 'store_true'},
-    'ffc-correction': {
+    'ffc-calibration': {
         'default': False,
         'help': "Enable flats correction",
         'action': 'store_true'},
-    'ffc-options': {
-        'default': 'default',
+    'ffc-method': {
+        'default': 'average',
         'type': str,
-        'help': "Reconstruction method",
-        'choices': ['default', 'background', 'roi']},
+        'help': "Flat-field correction method",
+        'choices': ['default', 'average', 'background', 'roi']},
+    'phase-method': {
+        'default': 'none',
+        'type': str,
+        'help': "Phase retrieval correction method",
+        'choices': ['none', 'paganin']},
     'phase-correction': {
         'default': False,
         'help': "Enable phase retrieval correction",

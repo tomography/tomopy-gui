@@ -183,8 +183,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
         self.ui.ffc_box.clicked.connect(self.on_pre_processing_box_clicked)
-        self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
-        self.ui.ffc_options_box.currentIndexChanged.connect(self.change_ffc_options)
+        #self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
+        self.ui.ffc_method_box.currentIndexChanged.connect(self.change_ffc_method)
+        self.ui.phase_method_box.currentIndexChanged.connect(self.change_phase_method)
         self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         self.ui.method_box.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
@@ -198,7 +199,6 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
-        self.ui.phase_correction_box.clicked.connect(self.on_phase_correction_box_clicked)
 
         self.ui.open_action.triggered.connect(self.on_open_from)
         self.ui.save_action.triggered.connect(self.on_save_as)
@@ -237,12 +237,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
         ##self.ui.theta_step.setText(str((180.0 / np.pi * theta[1] - theta[0]).astype(np.float)))
 
-        if self.params.ffc_correction:
+        if self.params.ffc_calibration:
             first = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
         else:
             first = proj[0,:,:].astype(np.float)
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(last_ind[0]-1, last_ind[0]))
-        if self.params.ffc_correction:
+        if self.params.ffc_calibration:
             last = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
         else:
             last = proj[0,:,:].astype(np.float)
@@ -280,7 +280,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.projection_dock.setWidget(self.projection_viewer)
             self.ui.projection_dock.setVisible(True)
         else:
-            self.projection_viewer.load_files(path, self.params.ffc_correction)
+            self.projection_viewer.load_files(path, self.params.ffc_calibration)
 
     def change_value(self, name, value):
         setattr(self.params, name, value)
@@ -296,22 +296,12 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def on_ffc_box_clicked(self):
         checked = self.ui.ffc_box.isChecked()
-        self.params.ffc_correction = checked
+        self.params.ffc_calibration = checked
 
     def on_pre_processing_box_clicked(self):
         checked = self.ui.pre_processing_box.isChecked()
         self.ui.preprocessing_container.setVisible(checked)
         self.params.pre_processing = checked
-
-    def on_phase_correction_box_clicked(self):
-        checked = self.ui.phase_correction_box.isChecked()
-        self.params.phase_correction = checked 
-        self.ui.pixel_size_label.setVisible(checked)
-        self.ui.pixel_size_box.setVisible(checked)
-        self.ui.distance_label.setVisible(checked)
-        self.ui.distance_box.setVisible(checked)
-        self.ui.energy_label.setVisible(checked)
-        self.ui.energy_box.setVisible(checked)
 
     def on_manual_box_clicked(self):
         checked = self.ui.manual_box.isChecked()
@@ -336,33 +326,47 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.distance_box.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
         self.ui.energy_box.setValue(self.params.energy if self.params.energy else 10.0)
 
-        if self.params.ffc_correction:
+        if self.params.ffc_calibration:
             self.ui.ffc_box.setChecked(True)
         self.on_ffc_box_clicked()
 
         if self.params.pre_processing:
             self.ui.pre_processing_box.setChecked(True)
         self.on_pre_processing_box_clicked()
-
-        if self.params.phase_correction:
-            self.ui.phase_correction_box.setChecked(True)
-        self.on_phase_correction_box_clicked()
-        
+       
         if self.params.manual:
             self.ui.manual_box.setChecked(True)
         self.on_manual_box_clicked()
 
         self.ui.slice_box.setChecked(True)
 
-        if self.params.ffc_options == "default":
-            self.ui.ffc_options_box.setCurrentIndex(0)
-        elif self.params.ffc_options == "background":
-            self.ui.ffc_options_box.setCurrentIndex(1)
-        elif self.params.ffc_options == "roi":
-            self.ui.ffc_options_box.setCurrentIndex(2)
+        if self.params.ffc_method == "none":
+            self.ui.ffc_method_box.setCurrentIndex(0)
+        elif self.params.ffc_method == "average":
+            self.ui.ffc_method_box.setCurrentIndex(1)
+        elif self.params.ffc_method == "background":
+            self.ui.ffc_method_box.setCurrentIndex(2)
+        elif self.params.ffc_method == "roi":
+            self.ui.ffc_method_box.setCurrentIndex(3)
 
-        self.change_ffc_options()
+        if self.params.phase_method == "none":
+            checked = False
+            self.ui.phase_method_box.setCurrentIndex(0)
+        elif self.params.phase_method == "paganin":
+            checked = True
+            self.ui.phase_method_box.setCurrentIndex(1)
+        self.change_ffc_method()
 
+        self.ui.pixel_size_label.setVisible(checked)
+        self.ui.pixel_size_box.setVisible(checked)
+        self.ui.distance_label.setVisible(checked)
+        self.ui.distance_box.setVisible(checked)
+        self.ui.energy_label.setVisible(checked)
+        self.ui.energy_box.setVisible(checked)
+
+
+        self.change_phase_method()
+        
         if self.params.method == "gridrec":
             self.ui.method_box.setCurrentIndex(0)
         elif self.params.method == "fbp":
@@ -409,9 +413,21 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.on_slice_box_clicked()
         self.ui.minus_log_box.setChecked(self.params.minus_log)
 
-    def change_ffc_options(self):
-        self.params.ffc_options = str(self.ui.ffc_options_box.currentText()).lower()
+    def change_ffc_method(self):
+        self.params.ffc_method = str(self.ui.ffc_method_box.currentText()).lower()
 
+    def change_phase_method(self):
+        self.params.phase_method = str(self.ui.phase_method_box.currentText()).lower()
+        is_none = self.params.phase_method == 'none'
+        is_paganin = self.params.phase_method == 'paganin'
+
+        for w in (self.ui.iterations, self.ui.iterations_label):
+            w.setVisible(is_paganin)
+        ##if(is_paganin):
+        #####    self.ui.
+        for w in (self.ui.pixel_size_label, self.ui.pixel_size_box,  self.ui.distance_label, self.ui.distance_box, self.ui.energy_label, self.ui.energy_box):
+            w.setVisible(is_paganin)
+      
     def change_method(self):
         self.params.method = str(self.ui.method_box.currentText()).lower()
         is_gridrec = self.params.method == 'gridrec'

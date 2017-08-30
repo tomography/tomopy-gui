@@ -196,6 +196,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.pixel_size_box.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
         self.ui.distance_box.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
         self.ui.energy_box.valueChanged.connect(lambda value: self.change_value('energy', value))
+        self.ui.alpha_box.valueChanged.connect(lambda value: self.change_value('alpha', value))
 
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
@@ -325,6 +326,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.pixel_size_box.setValue(self.params.pixel_size if self.params.pixel_size else 1.0)
         self.ui.distance_box.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
         self.ui.energy_box.setValue(self.params.energy if self.params.energy else 10.0)
+        self.ui.alpha_box.setValue(self.params.alpha if self.params.alpha else 0.001)
 
         if self.params.ffc_calibration:
             self.ui.ffc_box.setChecked(True)
@@ -363,6 +365,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.distance_box.setVisible(checked)
         self.ui.energy_label.setVisible(checked)
         self.ui.energy_box.setVisible(checked)
+        self.ui.alpha_label.setVisible(checked)
+        self.ui.alpha_box.setVisible(checked)
 
 
         self.change_phase_method()
@@ -373,9 +377,9 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.ui.method_box.setCurrentIndex(1)
         elif self.params.method == "mlem":
             self.ui.method_box.setCurrentIndex(2)
-        elif self.params.method == "sart":
+        elif self.params.method == "sirt":
             self.ui.method_box.setCurrentIndex(3)
-        elif self.params.method == "sartfbp":
+        elif self.params.method == "sirtfbp":
             self.ui.method_box.setCurrentIndex(4)
 
         self.change_method()
@@ -425,7 +429,10 @@ class ApplicationWindow(QtGui.QMainWindow):
             w.setVisible(is_paganin)
         ##if(is_paganin):
         #####    self.ui.
-        for w in (self.ui.pixel_size_label, self.ui.pixel_size_box,  self.ui.distance_label, self.ui.distance_box, self.ui.energy_label, self.ui.energy_box):
+        for w in (self.ui.pixel_size_label, self.ui.pixel_size_box,  
+                  self.ui.distance_label, self.ui.distance_box, 
+                  self.ui.energy_label, self.ui.energy_box, 
+                  self.ui.alpha_label, self.ui.alpha_box):
             w.setVisible(is_paganin)
       
     def change_method(self):
@@ -434,11 +441,11 @@ class ApplicationWindow(QtGui.QMainWindow):
         is_fbp = self.params.method == 'fbp'
         is_mlem = self.params.method == 'mlem'
         is_sirt = self.params.method == 'sirt'
-        is_sartfbp = self.params.method == 'sartfbp'
+        is_sirtfbp = self.params.method == 'sirtfbp'
 
         for w in (self.ui.iterations, self.ui.iterations_label):
-            w.setVisible(is_mlem or is_sirt or is_sartfbp)
-        if (is_mlem or is_sirt or is_sartfbp) :
+            w.setVisible(is_mlem or is_sirt or is_sirtfbp)
+        if (is_mlem or is_sirt or is_sirtfbp) :
             self.ui.iterations.setValue(self.params.num_iterations)
 
         for w in (self.ui.filter_box, self.ui.filter_label):
@@ -471,6 +478,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             print(self.params.propagation_distance)
             print(self.params.energy)
             print(self.params.pixel_size)
+            print(self.params.alpha)
 
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
             print(sections)
@@ -543,8 +551,8 @@ class ApplicationWindow(QtGui.QMainWindow):
 
             is_mlem = self.params.method == 'mlem'
             is_sirt = self.params.method == 'sirt'
-            is_sartfbp = self.params.method == 'sartfbp'
-            if (is_mlem or is_sirt or is_sartfbp) :
+            is_sirtfbp = self.params.method == 'sirtfbp'
+            if (is_mlem or is_sirt or is_sirtfbp) :
                 self.params.num_iterations = self.ui.iterations.value()
             
             data_size = util.get_dx_dims(str(self.ui.input_path_line.text()), 'data')

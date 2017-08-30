@@ -54,7 +54,7 @@ SECTIONS['retrieve-phase'] = {
         'type': float,
         'help': "Pixel size [m]"},
     'alpha': {
-        'default': 0,
+        'default': 0.001,
         'type': float,
         'help': "Regularization parameter"},
     'pad': {
@@ -129,7 +129,7 @@ SECTIONS['reconstruction'] = {
         'default': 'gridrec',
         'type': str,
         'help': "Reconstruction method",
-        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sartfbp']}}
+        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sirtfbp']}}
 
 SECTIONS['ir'] = {
     'num-iterations': {
@@ -143,15 +143,15 @@ SECTIONS['sirt'] = {
         'type': float,
         'help': "Relaxation factor"}}
 
-SECTIONS['sartfbp'] = {
+SECTIONS['sirtfbp'] = {
     'lambda': {
         'default': 0.1,
         'type': float,
-        'help': "lambda (sartfbp)"},
+        'help': "lambda (sirtfbp)"},
     'mu': {
         'default': 0.5,
         'type': float,
-        'help': "mu (sartfbp)"}}
+        'help': "mu (sirtfbp)"}}
 
 SECTIONS['gui'] = {
     'last-dir': {
@@ -198,13 +198,13 @@ SECTIONS['gui'] = {
         'help': "Allow manual entry for proj, dark, white and theta ranges",
         'action': 'store_true'}}
 
-TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'reconstruction', 'ir', 'sirt', 'sartfbp')
+TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'reconstruction', 'ir', 'sirt', 'sirtfbp')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',
               'Filtered backprojection',
               'Direct Fourier Inversion', 'Iterative reconstruction',
-              'SART', 'SBTV', 'GUI settings', 'Estimation', 'Performance')
+              'SIRT', 'SBTV', 'GUI settings', 'Estimation', 'Performance')
 
 def get_config_name():
     """Get the command line --config option."""

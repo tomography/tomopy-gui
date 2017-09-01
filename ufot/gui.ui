@@ -257,32 +257,6 @@
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="0" column="3">
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::MinimumExpanding</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>115</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="4" column="7">
-              <widget class="QDoubleSpinBox" name="energy_box">
-               <property name="maximum">
-                <double>100.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="2">
               <widget class="QComboBox" name="ffc_method_box">
                <property name="enabled">
@@ -316,13 +290,6 @@
                </item>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="QCheckBox" name="minus_log_box">
-               <property name="text">
-                <string>Minus Log</string>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="0">
               <widget class="QLabel" name="option_label">
                <property name="minimumSize">
@@ -342,45 +309,9 @@
              <item row="1" column="7">
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
-                <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
+                <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
                </item>
               </layout>
-             </item>
-             <item row="4" column="3">
-              <widget class="QDoubleSpinBox" name="pixel_size_box">
-               <property name="minimum">
-                <double>0.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>100.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.010000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="6">
-              <spacer name="horizontalSpacer_9">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="ffc_method_label">
@@ -397,72 +328,6 @@
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
-             </item>
-             <item row="4" column="2">
-              <widget class="QLabel" name="pixel_size_label">
-               <property name="text">
-                <string>pixel size (um)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="6">
-              <widget class="QLabel" name="energy_label">
-               <property name="text">
-                <string>energy (keV)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="QCheckBox" name="fix_naninf_box">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>150</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Remove NaN/Inf</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="4">
-              <widget class="QLabel" name="distance_label">
-               <property name="text">
-                <string>distance (mm)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="5">
-              <widget class="QDoubleSpinBox" name="distance_box">
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="4">
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="2" column="2">
               <widget class="QComboBox" name="phase_method_box">
@@ -488,20 +353,128 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="5">
-              <spacer name="horizontalSpacer_8">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+             <item row="1" column="4">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Air</string>
                </property>
-               <property name="sizeHint" stdset="0">
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="5">
+              <widget class="QSpinBox" name="spinBox"/>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>ROI</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QSpinBox" name="spinBox_2"/>
+             </item>
+             <item row="0" column="5">
+              <widget class="QSpinBox" name="spinBox_3"/>
+             </item>
+             <item row="0" column="6">
+              <widget class="QSpinBox" name="spinBox_4"/>
+             </item>
+             <item row="0" column="7">
+              <widget class="QSpinBox" name="spinBox_5"/>
+             </item>
+             <item row="1" column="2">
+              <widget class="QCheckBox" name="minus_log_box">
+               <property name="text">
+                <string>Minus Log</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QCheckBox" name="fix_naninf_box">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
                 <size>
-                 <width>40</width>
-                 <height>20</height>
+                 <width>150</width>
+                 <height>0</height>
                 </size>
                </property>
-              </spacer>
+               <property name="text">
+                <string>Remove NaN/Inf</string>
+               </property>
+              </widget>
              </item>
-             <item row="2" column="7">
+             <item row="1" column="6">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Cut off</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="4">
+              <widget class="QDoubleSpinBox" name="pixel_size_box">
+               <property name="minimum">
+                <double>0.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QLabel" name="pixel_size_label">
+               <property name="text">
+                <string>pixel size (um)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3">
+              <widget class="QLabel" name="distance_label">
+               <property name="text">
+                <string>distance (mm)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="4">
+              <widget class="QDoubleSpinBox" name="distance_box">
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="5">
+              <widget class="QLabel" name="alpha_label">
+               <property name="text">
+                <string>alpha</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="6">
               <widget class="QDoubleSpinBox" name="alpha_box">
                <property name="decimals">
                 <number>3</number>
@@ -517,13 +490,20 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="6">
-              <widget class="QLabel" name="alpha_label">
+             <item row="4" column="5">
+              <widget class="QLabel" name="energy_label">
                <property name="text">
-                <string>alpha</string>
+                <string>energy (keV)</string>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </widget>
+             </item>
+             <item row="4" column="6">
+              <widget class="QDoubleSpinBox" name="energy_box">
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
                </property>
               </widget>
              </item>

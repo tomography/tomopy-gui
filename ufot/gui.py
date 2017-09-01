@@ -128,7 +128,50 @@ def spinning_cursor():
     yield
     QtGui.QApplication.restoreOverrideCursor()
 
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog 0")
+        Dialog.resize(508, 300)
+        self.buttonBox = QtGui.QDialogButtonBox(Dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(150, 250, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.label = QtGui.QLabel(Dialog)
+        self.label.setGeometry(QtCore.QRect(10, 120, 181, 31))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.sl_value = QtGui.QSlider(Dialog)
+        self.sl_value.setGeometry(QtCore.QRect(220, 120, 161, 31))
+        self.sl_value.setOrientation(QtCore.Qt.Horizontal)
+        self.sl_value.setObjectName("sl_value")
+        self.ed_value = QtGui.QLineEdit(Dialog)
+        self.ed_value.setGeometry(QtCore.QRect(400, 120, 41, 31))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.ed_value.setFont(font)
+        self.ed_value.setObjectName("ed_value")
+        self.retranslateUi(Dialog)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        print(
 
+class StartSub2(QtGui.QDialog, Ui_Dialog):
+    def __init__(self,parent=None):
+        QtGui.QDialog.__init__(self,parent)
+        self.setupUi(self)
+        
+    def getValues(self):
+        return 5       
+        
+    def retranslateUi(self, Dialog):
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "ROI selection", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Dialog", "Set example value:", None, QtGui.QApplication.UnicodeUTF8))
+        
+        
 class ApplicationWindow(QtGui.QMainWindow):
     def __init__(self, app, params):
         QtGui.QMainWindow.__init__(self)
@@ -351,13 +394,15 @@ class ApplicationWindow(QtGui.QMainWindow):
         elif self.params.ffc_method == "roi":
             self.ui.ffc_method_box.setCurrentIndex(3)
 
+#        self.change_ffc_method()
+
+
         if self.params.phase_method == "none":
             checked = False
             self.ui.phase_method_box.setCurrentIndex(0)
         elif self.params.phase_method == "paganin":
             checked = True
             self.ui.phase_method_box.setCurrentIndex(1)
-        self.change_ffc_method()
 
         self.ui.pixel_size_label.setVisible(checked)
         self.ui.pixel_size_box.setVisible(checked)
@@ -419,6 +464,12 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def change_ffc_method(self):
         self.params.ffc_method = str(self.ui.ffc_method_box.currentText()).lower()
+        if (self.params.ffc_method == "roi"):
+            dlg = StartSub2()
+            if dlg.exec_():
+                values = dlg.getValues()
+                print(values)
+                # Do stuff with values
 
     def change_phase_method(self):
         self.params.phase_method = str(self.ui.phase_method_box.currentText()).lower()

@@ -157,7 +157,6 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-        print(
 
 class StartSub2(QtGui.QDialog, Ui_Dialog):
     def __init__(self,parent=None):

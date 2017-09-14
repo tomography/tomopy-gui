@@ -1,6 +1,5 @@
-#!/Users/decarlo/anaconda2/bin/python
-
 #!/local/decarlo/conda/anaconda/bin/python
+#!/Users/decarlo/anaconda2/bin/python
 #!/usr/bin/env python
 
 import os

@@ -28,10 +28,10 @@ def set_gui_startup(self, path):
 
         print(data_size)
 
-        self.ui.label_data_size.setText(str(data_size))
-        self.ui.label_data_dark_size.setText(str(data_dark_size))
-        self.ui.label_data_white_size.setText(str(data_white_size))
-        self.ui.label_theta_size.setText(str(theta_size))
+        self.ui.data_size.setText(str(data_size))
+        self.ui.data_dark_size.setText(str(data_dark_size))
+        self.ui.data_white_size.setText(str(data_white_size))
+        self.ui.theta_size.setText(str(theta_size))
 
         self.ui.dx_file_name_line.setText(path)
         self.ui.input_path_line.setText(path)
@@ -53,8 +53,6 @@ def set_gui_startup(self, path):
 
         self.ui.slice_start.setRange(0, self.dsize_bin)
         self.ui.slice_start.setValue(self.dsize_bin/2)
-        self.ui.slice_start.setRange(0, self.dsize_bin)
-        self.ui.slice_start.setValue(self.dsize_bin/2)
 
         self.ui.slice_center.setRange(0, self.dsize)
         self.ui.slice_center.setValue(self.dsize/2)
@@ -70,6 +68,14 @@ def set_gui_startup(self, path):
         self.on_ffc_box_clicked()
         self.on_pre_processing_box_clicked()
         self.ui.calibrate_dx.setVisible(True)
+
+
+        self.ui.calibrate_container.setVisible(True)
+
+        self.ui.dx_data_label.setVisible(True)
+        self.ui.dx_data_white_label.setVisible(True)
+        self.ui.dx_data_dark_label.setVisible(True)
+        self.ui.dx_theta_label.setVisible(True)
         
         self.ui.pre_processing_box.setVisible(True)
 
@@ -198,7 +204,15 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.output_container.setVisible(False)
         self.ui.ffc_box.setVisible(False)
         self.ui.pre_processing_box.setVisible(False)
-        self.ui.calibrate_dx.setVisible(False)
+        #self.ui.calibrate_dx.setVisible(False)
+        self.ui.calibrate_container.setVisible(False)
+
+        self.ui.dx_data_label.setVisible(False)
+        self.ui.dx_data_white_label.setVisible(False)
+        self.ui.dx_data_dark_label.setVisible(False)
+        self.ui.dx_theta_label.setVisible(False)
+
+
 
         self.ui.theta_step.setVisible(False)
         self.ui.theta_step_label.setVisible(False)
@@ -244,6 +258,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
         self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
         self.ui.slice_center.valueChanged.connect(lambda value: self.change_center('slice_center', value))
+
+        self.ui.theta_start.valueChanged.connect(lambda value: self.change_start('theta_start', value))
+        self.ui.theta_end.valueChanged.connect(lambda value: self.change_end('theta_end', value))
 
         self.ui.pixel_size_box.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
         self.ui.distance_box.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
@@ -310,7 +327,8 @@ class ApplicationWindow(QtGui.QMainWindow):
     def axis_slider_changed(self):
         val = self.overlap_viewer.slider.value()
         self.axis_calibration.position = val
-        self.ui.axis_num.setText('{} px'.format(self.axis_calibration.axis))
+#        self.ui.axis_num.setText('{} px'.format(self.axis_calibration.axis))
+        self.ui.axis_num.setText(str(self.axis_calibration.axis))
         self.ui.axis_spin.setValue(self.axis_calibration.axis)
 
     def on_show_slices_clicked(self):
@@ -341,9 +359,13 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def change_start(self, name, value):
         setattr(self.params, name, value)
-        self.ui.slice_end.setMinimum(value+1)
+        if(name == 'slice_start'):
+            self.ui.slice_end.setMinimum(value+1)
+        elif(name == 'theta_start'):
+            self.ui.theta_end.setMinimum(value+0.1)
 
     def change_end(self, name, value):
+        print("end::")
         setattr(self.params, name, value)
 
     def change_center(self, name, value):
@@ -592,14 +614,21 @@ class ApplicationWindow(QtGui.QMainWindow):
 
 #$$$
     def on_manual_box_clicked(self):
+        self.ui.data_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_start_label.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_end_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.data_end_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_end.setVisible(self.ui.manual_box.isChecked())
+
+        self.ui.data_dark_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_dark_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_dark_end.setVisible(self.ui.manual_box.isChecked())
+ 
+        self.ui.data_white_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_white_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_white_end.setVisible(self.ui.manual_box.isChecked())
+ 
+        self.ui.theta_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_end.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_step.setVisible(self.ui.manual_box.isChecked())

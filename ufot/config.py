@@ -82,14 +82,18 @@ SECTIONS['reading'] = {
         'type': util.positive_int,
         'default': 1,
         'help': "End slice to read for reconstruction"},
+    'slice-center': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Slice used to find the center of rotation"},
     'theta_start': {
         'default': 0,
         'type': float,
-        'help': "Angle step between projections in radians"},
+        'help': "Angle of the first projection in radians"},
     'theta_end': {
         'default': np.pi,
         'type': float,
-        'help': "Angle step between projections in radians"},
+        'help': "Angle of the last projection in radians"},
     'last-file': {
         'default': '.',
         'type': str,

@@ -25,7 +25,9 @@ def set_gui_startup(self, path):
         data_dark_size = util.get_dx_dims(str(path), 'data_dark')
         data_white_size = util.get_dx_dims(str(path), 'data_white')
         theta_size = util.get_dx_dims(str(path), 'theta')
+
         print(data_size)
+
         self.ui.label_data_size.setText(str(data_size))
         self.ui.label_data_dark_size.setText(str(data_dark_size))
         self.ui.label_data_white_size.setText(str(data_white_size))
@@ -46,13 +48,16 @@ def set_gui_startup(self, path):
         self.ui.theta_start.setValue(np.rad2deg(theta[0]))
         self.ui.theta_end.setValue(np.rad2deg(theta[-1]))
 
-        self.dsize = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
+        self.dsize = data_size[1]
+        self.dsize_bin = (data_size[1]/np.power(2, float(self.params.binning))).astype(np.int)
 
-        self.ui.slice_start.setRange(0, self.dsize)
-        self.ui.slice_start.setValue(self.dsize/2)
-        self.ui.slice_end.setRange(self.dsize/2+1, self.dsize)
-        self.ui.slice_end.setValue(self.dsize/2+1)
+        self.ui.slice_start.setRange(0, self.dsize_bin)
+        self.ui.slice_start.setValue(self.dsize_bin/2)
+        self.ui.slice_start.setRange(0, self.dsize_bin)
+        self.ui.slice_start.setValue(self.dsize_bin/2)
 
+        self.ui.slice_center.setRange(0, self.dsize)
+        self.ui.slice_center.setValue(self.dsize/2)
 
         self.params.last_file = set_last_file(path, self.ui.dx_file_name_line, self.params.last_file)
         self.params.last_dir = set_last_dir(path, self.ui.input_path_line, self.params.last_dir)  
@@ -194,6 +199,10 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.ffc_box.setVisible(False)
         self.ui.pre_processing_box.setVisible(False)
         self.ui.calibrate_dx.setVisible(False)
+
+        self.ui.theta_step.setVisible(False)
+        self.ui.theta_step_label.setVisible(False)
+
         self.axis_calibration = None
     
         # set up run-time widgets
@@ -213,7 +222,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         # connect signals
         self.overlap_viewer.slider.valueChanged.connect(self.axis_slider_changed)
         self.ui.slice_box.clicked.connect(self.on_slice_box_clicked)
-        self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
+        ###self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         
         self.ui.dx_file_select.clicked.connect(self.dx_file_select_clicked)
         self.ui.dx_file_load.clicked.connect(self.dx_file_load_clicked)
@@ -234,6 +243,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
         self.ui.slice_end.valueChanged.connect(lambda value: self.change_end('slice_end', value))
+        self.ui.slice_center.valueChanged.connect(lambda value: self.change_center('slice_center', value))
 
         self.ui.pixel_size_box.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
         self.ui.distance_box.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
@@ -336,6 +346,8 @@ class ApplicationWindow(QtGui.QMainWindow):
     def change_end(self, name, value):
         setattr(self.params, name, value)
 
+    def change_center(self, name, value):
+        setattr(self.params, name, value)
 
     def on_ffc_box_clicked(self):
         checked = self.ui.ffc_box.isChecked()
@@ -364,12 +376,16 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.theta_end.setValue(self.params.theta_end if self.params.theta_end else np.pi)
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
+        self.ui.slice_center.setValue(self.params.slice_center if self.params.slice_center else 1)
         self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)
         self.ui.pixel_size_box.setValue(self.params.pixel_size if self.params.pixel_size else 1.0)
         self.ui.distance_box.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
         self.ui.energy_box.setValue(self.params.energy if self.params.energy else 10.0)
         self.ui.alpha_box.setValue(self.params.alpha if self.params.alpha else 0.001)
 
+        print("VVVVVVVVV")
+        print(self.params.slice_center)
+        print("VVVVVVVVV")
         if self.params.ffc_calibration:
             self.ui.ffc_box.setChecked(True)
         self.on_ffc_box_clicked()
@@ -574,6 +590,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.params.slice_start = self.ui.slice_start.value()
         self.params.slice_end = self.ui.slice_end.value()
 
+#$$$
     def on_manual_box_clicked(self):
         self.ui.data_start_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_end_label.setVisible(self.ui.manual_box.isChecked())
@@ -585,6 +602,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.data_white_end.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.theta_step.setVisible(self.ui.manual_box.isChecked())
+        self.ui.theta_step_label.setVisible(self.ui.manual_box.isChecked())
+        
         #self.ui.theta_unit_label.setVisible(self.ui.manual_box.isChecked())
 
     def on_reconstruct(self):

@@ -139,6 +139,13 @@ def spinning_cursor():
     yield
     QtGui.QApplication.restoreOverrideCursor()
 
+class RoiDialog(QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self,parent)
+        ui_file = pkg_resources.resource_filename(__name__, 'roi.ui')
+        self.ui = uic.loadUi(ui_file, self)
+        self.ui.show()
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog 0")
@@ -502,7 +509,8 @@ class ApplicationWindow(QtGui.QMainWindow):
     def change_ffc_method(self):
         self.params.ffc_method = str(self.ui.ffc_method_box.currentText()).lower()
         if (self.params.ffc_method == "roi"):
-            dlg = StartSub2()
+            #dlg = StartSub2()
+            dlg = RoiDialog()
             if dlg.exec_():
                 values = dlg.getValues()
                 print(values)

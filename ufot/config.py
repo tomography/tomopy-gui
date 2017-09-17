@@ -86,11 +86,11 @@ SECTIONS['reading'] = {
         'type': util.positive_int,
         'default': 0,
         'help': "Slice used to find the center of rotation"},
-    'theta_start': {
+    'theta-start': {
         'default': 0,
         'type': float,
         'help': "Angle of the first projection in radians"},
-    'theta_end': {
+    'theta-end': {
         'default': np.pi,
         'type': float,
         'help': "Angle of the last projection in radians"},
@@ -180,10 +180,26 @@ SECTIONS['gui'] = {
         'help': "Enable flats correction",
         'action': 'store_true'},
     'ffc-method': {
-        'default': 'average',
+        'default': 'default',
         'type': str,
         'help': "Flat-field correction method",
-        'choices': ['default', 'average', 'background', 'roi']},
+        'choices': ['default', 'background', 'roi']},
+    'roi-tx': {
+        'type': str,
+        'default': '0',
+        'help': "ROI top left x pixel coordinate"},
+    'roi-ty': {
+        'type': str,
+        'default': '0',
+        'help': "ROI top left y pixel coordinate"},
+    'roi-bx': {
+        'type': str,
+        'default': '1',
+        'help': "ROI bottom right x pixel coordinate"},
+    'roi-by': {
+        'type': str,
+        'default': '1',
+        'help': "ROI bottom right y pixel coordinate"},
     'phase-method': {
         'default': 'none',
         'type': str,

@@ -142,53 +142,44 @@ def spinning_cursor():
 class RoiDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self,parent)
+
         ui_file = pkg_resources.resource_filename(__name__, 'roi.ui')
         self.ui = uic.loadUi(ui_file, self)
-        self.ui.show()
+        self.ui.show()    
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog 0")
-        Dialog.resize(508, 300)
-        self.buttonBox = QtGui.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(150, 250, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.label = QtGui.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(10, 120, 181, 31))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.label.setFont(font)
-        self.label.setObjectName("label")
-        self.sl_value = QtGui.QSlider(Dialog)
-        self.sl_value.setGeometry(QtCore.QRect(220, 120, 161, 31))
-        self.sl_value.setOrientation(QtCore.Qt.Horizontal)
-        self.sl_value.setObjectName("sl_value")
-        self.ed_value = QtGui.QLineEdit(Dialog)
-        self.ed_value.setGeometry(QtCore.QRect(400, 120, 41, 31))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.ed_value.setFont(font)
-        self.ed_value.setObjectName("ed_value")
-        self.retranslateUi(Dialog)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.roi_tx = 0
+        self.roi_ty = 0
+        self.roi_bx = 1
+        self.roi_by = 1
 
-class StartSub2(QtGui.QDialog, Ui_Dialog):
-    def __init__(self,parent=None):
-        QtGui.QDialog.__init__(self,parent)
-        self.setupUi(self)
-        
-    def getValues(self):
-        return 5       
-        
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "ROI selection", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Dialog", "Set example value:", None, QtGui.QApplication.UnicodeUTF8))
-        
-        
+        # connect signals
+        self.ui.roi_ok_button.clicked.connect(self.on_roi_save_clicked)
+        self.ui.roi_top_x.valueChanged.connect(self.on_change_tx)
+        #self.ui.roi_bottom_x.valueChanged.connect(self.on_change_bx)
+        self.ui.roi_top_y.valueChanged.connect(self.on_change_ty)
+
+#        self.ui.roi_top_y.valueChanged.connect(lambda value: self.change_value('roi_top_y', value))
+#        self.ui.roi_bottom_x.valueChanged.connect(lambda value: self.change_value('roi_bottom_x', value))
+#        self.ui.roi_bottom_y.valueChanged.connect(lambda value: self.change_value('roi_bottom_y', value))
+#       self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
+
+#$$$$    
+    def on_change_tx(self):
+        value = self.ui.roi_top_x.value()
+        self.ui.roi_bottom_x.setMinimum(value+1)
+
+    def on_change_ty(self):
+        value = self.ui.roi_top_y.value()
+        self.ui.roi_bottom_y.setMinimum(value+1)
+
+    def on_roi_save_clicked(self):
+        self.roi_tx = self.ui.roi_top_x.value()
+        self.roi_ty = self.ui.roi_top_y.value()
+        self.roi_bx = self.ui.roi_bottom_x.value()
+        self.roi_by = self.ui.roi_bottom_y.value()
+        self.close()
+        return self.roi_tx, self.roi_ty, self.roi_bx, self.roi_by
+
 class ApplicationWindow(QtGui.QMainWindow):
     def __init__(self, app, params):
         QtGui.QMainWindow.__init__(self)
@@ -218,8 +209,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.dx_data_white_label.setVisible(False)
         self.ui.dx_data_dark_label.setVisible(False)
         self.ui.dx_theta_label.setVisible(False)
-
-
 
         self.ui.theta_step.setVisible(False)
         self.ui.theta_step_label.setVisible(False)
@@ -401,6 +390,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.input_path_line.setText(self.params.last_file or '.')
         self.ui.dx_file_name_line.setText(self.params.last_file or '.')
         self.ui.output_path_line.setText(self.params.output_dir or '.')
+
+        self.ui.roi_tx.setText(self.params.roi_tx if self.params.roi_tx else str(0))
+        self.ui.roi_ty.setText(self.params.roi_ty if self.params.roi_ty else str(0))
+        self.ui.roi_bx.setText(self.params.roi_bx if self.params.roi_bx else str(1))
+        self.ui.roi_by.setText(self.params.roi_by if self.params.roi_by else str(1))
+
         self.ui.theta_start.setValue(self.params.theta_start if self.params.theta_start else 0.0)
         self.ui.theta_end.setValue(self.params.theta_end if self.params.theta_end else np.pi)
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
@@ -429,16 +424,14 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.ui.slice_box.setChecked(True)
 
-        if self.params.ffc_method == "none":
+        if self.params.ffc_method == "default":
             self.ui.ffc_method_box.setCurrentIndex(0)
-        elif self.params.ffc_method == "average":
-            self.ui.ffc_method_box.setCurrentIndex(1)
         elif self.params.ffc_method == "background":
-            self.ui.ffc_method_box.setCurrentIndex(2)
+            self.ui.ffc_method_box.setCurrentIndex(1)
         elif self.params.ffc_method == "roi":
-            self.ui.ffc_method_box.setCurrentIndex(3)
+            self.ui.ffc_method_box.setCurrentIndex(2)
 
-#        self.change_ffc_method()
+        self.change_ffc_method()
 
 
         if self.params.phase_method == "none":
@@ -459,7 +452,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
 
         self.change_phase_method()
-        
+      
         if self.params.method == "gridrec":
             self.ui.method_box.setCurrentIndex(0)
         elif self.params.method == "fbp":
@@ -505,26 +498,64 @@ class ApplicationWindow(QtGui.QMainWindow):
         
         self.ui.on_slice_box_clicked()
         self.ui.minus_log_box.setChecked(self.params.minus_log)
+#$$$$$$$$
+    def change_roi(self):
+        if (self.params.ffc_method == "roi"):
+            roi_dlg = RoiDialog()
+            roi_dlg.exec_()
+            if roi_dlg.result() == 0:
+                roi_tx, roi_ty, roi_bx, roi_by = roi_dlg.on_roi_save_clicked()
+                print("XXXZZZXXX")
+                print(roi_tx, roi_ty, roi_bx, roi_by)
+                self.ui.roi_tx.setText(str(roi_tx))
+                self.ui.roi_ty.setText(str(roi_ty))
+                self.ui.roi_bx.setText(str(roi_bx))
+                self.ui.roi_by.setText(str(roi_by))
+                print("XXXZZZXXX")
+                self.params.roi_tx = str(self.ui.roi_tx)
+                self.params.roi_ty = str(self.ui.roi_ty)
+                self.params.roi_bx = str(self.ui.roi_bx)
+                self.params.roi_by = str(self.ui.roi_by)
+            # Do stuff with values
 
     def change_ffc_method(self):
         self.params.ffc_method = str(self.ui.ffc_method_box.currentText()).lower()
+        is_default = self.params.ffc_method == 'default'
+        is_average = self.params.ffc_method == 'average'
+        is_roi = self.params.ffc_method == 'roi'
+
+        for w in (self.ui.roi_label, self.ui.roi_tx_label, self.ui.roi_ty_label, 
+                  self.ui.roi_bx_label, self.ui.roi_by_label,  
+                  self.ui.roi_tx, self.ui.roi_ty, 
+                  self.ui.roi_bx, self.ui.roi_by):
+            w.setVisible(is_roi)
+
         if (self.params.ffc_method == "roi"):
-            #dlg = StartSub2()
-            dlg = RoiDialog()
-            if dlg.exec_():
-                values = dlg.getValues()
-                print(values)
-                # Do stuff with values
+            roi_dlg = RoiDialog()
+            roi_dlg.exec_()
+            if roi_dlg.result() == 0:
+                roi_tx, roi_ty, roi_bx, roi_by = roi_dlg.on_roi_save_clicked()
+                print("1: XXXZZZXXX")
+                print(roi_tx, roi_ty, roi_bx, roi_by)
+                self.ui.roi_tx.setText(str(roi_tx))
+                self.ui.roi_ty.setText(str(roi_ty))
+                self.ui.roi_bx.setText(str(roi_bx))
+                self.ui.roi_by.setText(str(roi_by))
+                print("2: XXXZZZXXX")
+                self.params.roi_tx = self.ui.roi_tx.text()
+                self.params.roi_ty = self.ui.roi_ty.text()
+                self.params.roi_bx = self.ui.roi_bx.text()
+                self.params.roi_by = self.ui.roi_by.text()
+                print(self.params.roi_tx, self.params.roi_ty, self.params.roi_bx, self.params.roi_by)
+                print("3: XXXZZZXXX")
+            # Do stuff with values
+
 
     def change_phase_method(self):
         self.params.phase_method = str(self.ui.phase_method_box.currentText()).lower()
         is_none = self.params.phase_method == 'none'
         is_paganin = self.params.phase_method == 'paganin'
 
-        for w in (self.ui.iterations, self.ui.iterations_label):
-            w.setVisible(is_paganin)
-        ##if(is_paganin):
-        #####    self.ui.
         for w in (self.ui.pixel_size_label, self.ui.pixel_size_box,  
                   self.ui.distance_label, self.ui.distance_box, 
                   self.ui.energy_label, self.ui.energy_box, 
@@ -575,7 +606,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             print(self.params.energy)
             print(self.params.pixel_size)
             print(self.params.alpha)
-
+            self.params.ffc_method = 'default'
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
             print(sections)
             config.write('ufot.conf', args=self.params, sections=sections)

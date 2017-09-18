@@ -28,6 +28,9 @@ def get_dx_dims(fname, dataset):
 
     return shape
 
+def theta_step(start, end, proj_number):
+    return (end-start)/proj_number
+
 def positive_int(value):
     """Convert *value* to an integer and make sure it is positive."""
     result = int(value)

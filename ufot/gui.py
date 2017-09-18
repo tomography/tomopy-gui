@@ -26,8 +26,6 @@ def set_gui_startup(self, path):
         data_white_size = util.get_dx_dims(str(path), 'data_white')
         theta_size = util.get_dx_dims(str(path), 'theta')
 
-        print(data_size)
-
         self.ui.data_size.setText(str(data_size))
         self.ui.data_dark_size.setText(str(data_dark_size))
         self.ui.data_white_size.setText(str(data_white_size))
@@ -40,10 +38,10 @@ def set_gui_startup(self, path):
         fname = str(self.ui.dx_file_name_line.text())
 
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
-        # self.ui.theta_step.setText(str((180.0 / np.pi * (theta[1] - theta[0]).astype(np.float)))) #$$$
-        self.ui.theta_step.setText(str(np.rad2deg((theta[1] - theta[0])))) #$$$
+        self.ui.theta_step.setText(str(np.rad2deg((theta[1] - theta[0]))))
         self.params.theta_start = theta[0]
         self.params.theta_end = theta[-1]
+        self.params.projection_number = data_size[0]
 
         self.ui.theta_start.setValue(np.rad2deg(theta[0]))
         self.ui.theta_end.setValue(np.rad2deg(theta[-1]))
@@ -155,15 +153,8 @@ class RoiDialog(QtGui.QDialog):
         # connect signals
         self.ui.roi_ok_button.clicked.connect(self.on_roi_save_clicked)
         self.ui.roi_top_x.valueChanged.connect(self.on_change_tx)
-        #self.ui.roi_bottom_x.valueChanged.connect(self.on_change_bx)
         self.ui.roi_top_y.valueChanged.connect(self.on_change_ty)
 
-#        self.ui.roi_top_y.valueChanged.connect(lambda value: self.change_value('roi_top_y', value))
-#        self.ui.roi_bottom_x.valueChanged.connect(lambda value: self.change_value('roi_bottom_x', value))
-#        self.ui.roi_bottom_y.valueChanged.connect(lambda value: self.change_value('roi_bottom_y', value))
-#       self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
-
-#$$$$    
     def on_change_tx(self):
         value = self.ui.roi_top_x.value()
         self.ui.roi_bottom_x.setMinimum(value+1)
@@ -244,11 +235,13 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
         self.ui.ffc_box.clicked.connect(self.on_pre_processing_box_clicked)
-        #self.ui.ffc_box.clicked.connect(self.on_ffc_box_clicked)
-        self.ui.ffc_method_box.currentIndexChanged.connect(self.change_ffc_method)
-        self.ui.phase_method_box.currentIndexChanged.connect(self.change_phase_method)
+        self.ui.ffc_method.currentIndexChanged.connect(self.change_ffc_method)
+        self.ui.cut_off.valueChanged.connect(lambda value: self.change_value('cut_off', value))
+        self.ui.air.valueChanged.connect(lambda value: self.change_value('air', value))
+
+        self.ui.phase_method.currentIndexChanged.connect(self.change_phase_method)
         self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
-        self.ui.method_box.currentIndexChanged.connect(self.change_method)
+        self.ui.rec_method.currentIndexChanged.connect(self.change_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
         self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
@@ -258,10 +251,10 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.theta_start.valueChanged.connect(lambda value: self.change_start('theta_start', value))
         self.ui.theta_end.valueChanged.connect(lambda value: self.change_end('theta_end', value))
 
-        self.ui.pixel_size_box.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
-        self.ui.distance_box.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
-        self.ui.energy_box.valueChanged.connect(lambda value: self.change_value('energy', value))
-        self.ui.alpha_box.valueChanged.connect(lambda value: self.change_value('alpha', value))
+        self.ui.pixel_size.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
+        self.ui.distance.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
+        self.ui.energy.valueChanged.connect(lambda value: self.change_value('energy', value))
+        self.ui.alpha.valueChanged.connect(lambda value: self.change_value('alpha', value))
 
         self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
@@ -351,17 +344,24 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def change_value(self, name, value):
         setattr(self.params, name, value)
-        print(name, value)
 
     def change_start(self, name, value):
-        setattr(self.params, name, value)
         if(name == 'slice_start'):
             self.ui.slice_end.setMinimum(value+1)
         elif(name == 'theta_start'):
-            self.ui.theta_end.setMinimum(value+0.1)
+            self.ui.theta_end.setMinimum(value+0.01)
+            self.ui.theta_step.setText(str(util.theta_step(value, np.rad2deg(self.params.theta_end), self.params.projection_number)))
+            #$$$$$$
+            value = np.deg2rad(value)
+        setattr(self.params, name, value)
 
     def change_end(self, name, value):
-        print("end::")
+        if(name == 'slice_end'):
+            self.ui.slice_start.setMaximum(value-1)
+        elif(name == 'theta_end'):
+            self.ui.theta_start.setMaximum(value-0.01)
+            self.ui.theta_step.setText(str(util.theta_step(np.rad2deg(self.params.theta_start), value, self.params.projection_number)))
+            value = np.deg2rad(value)
         setattr(self.params, name, value)
 
     def change_center(self, name, value):
@@ -395,21 +395,21 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.roi_ty.setText(self.params.roi_ty if self.params.roi_ty else str(0))
         self.ui.roi_bx.setText(self.params.roi_bx if self.params.roi_bx else str(1))
         self.ui.roi_by.setText(self.params.roi_by if self.params.roi_by else str(1))
+        self.ui.cut_off.setValue(self.params.cut_off if self.params.cut_off else 1.0)
+        self.ui.air.setValue(self.params.air if self.params.air else 1.0)
 
         self.ui.theta_start.setValue(self.params.theta_start if self.params.theta_start else 0.0)
         self.ui.theta_end.setValue(self.params.theta_end if self.params.theta_end else np.pi)
+
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
         self.ui.slice_center.setValue(self.params.slice_center if self.params.slice_center else 1)
         self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)
-        self.ui.pixel_size_box.setValue(self.params.pixel_size if self.params.pixel_size else 1.0)
-        self.ui.distance_box.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
-        self.ui.energy_box.setValue(self.params.energy if self.params.energy else 10.0)
-        self.ui.alpha_box.setValue(self.params.alpha if self.params.alpha else 0.001)
+        self.ui.pixel_size.setValue(self.params.pixel_size if self.params.pixel_size else 1.0)
+        self.ui.distance.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
+        self.ui.energy.setValue(self.params.energy if self.params.energy else 10.0)
+        self.ui.alpha.setValue(self.params.alpha if self.params.alpha else 0.001)
 
-        print("VVVVVVVVV")
-        print(self.params.slice_center)
-        print("VVVVVVVVV")
         if self.params.ffc_calibration:
             self.ui.ffc_box.setChecked(True)
         self.on_ffc_box_clicked()
@@ -425,44 +425,44 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_box.setChecked(True)
 
         if self.params.ffc_method == "default":
-            self.ui.ffc_method_box.setCurrentIndex(0)
+            self.ui.ffc_method.setCurrentIndex(0)
         elif self.params.ffc_method == "background":
-            self.ui.ffc_method_box.setCurrentIndex(1)
+            self.ui.ffc_method.setCurrentIndex(1)
         elif self.params.ffc_method == "roi":
-            self.ui.ffc_method_box.setCurrentIndex(2)
+            self.ui.ffc_method.setCurrentIndex(2)
 
         self.change_ffc_method()
 
 
         if self.params.phase_method == "none":
             checked = False
-            self.ui.phase_method_box.setCurrentIndex(0)
+            self.ui.phase_method.setCurrentIndex(0)
         elif self.params.phase_method == "paganin":
             checked = True
-            self.ui.phase_method_box.setCurrentIndex(1)
+            self.ui.phase_method.setCurrentIndex(1)
 
         self.ui.pixel_size_label.setVisible(checked)
-        self.ui.pixel_size_box.setVisible(checked)
+        self.ui.pixel_size.setVisible(checked)
         self.ui.distance_label.setVisible(checked)
-        self.ui.distance_box.setVisible(checked)
+        self.ui.distance.setVisible(checked)
         self.ui.energy_label.setVisible(checked)
-        self.ui.energy_box.setVisible(checked)
+        self.ui.energy.setVisible(checked)
         self.ui.alpha_label.setVisible(checked)
-        self.ui.alpha_box.setVisible(checked)
+        self.ui.alpha.setVisible(checked)
 
 
         self.change_phase_method()
       
         if self.params.method == "gridrec":
-            self.ui.method_box.setCurrentIndex(0)
+            self.ui.rec_method.setCurrentIndex(0)
         elif self.params.method == "fbp":
-            self.ui.method_box.setCurrentIndex(1)
+            self.ui.rec_method.setCurrentIndex(1)
         elif self.params.method == "mlem":
-            self.ui.method_box.setCurrentIndex(2)
+            self.ui.rec_method.setCurrentIndex(2)
         elif self.params.method == "sirt":
-            self.ui.method_box.setCurrentIndex(3)
+            self.ui.rec_method.setCurrentIndex(3)
         elif self.params.method == "sirtfbp":
-            self.ui.method_box.setCurrentIndex(4)
+            self.ui.rec_method.setCurrentIndex(4)
 
         self.change_method()
 
@@ -498,20 +498,17 @@ class ApplicationWindow(QtGui.QMainWindow):
         
         self.ui.on_slice_box_clicked()
         self.ui.minus_log_box.setChecked(self.params.minus_log)
-#$$$$$$$$
+
     def change_roi(self):
         if (self.params.ffc_method == "roi"):
             roi_dlg = RoiDialog()
             roi_dlg.exec_()
             if roi_dlg.result() == 0:
                 roi_tx, roi_ty, roi_bx, roi_by = roi_dlg.on_roi_save_clicked()
-                print("XXXZZZXXX")
-                print(roi_tx, roi_ty, roi_bx, roi_by)
                 self.ui.roi_tx.setText(str(roi_tx))
                 self.ui.roi_ty.setText(str(roi_ty))
                 self.ui.roi_bx.setText(str(roi_bx))
                 self.ui.roi_by.setText(str(roi_by))
-                print("XXXZZZXXX")
                 self.params.roi_tx = str(self.ui.roi_tx)
                 self.params.roi_ty = str(self.ui.roi_ty)
                 self.params.roi_bx = str(self.ui.roi_bx)
@@ -519,51 +516,50 @@ class ApplicationWindow(QtGui.QMainWindow):
             # Do stuff with values
 
     def change_ffc_method(self):
-        self.params.ffc_method = str(self.ui.ffc_method_box.currentText()).lower()
+        self.params.ffc_method = str(self.ui.ffc_method.currentText()).lower()
         is_default = self.params.ffc_method == 'default'
-        is_average = self.params.ffc_method == 'average'
+        is_background = self.params.ffc_method == 'background'
         is_roi = self.params.ffc_method == 'roi'
 
-        for w in (self.ui.roi_label, self.ui.roi_tx_label, self.ui.roi_ty_label, 
+        for w in (self.ui.roi_tx_label, self.ui.roi_ty_label, 
                   self.ui.roi_bx_label, self.ui.roi_by_label,  
                   self.ui.roi_tx, self.ui.roi_ty, 
                   self.ui.roi_bx, self.ui.roi_by):
             w.setVisible(is_roi)
 
-        if (self.params.ffc_method == "roi"):
+        if is_roi:
             roi_dlg = RoiDialog()
             roi_dlg.exec_()
             if roi_dlg.result() == 0:
                 roi_tx, roi_ty, roi_bx, roi_by = roi_dlg.on_roi_save_clicked()
-                print("1: XXXZZZXXX")
-                print(roi_tx, roi_ty, roi_bx, roi_by)
                 self.ui.roi_tx.setText(str(roi_tx))
                 self.ui.roi_ty.setText(str(roi_ty))
                 self.ui.roi_bx.setText(str(roi_bx))
                 self.ui.roi_by.setText(str(roi_by))
-                print("2: XXXZZZXXX")
-                self.params.roi_tx = self.ui.roi_tx.text()
-                self.params.roi_ty = self.ui.roi_ty.text()
-                self.params.roi_bx = self.ui.roi_bx.text()
-                self.params.roi_by = self.ui.roi_by.text()
-                print(self.params.roi_tx, self.params.roi_ty, self.params.roi_bx, self.params.roi_by)
-                print("3: XXXZZZXXX")
-            # Do stuff with values
+                self.params.roi_tx = roi_tx
+                self.params.roi_ty = roi_ty
+                self.params.roi_bx = roi_bx
+                self.params.roi_by = roi_by
 
+        for w in (self.ui.cut_off_label, self.ui.cut_off):
+            w.setVisible(is_default)
+
+        for w in (self.ui.air_label, self.ui.air):
+            w.setVisible(is_background)
 
     def change_phase_method(self):
-        self.params.phase_method = str(self.ui.phase_method_box.currentText()).lower()
+        self.params.phase_method = str(self.ui.phase_method.currentText()).lower()
         is_none = self.params.phase_method == 'none'
         is_paganin = self.params.phase_method == 'paganin'
 
-        for w in (self.ui.pixel_size_label, self.ui.pixel_size_box,  
-                  self.ui.distance_label, self.ui.distance_box, 
-                  self.ui.energy_label, self.ui.energy_box, 
-                  self.ui.alpha_label, self.ui.alpha_box):
+        for w in (self.ui.pixel_size_label, self.ui.pixel_size,  
+                  self.ui.distance_label, self.ui.distance, 
+                  self.ui.energy_label, self.ui.energy, 
+                  self.ui.alpha_label, self.ui.alpha):
             w.setVisible(is_paganin)
       
     def change_method(self):
-        self.params.method = str(self.ui.method_box.currentText()).lower()
+        self.params.method = str(self.ui.rec_method.currentText()).lower()
         is_gridrec = self.params.method == 'gridrec'
         is_fbp = self.params.method == 'fbp'
         is_mlem = self.params.method == 'mlem'
@@ -602,13 +598,8 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def closeEvent(self, event):
         try:
-            print(self.params.propagation_distance)
-            print(self.params.energy)
-            print(self.params.pixel_size)
-            print(self.params.alpha)
             self.params.ffc_method = 'default'
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
-            print(sections)
             config.write('ufot.conf', args=self.params, sections=sections)
             config.write(str(self.params.last_dir)+'.conf', args=self.params, sections=sections)
         except IOError as e:
@@ -618,10 +609,8 @@ class ApplicationWindow(QtGui.QMainWindow):
     def on_save_as(self):
         if os.path.exists(self.params.last_file):
             config_file = str(self.params.last_file + "/ufot.conf")
-            print (config_file)
         else:
             config_file = str(os.getenv('HOME') + "ufot.conf")
-            print (config_file)
         save_config = QtGui.QFileDialog.getSaveFileName(self, 'Save as ...', config_file)
         if save_config:
             sections = config.TOMO_PARAMS + ('gui',)
@@ -629,7 +618,6 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def on_open_from(self):
         config_file = QtGui.QFileDialog.getOpenFileName(self, 'Open ...', self.params.last_file)
-        print(config_file)
         parser = ArgumentParser()
         params = config.Params(sections=config.TOMO_PARAMS + ('gui',))
         parser = params.add_arguments(parser)
@@ -651,7 +639,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.params.slice_start = self.ui.slice_start.value()
         self.params.slice_end = self.ui.slice_end.value()
 
-#$$$
     def on_manual_box_clicked(self):
         self.ui.data_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_start_label.setVisible(self.ui.manual_box.isChecked())
@@ -673,8 +660,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.theta_step.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_step_label.setVisible(self.ui.manual_box.isChecked())
         
-        #self.ui.theta_unit_label.setVisible(self.ui.manual_box.isChecked())
-
     def on_reconstruct(self):
         with spinning_cursor():
             self.ui.centralWidget.setEnabled(False)

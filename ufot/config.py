@@ -37,10 +37,11 @@ SECTIONS['flat-correction'] = {
         'help': 'Do minus log'}}
 
 SECTIONS['retrieve-phase'] = {
-    'retrieval-method': {
-        'choices': ['default'],
-        'default': 'default',
-        'help': "Phase retrieval method"},
+    'phase-method': {
+        'default': 'none',
+        'type': str,
+        'help': "Phase retrieval correction method",
+        'choices': ['none', 'paganin']},
     'energy': {
         'default': None,
         'type': float,
@@ -74,6 +75,10 @@ SECTIONS['sinos'] = {
         'help': 'Number of sinograms to process per pass'}}
 
 SECTIONS['reading'] = {
+    'projection-number': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Number of projections"},
     'slice-start': {
         'type': util.positive_int,
         'default': 0,
@@ -86,14 +91,6 @@ SECTIONS['reading'] = {
         'type': util.positive_int,
         'default': 0,
         'help': "Slice used to find the center of rotation"},
-    'theta-start': {
-        'default': 0,
-        'type': float,
-        'help': "Angle of the first projection in radians"},
-    'theta-end': {
-        'default': np.pi,
-        'type': float,
-        'help': "Angle of the last projection in radians"},
     'last-file': {
         'default': '.',
         'type': str,
@@ -133,7 +130,15 @@ SECTIONS['reconstruction'] = {
         'default': 'gridrec',
         'type': str,
         'help': "Reconstruction method",
-        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sirtfbp']}}
+        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sirtfbp']},
+    'theta-start': {
+        'default': 0,
+        'type': float,
+        'help': "Angle of the first projection in radians"},
+    'theta-end': {
+        'default': np.pi,
+        'type': float,
+        'help': "Angle of the last projection in radians"}}
 
 SECTIONS['ir'] = {
     'num-iterations': {
@@ -184,6 +189,14 @@ SECTIONS['gui'] = {
         'type': str,
         'help': "Flat-field correction method",
         'choices': ['default', 'background', 'roi']},
+    'cut-off': {
+        'default': 1.0,
+        'type': float,
+        'help': "Permitted maximum vaue for the normalized data"},
+    'air': {
+        'type': util.positive_int,
+        'default': 1,
+        'help': "Number of pixels at each boundary to calculate the scaling factor"},
     'roi-tx': {
         'type': str,
         'default': '0',
@@ -200,15 +213,6 @@ SECTIONS['gui'] = {
         'type': str,
         'default': '1',
         'help': "ROI bottom right y pixel coordinate"},
-    'phase-method': {
-        'default': 'none',
-        'type': str,
-        'help': "Phase retrieval correction method",
-        'choices': ['none', 'paganin']},
-    'phase-correction': {
-        'default': False,
-        'help': "Enable phase retrieval correction",
-        'action': 'store_true'},
     'num-flats': {
         'default': 0,
         'type': int,

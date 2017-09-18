@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>308</width>
+    <height>126</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ROI Selection</string>
+  </property>
+  <widget class="QSpinBox" name="roi_top_x">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>30</y>
+     <width>71</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>4096</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="roi_top_y">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>30</y>
+     <width>71</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>4096</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="roi_bottom_x">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>60</y>
+     <width>71</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>4096</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="roi_bottom_y">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>60</y>
+     <width>71</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>4096</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="roi_top_label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Top Left Corner</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="roi_bottom_label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>131</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Bottom Right Corner</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="roi_x_label">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>10</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="roy_y_label">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>10</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y</string>
+   </property>
+  </widget>
+  <widget class="QDialogButtonBox" name="roi_ok_button">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>90</y>
+     <width>81</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Save</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

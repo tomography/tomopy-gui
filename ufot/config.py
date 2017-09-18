@@ -27,11 +27,6 @@ SECTIONS['general'] = {
         'metavar': 'FILE'}}
  
 SECTIONS['flat-correction'] = {
-    'normalization-mode': {
-        'choices': ['average', 'bg', 'roi'],
-        'default': "average",
-        'type': str,
-        'help': "Flat-field correction method"},
     'fix-nan-and-inf': {
         'default': False,
         'help': "Fix nan and inf",
@@ -42,10 +37,11 @@ SECTIONS['flat-correction'] = {
         'help': 'Do minus log'}}
 
 SECTIONS['retrieve-phase'] = {
-    'retrieval-method': {
-        'choices': ['default'],
-        'default': 'default',
-        'help': "Phase retrieval method"},
+    'phase-method': {
+        'default': 'none',
+        'type': str,
+        'help': "Phase retrieval correction method",
+        'choices': ['none', 'paganin']},
     'energy': {
         'default': None,
         'type': float,
@@ -59,7 +55,7 @@ SECTIONS['retrieve-phase'] = {
         'type': float,
         'help': "Pixel size [m]"},
     'alpha': {
-        'default': 0,
+        'default': 0.001,
         'type': float,
         'help': "Regularization parameter"},
     'pad': {
@@ -79,6 +75,10 @@ SECTIONS['sinos'] = {
         'help': 'Number of sinograms to process per pass'}}
 
 SECTIONS['reading'] = {
+    'projection-number': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Number of projections"},
     'slice-start': {
         'type': util.positive_int,
         'default': 0,
@@ -87,14 +87,10 @@ SECTIONS['reading'] = {
         'type': util.positive_int,
         'default': 1,
         'help': "End slice to read for reconstruction"},
-    'theta_start': {
+    'slice-center': {
+        'type': util.positive_int,
         'default': 0,
-        'type': float,
-        'help': "Angle step between projections in radians"},
-    'theta_end': {
-        'default': np.pi,
-        'type': float,
-        'help': "Angle step between projections in radians"},
+        'help': "Slice used to find the center of rotation"},
     'last-file': {
         'default': '.',
         'type': str,
@@ -134,7 +130,15 @@ SECTIONS['reconstruction'] = {
         'default': 'gridrec',
         'type': str,
         'help': "Reconstruction method",
-        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sartfbp']}}
+        'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sirtfbp']},
+    'theta-start': {
+        'default': 0,
+        'type': float,
+        'help': "Angle of the first projection in radians"},
+    'theta-end': {
+        'default': np.pi,
+        'type': float,
+        'help': "Angle of the last projection in radians"}}
 
 SECTIONS['ir'] = {
     'num-iterations': {
@@ -148,15 +152,15 @@ SECTIONS['sirt'] = {
         'type': float,
         'help': "Relaxation factor"}}
 
-SECTIONS['sartfbp'] = {
+SECTIONS['sirtfbp'] = {
     'lambda': {
         'default': 0.1,
         'type': float,
-        'help': "lambda (sartfbp)"},
+        'help': "lambda (sirtfbp)"},
     'mu': {
         'default': 0.5,
         'type': float,
-        'help': "mu (sartfbp)"}}
+        'help': "mu (sirtfbp)"}}
 
 SECTIONS['gui'] = {
     'last-dir': {
@@ -176,19 +180,39 @@ SECTIONS['gui'] = {
         'default': False,
         'help': "Enable pre-proces correction",
         'action': 'store_true'},
-    'ffc-correction': {
+    'ffc-calibration': {
         'default': False,
         'help': "Enable flats correction",
         'action': 'store_true'},
-    'ffc-options': {
+    'ffc-method': {
         'default': 'default',
         'type': str,
-        'help': "Reconstruction method",
+        'help': "Flat-field correction method",
         'choices': ['default', 'background', 'roi']},
-    'phase-correction': {
-        'default': False,
-        'help': "Enable phase retrieval correction",
-        'action': 'store_true'},
+    'cut-off': {
+        'default': 1.0,
+        'type': float,
+        'help': "Permitted maximum vaue for the normalized data"},
+    'air': {
+        'type': util.positive_int,
+        'default': 1,
+        'help': "Number of pixels at each boundary to calculate the scaling factor"},
+    'roi-tx': {
+        'type': str,
+        'default': '0',
+        'help': "ROI top left x pixel coordinate"},
+    'roi-ty': {
+        'type': str,
+        'default': '0',
+        'help': "ROI top left y pixel coordinate"},
+    'roi-bx': {
+        'type': str,
+        'default': '1',
+        'help': "ROI bottom right x pixel coordinate"},
+    'roi-by': {
+        'type': str,
+        'default': '1',
+        'help': "ROI bottom right y pixel coordinate"},
     'num-flats': {
         'default': 0,
         'type': int,
@@ -198,13 +222,13 @@ SECTIONS['gui'] = {
         'help': "Allow manual entry for proj, dark, white and theta ranges",
         'action': 'store_true'}}
 
-TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'reconstruction', 'ir', 'sirt', 'sartfbp')
+TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'reconstruction', 'ir', 'sirt', 'sirtfbp')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',
               'Filtered backprojection',
               'Direct Fourier Inversion', 'Iterative reconstruction',
-              'SART', 'SBTV', 'GUI settings', 'Estimation', 'Performance')
+              'SIRT', 'SBTV', 'GUI settings', 'Estimation', 'Performance')
 
 def get_config_name():
     """Get the command line --config option."""

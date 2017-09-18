@@ -8,7 +8,7 @@ setup(
     author_email='matthias.vogelgesang@kit.edu',
     url='https://github.com/ufo-kit',
     packages=find_packages(),
-    package_data={'':['gui.ui']},
+    package_data={'':['gui.ui', 'roi.ui']},
     scripts=['bin/ufot'],
     description='tofu for tomopy',
     install_requires=['pyqtgraph'],

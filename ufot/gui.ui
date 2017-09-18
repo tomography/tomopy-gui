@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1018</width>
+    <width>1017</width>
     <height>1081</height>
    </rect>
   </property>
@@ -257,53 +257,58 @@
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="3" column="7">
-              <widget class="QDoubleSpinBox" name="energy_box">
-               <property name="maximum">
-                <double>100.000000000000000</double>
+             <item row="7" column="3">
+              <widget class="QLabel" name="energy_label">
+               <property name="text">
+                <string>energy (keV)</string>
                </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="roi_tx">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLabel" name="pixel_size_label">
+               <property name="text">
+                <string>pixel size (um)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QComboBox" name="ffc_options_box">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <item>
-                <property name="text">
-                 <string>default</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>background</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>roi</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QCheckBox" name="minus_log_box">
+              <widget class="QLabel" name="roi_tx_label">
                <property name="text">
-                <string>Minus Log</string>
+                <string>Top Left X</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_3">
+             <item row="2" column="2">
+              <widget class="QLabel" name="cut_off_label">
+               <property name="text">
+                <string>Cut off</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="option_label">
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -318,10 +323,10 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="7">
+             <item row="2" column="7">
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
-                <spacer name="horizontalSpacer_6">
+                <spacer name="horizontalSpacer_5">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -335,15 +340,91 @@
                </item>
               </layout>
              </item>
-             <item row="2" column="0">
-              <widget class="QCheckBox" name="phase_correction_box">
+             <item row="1" column="0">
+              <widget class="QLabel" name="ffc_method_label">
+               <property name="minimumSize">
+                <size>
+                 <width>64</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="text">
-                <string>phase retrieval</string>
+                <string>Flat-field</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="phase_method_label">
+               <property name="text">
+                <string>Phase retrieval</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QLabel" name="air_label">
+               <property name="text">
+                <string>Air</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="minus_log_box">
+               <property name="text">
+                <string>Minus Log</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="4">
+              <widget class="QDoubleSpinBox" name="alpha">
+               <property name="decimals">
+                <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.001000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.010000000000000</double>
                </property>
               </widget>
              </item>
              <item row="3" column="3">
-              <widget class="QDoubleSpinBox" name="pixel_size_box">
+              <widget class="QSpinBox" name="air">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QDoubleSpinBox" name="cut_off">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="4">
+              <widget class="QDoubleSpinBox" name="energy">
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <widget class="QDoubleSpinBox" name="pixel_size">
                <property name="minimum">
                 <double>0.000000000000000</double>
                </property>
@@ -355,65 +436,123 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="minimumSize">
+             <item row="1" column="5">
+              <widget class="QLabel" name="roi_by">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="roi_ty_label">
+               <property name="text">
+                <string>Top Left Y</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
                 <size>
-                 <width>64</width>
-                 <height>0</height>
+                 <width>20</width>
+                 <height>40</height>
                 </size>
                </property>
+              </spacer>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLabel" name="distance_label">
                <property name="text">
-                <string>Normalize</string>
+                <string>distance (mm)</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="3" column="2">
-              <widget class="QLabel" name="pixel_size_label">
-               <property name="text">
-                <string>pixel size (um)</string>
-               </property>
+             <item row="5" column="1">
+              <widget class="QComboBox" name="phase_method">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Paganin</string>
+                </property>
+               </item>
               </widget>
              </item>
-             <item row="3" column="6">
-              <widget class="QLabel" name="energy_label">
+             <item row="0" column="4">
+              <widget class="QLabel" name="roi_bx_label">
                <property name="text">
-                <string>energy (keV)</string>
+                <string>Bottom Right X</string>
                </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="QCheckBox" name="fix_naninf_box">
-               <property name="text">
-                <string>Remove NaN/Inf</string>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
              <item row="1" column="4">
-              <widget class="QCheckBox" name="interpolate_button">
+              <widget class="QLabel" name="roi_bx">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="ffc_method">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <item>
+                <property name="text">
+                 <string>Default</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Background</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>ROI</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QLabel" name="alpha_label">
                <property name="text">
-                <string>Interpolate</string>
+                <string>alpha</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="3" column="4">
-              <widget class="QLabel" name="distance_label">
-               <property name="text">
-                <string>distance (mm)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="5">
-              <widget class="QDoubleSpinBox" name="distance_box">
+             <item row="7" column="2">
+              <widget class="QDoubleSpinBox" name="distance">
                <property name="maximum">
                 <double>1000.000000000000000</double>
                </property>
@@ -422,57 +561,47 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="3">
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+             <item row="1" column="3">
+              <widget class="QLabel" name="roi_ty">
+               <property name="text">
+                <string/>
                </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
-              </spacer>
+              </widget>
              </item>
-             <item row="0" column="4">
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+             <item row="0" column="5">
+              <widget class="QLabel" name="roi_by_label">
+               <property name="text">
+                <string>Bottom Right Y</string>
                </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
-              </spacer>
+              </widget>
              </item>
-             <item row="1" column="5">
-              <spacer name="horizontalSpacer_8">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="fix_naninf_box">
+               <property name="enabled">
+                <bool>true</bool>
                </property>
-               <property name="sizeHint" stdset="0">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
                 <size>
-                 <width>40</width>
-                 <height>20</height>
+                 <width>150</width>
+                 <height>0</height>
                 </size>
                </property>
-              </spacer>
-             </item>
-             <item row="1" column="6">
-              <spacer name="horizontalSpacer_9">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+               <property name="text">
+                <string>Remove NaN/Inf</string>
                </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
+              </widget>
              </item>
             </layout>
            </item>
@@ -517,7 +646,7 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="method_label">
+              <widget class="QLabel" name="rec_method_label">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -545,7 +674,7 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QComboBox" name="method_box">
+              <widget class="QComboBox" name="rec_method">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -580,7 +709,7 @@
                </item>
                <item>
                 <property name="text">
-                 <string>sartfbp</string>
+                 <string>sirtfbp</string>
                 </property>
                </item>
               </widget>
@@ -931,7 +1060,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="calibrate_input_container">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
               <horstretch>0</horstretch>
@@ -943,7 +1072,37 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_11">
              <item>
-              <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0">
+              <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0,0">
+               <item row="2" column="1">
+                <widget class="QLabel" name="dx_data_dark_label">
+                 <property name="text">
+                  <string>Darks</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="dx_data_label">
+                 <property name="text">
+                  <string>Projections</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="dx_data_white_label">
+                 <property name="text">
+                  <string>Flats</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="2">
                 <widget class="QLineEdit" name="dx_file_name_line"/>
                </item>
@@ -953,7 +1112,7 @@
                   <string>Data Exchange</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
@@ -964,7 +1123,210 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="4">
+               <item row="0" column="3">
+                <widget class="QPushButton" name="dx_file_load">
+                 <property name="text">
+                  <string>Reload</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLabel" name="dx_theta_label">
+                 <property name="text">
+                  <string>Theta</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLabel" name="data_size">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QLabel" name="data_dark_size">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLabel" name="data_white_size">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLabel" name="theta_size">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QCheckBox" name="ffc_box">
+                 <property name="text">
+                  <string>Flat-field Corrected</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="calibrate_container">
+            <property name="title">
+             <string>Center</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_12">
+             <item>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="9" column="2">
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="10" column="2">
+                <widget class="QLabel" name="data_end_label">
+                 <property name="text">
+                  <string>End</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="4">
+                <widget class="QLabel" name="theta_step">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QComboBox" name="center_method">
+                 <item>
+                  <property name="text">
+                   <string>Manual</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Entropy</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Vo</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Correlation</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="data_dark_label">
+                 <property name="text">
+                  <string>Bad Darks</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="theta_label">
+                 <property name="text">
+                  <string>Theta</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="0">
+                <widget class="QLabel" name="data_white_label">
+                 <property name="text">
+                  <string>Bad Flats</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="slice_center">
+                 <property name="maximum">
+                  <number>4096</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="2">
+                <widget class="QSpinBox" name="data_end"/>
+               </item>
+               <item row="12" column="1">
+                <widget class="QSpinBox" name="data_start"/>
+               </item>
+               <item row="13" column="1">
+                <widget class="QSpinBox" name="data_dark_start"/>
+               </item>
+               <item row="8" column="1">
+                <widget class="QLabel" name="axis_num">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QDoubleSpinBox" name="theta_start">
+                 <property name="decimals">
+                  <number>2</number>
+                 </property>
+                 <property name="maximum">
+                  <double>360.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="6">
                 <widget class="QPushButton" name="calibrate_dx">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -977,112 +1339,87 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="3">
-                <widget class="QPushButton" name="dx_file_load">
+               <item row="10" column="0">
+                <widget class="QCheckBox" name="manual_box">
                  <property name="text">
-                  <string>Reload</string>
+                  <string>Manual Override</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QCheckBox" name="ffc_box">
-                 <property name="text">
-                  <string>Flat-field corrected</string>
-                 </property>
-                </widget>
+               <item row="14" column="1">
+                <widget class="QSpinBox" name="data_white_start"/>
                </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_2">
-            <property name="title">
-             <string>Output</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_12">
-             <item>
-              <layout class="QGridLayout" name="gridLayout_6">
-               <item row="5" column="1">
-                <widget class="QLabel" name="label_10">
+               <item row="14" column="2">
+                <widget class="QSpinBox" name="data_white_end"/>
+               </item>
+               <item row="13" column="2">
+                <widget class="QSpinBox" name="data_dark_end"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="slice_center_precision_label">
                  <property name="text">
-                  <string>Theta step (deg)</string>
+                  <string>Precision</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="3">
-                <widget class="QSpinBox" name="data_dark_end"/>
-               </item>
-               <item row="0" column="3">
-                <widget class="QLabel" name="data_end_label">
+               <item row="6" column="0">
+                <widget class="QLabel" name="slice_center_label">
                  <property name="text">
-                  <string>End</string>
+                  <string>Slide for centering</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="2">
+                <widget class="QDoubleSpinBox" name="theta_end">
+                 <property name="decimals">
+                  <number>2</number>
+                 </property>
+                 <property name="maximum">
+                  <double>360.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="4">
+                <widget class="QLabel" name="theta_step_label">
+                 <property name="text">
+                  <string>Theta step (deg)</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="2">
-                <widget class="QSpinBox" name="data_white_start"/>
-               </item>
-               <item row="1" column="4">
-                <widget class="QLabel" name="label_data_size">
+               <item row="10" column="1">
+                <widget class="QLabel" name="data_start_label">
                  <property name="text">
-                  <string/>
+                  <string>Start</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QLabel" name="label_4">
+               <item row="12" column="0">
+                <widget class="QLabel" name="data_label">
                  <property name="text">
-                  <string>Projections</string>
+                  <string>Blocked Projections</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>Darks</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="4">
-                <widget class="QLabel" name="label_data_dark_size">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLabel" name="label_7">
-                 <property name="text">
-                  <string>Flats</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="4">
-                <widget class="QLabel" name="label_data_white_size">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QLabel" name="label_8">
+               <item row="8" column="0">
+                <widget class="QLabel" name="center_label">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -1103,45 +1440,27 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QSpinBox" name="data_start"/>
-               </item>
-               <item row="6" column="4">
-                <widget class="QLabel" name="axis_num">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
+               <item row="5" column="0">
+                <widget class="QLabel" name="center_method_label">
                  <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="3">
-                <widget class="QSpinBox" name="data_white_end"/>
-               </item>
-               <item row="0" column="2">
-                <widget class="QLabel" name="data_start_label">
-                 <property name="text">
-                  <string>Start</string>
+                  <string>Method</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="3">
-                <widget class="QSpinBox" name="data_end"/>
+               <item row="7" column="1">
+                <widget class="QDoubleSpinBox" name="slice_center_precision">
+                 <property name="minimum">
+                  <double>0.010000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
                </item>
-               <item row="0" column="4">
+               <item row="12" column="5">
                 <spacer name="horizontalSpacer_3">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -1153,66 +1472,6 @@
                   </size>
                  </property>
                 </spacer>
-               </item>
-               <item row="2" column="2">
-                <widget class="QSpinBox" name="data_dark_start"/>
-               </item>
-               <item row="0" column="0">
-                <widget class="QCheckBox" name="manual_box">
-                 <property name="text">
-                  <string>Manual</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLabel" name="theta_label">
-                 <property name="text">
-                  <string>Theta</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <widget class="QDoubleSpinBox" name="theta_start">
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="maximum">
-                  <double>360.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>0.100000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="3">
-                <widget class="QDoubleSpinBox" name="theta_end">
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="maximum">
-                  <double>360.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>0.100000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="4">
-                <widget class="QLabel" name="theta_step">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="4">
-                <widget class="QLabel" name="label_theta_size">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
                </item>
               </layout>
              </item>
@@ -1263,7 +1522,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1018</width>
+     <width>1017</width>
      <height>22</height>
     </rect>
    </property>

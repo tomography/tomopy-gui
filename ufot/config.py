@@ -126,10 +126,10 @@ SECTIONS['reconstruction'] = {
         'default': False,
         'help': "Full or one slice only reconstruction",
         'action': 'store_true'},
-    'method': {
+    'reconstruction-algorithm': {
         'default': 'gridrec',
         'type': str,
-        'help': "Reconstruction method",
+        'help': "Reconstruction algorithm",
         'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sirtfbp']},
     'theta-start': {
         'default': 0,

@@ -241,7 +241,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.ui.phase_method.currentIndexChanged.connect(self.change_phase_method)
         self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
-        self.ui.rec_method.currentIndexChanged.connect(self.change_method)
+        self.ui.rec_method.currentIndexChanged.connect(self.change_rec_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
         self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
@@ -453,18 +453,18 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.change_phase_method()
       
-        if self.params.method == "gridrec":
+        if self.params.reconstruction_algorithm == "gridrec":
             self.ui.rec_method.setCurrentIndex(0)
-        elif self.params.method == "fbp":
+        elif self.params.reconstruction_algorithm == "fbp":
             self.ui.rec_method.setCurrentIndex(1)
-        elif self.params.method == "mlem":
+        elif self.params.reconstruction_algorithm == "mlem":
             self.ui.rec_method.setCurrentIndex(2)
-        elif self.params.method == "sirt":
+        elif self.params.reconstruction_algorithm == "sirt":
             self.ui.rec_method.setCurrentIndex(3)
-        elif self.params.method == "sirtfbp":
+        elif self.params.reconstruction_algorithm == "sirtfbp":
             self.ui.rec_method.setCurrentIndex(4)
 
-        self.change_method()
+        self.change_rec_method()
 
         if self.params.binning == "0":
             self.ui.binning_box.setCurrentIndex(0)
@@ -558,13 +558,13 @@ class ApplicationWindow(QtGui.QMainWindow):
                   self.ui.alpha_label, self.ui.alpha):
             w.setVisible(is_paganin)
       
-    def change_method(self):
-        self.params.method = str(self.ui.rec_method.currentText()).lower()
-        is_gridrec = self.params.method == 'gridrec'
-        is_fbp = self.params.method == 'fbp'
-        is_mlem = self.params.method == 'mlem'
-        is_sirt = self.params.method == 'sirt'
-        is_sirtfbp = self.params.method == 'sirtfbp'
+    def change_rec_method(self):
+        self.params.reconstruction_algorithm = str(self.ui.rec_method.currentText()).lower()
+        is_gridrec = self.params.reconstruction_algorithm == 'gridrec'
+        is_fbp = self.params.reconstruction_algorithm == 'fbp'
+        is_mlem = self.params.reconstruction_algorithm == 'mlem'
+        is_sirt = self.params.reconstruction_algorithm == 'sirt'
+        is_sirtfbp = self.params.reconstruction_algorithm == 'sirtfbp'
 
         for w in (self.ui.iterations, self.ui.iterations_label):
             w.setVisible(is_mlem or is_sirt or is_sirtfbp)
@@ -672,9 +672,9 @@ class ApplicationWindow(QtGui.QMainWindow):
                 self.ui.centralWidget.setEnabled(True)
                 return
 
-            is_mlem = self.params.method == 'mlem'
-            is_sirt = self.params.method == 'sirt'
-            is_sirtfbp = self.params.method == 'sirtfbp'
+            is_mlem = self.params.reconstruction_algorithm == 'mlem'
+            is_sirt = self.params.reconstruction_algorithm == 'sirt'
+            is_sirtfbp = self.params.reconstruction_algorithm == 'sirtfbp'
             if (is_mlem or is_sirt or is_sirtfbp) :
                 self.params.num_iterations = self.ui.iterations.value()
             

@@ -27,13 +27,11 @@ SECTIONS['general'] = {
         'metavar': 'FILE'}}
  
 SECTIONS['flat-correction'] = {
-    'fix-nan-and-inf': {
-        'default': False,
-        'help': "Fix nan and inf",
-        'action': 'store_true'},
+    'nan-and-inf': {
+        'default': True,
+        'help': "Fix nan and inf"},
     'minus-log': {
         'default': True,
-        'action': 'store_true',
         'help': 'Do minus log'}}
 
 SECTIONS['retrieve-phase'] = {
@@ -91,12 +89,12 @@ SECTIONS['reading'] = {
         'type': util.positive_int,
         'default': 0,
         'help': "Slice used to find the center of rotation"},
-    'last-file': {
+    'input-file-path': {
         'default': '.',
         'type': str,
         'help': "Name of the last file used",
         'metavar': 'PATH'},
-    'output-dir': {
+    'output-path': {
         'default': '.',
         'type': str,
         'help': "Path to location or format-specified file path "
@@ -114,8 +112,8 @@ SECTIONS['reconstruction'] = {
         'type': str,
         'help': "Reconstruction filter",
         'choices': ['none', 'shepp', 'cosine', 'hann', 'hamming', 'ramlak', 'parzen', 'butterworth']},
-    'axis': {
-        'default': 1024,
+    'center': {
+        'default': 1024.0,
         'type': float,
         'help': "Rotation axis position"},
     'dry-run': {
@@ -126,10 +124,10 @@ SECTIONS['reconstruction'] = {
         'default': False,
         'help': "Full or one slice only reconstruction",
         'action': 'store_true'},
-    'method': {
+    'reconstruction-algorithm': {
         'default': 'gridrec',
         'type': str,
-        'help': "Reconstruction method",
+        'help': "Reconstruction algorithm",
         'choices': ['gridrec', 'fbp', 'mlem', 'sirt', 'sirtfbp']},
     'theta-start': {
         'default': 0,
@@ -163,7 +161,7 @@ SECTIONS['sirtfbp'] = {
         'help': "mu (sirtfbp)"}}
 
 SECTIONS['gui'] = {
-    'last-dir': {
+    'input-path': {
         'default': '.',
         'type': str,
         'help': "Path of the last used directory",

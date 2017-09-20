@@ -33,7 +33,7 @@ def set_gui_startup(self, path):
 
         self.ui.dx_file_name_line.setText(path)
         self.ui.input_path_line.setText(path)
-        self.last_file = os.path.dirname(str(path))
+        self.input_file_path = os.path.dirname(str(path))
 
         fname = str(self.ui.dx_file_name_line.text())
 
@@ -55,16 +55,14 @@ def set_gui_startup(self, path):
         self.ui.slice_center.setRange(0, self.dsize)
         self.ui.slice_center.setValue(self.dsize/2)
 
-        self.params.last_file = set_last_file(path, self.ui.dx_file_name_line, self.params.last_file)
-        self.params.last_dir = set_last_dir(path, self.ui.input_path_line, self.params.last_dir)  
-        self.params.output_dir = set_output_dir(path, self.ui.output_path_line, self.params.output_dir)
+        self.params.input_file_path = set_input_file_path(path, self.ui.dx_file_name_line, self.params.input_file_path)
+        self.params.input_path = set_input_path(path, self.ui.input_path_line, self.params.input_path)  
+        self.params.output_path = set_output_path(path, self.ui.output_path_line, self.params.output_path)
 
         self.ui.preprocessing_container.setVisible(True)
         self.ui.reconstruction_container.setVisible(True)
         self.ui.output_container.setVisible(True)
-        self.ui.ffc_box.setVisible(True)
-        self.on_ffc_box_clicked()
-        self.on_pre_processing_box_clicked()
+        self.ui.ffc_box.setVisible(True)        
         self.ui.calibrate_dx.setVisible(True)
 
 
@@ -77,6 +75,8 @@ def set_gui_startup(self, path):
         
         self.ui.pre_processing_box.setVisible(True)
 
+        self.on_ffc_box_clicked()
+        self.on_pre_processing_box_clicked()
         self.on_show_projection_clicked()
 
 def get_filtered_filenames(path, exts=['.tif', '.tiff']):
@@ -90,27 +90,27 @@ def get_filtered_filenames(path, exts=['.tif', '.tiff']):
 
     return sorted(result)
 
-def set_last_file(path, line_edit, last_file):
+def set_input_file_path(path, line_edit, input_file_path):
     if os.path.exists(str(path)):
         line_edit.clear()
         line_edit.setText(path)
-        last_file = str(line_edit.text())
-    return last_file
+        input_file_path = str(line_edit.text())
+    return input_file_path
 
-def set_last_dir(path, line_edit, last_file):
+def set_input_path(path, line_edit, input_file_path):
     if os.path.exists(str(path)):
         line_edit.clear()
         line_edit.setText(path)
-        last_dir = os.path.dirname(str(path))
-    return last_dir
+        input_path = os.path.dirname(str(path))
+    return input_path
 
-def set_output_dir(path, line_edit, last_file):
-    output_dir = os.path.splitext(str(path))[0] + os.sep
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+def set_output_path(path, line_edit, input_file_path):
+    output_path = os.path.splitext(str(path))[0] + os.sep
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
     line_edit.clear()
-    line_edit.setText(output_dir)
-    return output_dir
+    line_edit.setText(output_path)
+    return output_path
 
 class CallableHandler(logging.Handler):
     def __init__(self, func):
@@ -184,7 +184,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.projection_dock.setVisible(False)
         self.ui.slice_dock.setVisible(False)
         self.ui.volume_dock.setVisible(False)
-        self.ui.axis_view_widget.setVisible(False)
+        self.ui.center_view_widget.setVisible(False)
 
         self.get_values_from_params()
 
@@ -204,7 +204,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.theta_step.setVisible(False)
         self.ui.theta_step_label.setVisible(False)
 
-        self.axis_calibration = None
+        self.center_calibration = None
     
         # set up run-time widgets
         self.projection_viewer = ufot.widgets.ProjectionViewer()
@@ -221,7 +221,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.volume_dock.setWidget(self.volume_viewer)
 
         # connect signals
-        self.overlap_viewer.slider.valueChanged.connect(self.axis_slider_changed)
+        self.overlap_viewer.slider.valueChanged.connect(self.center_slider_changed)
         self.ui.slice_box.clicked.connect(self.on_slice_box_clicked)
         ###self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         
@@ -239,9 +239,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.cut_off.valueChanged.connect(lambda value: self.change_value('cut_off', value))
         self.ui.air.valueChanged.connect(lambda value: self.change_value('air', value))
 
+        self.ui.nan_and_inf_box.clicked.connect(self.on_nan_and_inf_box_clicked)
+        self.ui.minus_log_box.clicked.connect(self.on_minus_log_box_clicked)
+
         self.ui.phase_method.currentIndexChanged.connect(self.change_phase_method)
         self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
-        self.ui.rec_method.currentIndexChanged.connect(self.change_method)
+        self.ui.rec_method.currentIndexChanged.connect(self.change_rec_method)
         self.ui.binning_box.currentIndexChanged.connect(self.change_binning)
         self.ui.filter_box.currentIndexChanged.connect(self.change_filter)
         self.ui.slice_start.valueChanged.connect(lambda value: self.change_start('slice_start', value))
@@ -256,7 +259,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.energy.valueChanged.connect(lambda value: self.change_value('energy', value))
         self.ui.alpha.valueChanged.connect(lambda value: self.change_value('alpha', value))
 
-        self.ui.axis_spin.valueChanged.connect(self.change_axis_spin)
+        self.ui.center_spin.valueChanged.connect(self.change_center_spin)
         self.ui.reco_button.clicked.connect(self.on_reconstruct)
 
         self.ui.open_action.triggered.connect(self.on_open_from)
@@ -277,7 +280,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.text_browser.append(record)
 
     def get_filename(self, caption, type_filter):
-        return QtGui.QFileDialog.getOpenFileName(self, caption, self.last_file, type_filter)
+        return QtGui.QFileDialog.getOpenFileName(self, caption, self.input_file_path, type_filter)
 
     def dx_file_select_clicked(self, checked):
         path = self.get_filename('Open DX file', 'Images (*.hdf *.h5)')
@@ -307,18 +310,18 @@ class ApplicationWindow(QtGui.QMainWindow):
             last = proj[0,:,:].astype(np.float)
 
         with spinning_cursor():
-            self.axis_calibration = ufot.process.AxisCalibration(first, last)
+            self.center_calibration = ufot.process.CenterCalibration(first, last)
 
-        position = self.axis_calibration.position
+        position = self.center_calibration.position
         self.overlap_viewer.set_images(first, last)
         self.overlap_viewer.set_position(position)
 
-    def axis_slider_changed(self):
+    def center_slider_changed(self):
         val = self.overlap_viewer.slider.value()
-        self.axis_calibration.position = val
-#        self.ui.axis_num.setText('{} px'.format(self.axis_calibration.axis))
-        self.ui.axis_num.setText(str(self.axis_calibration.axis))
-        self.ui.axis_spin.setValue(self.axis_calibration.axis)
+        self.center_calibration.position = val
+#        self.ui.center.setText('{} px'.format(self.center_calibration.center))
+        self.ui.center.setText(str(self.center_calibration.center))
+        self.ui.center_spin.setValue(self.center_calibration.center)
 
     def on_show_slices_clicked(self):
         path = str(self.ui.output_path_line.text())
@@ -376,6 +379,14 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.preprocessing_container.setVisible(checked)
         self.params.pre_processing = checked
 
+    def on_nan_and_inf_box_clicked(self):
+        checked = self.ui.nan_and_inf_box.isChecked()
+        self.params.nan_and_inf = checked
+
+    def on_minus_log_box_clicked(self):
+        checked = self.ui.minus_log_box.isChecked()
+        self.params.minus_log = checked
+
     def on_manual_box_clicked(self):
         checked = self.ui.manual_box.isChecked()
 
@@ -384,12 +395,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.params.manual = checked
 
     def get_values_from_params(self):
-        self.last_dir = self.params.last_dir
-        self.last_file = self.params.last_file
+        self.input_path = self.params.input_path
+        self.input_file_path = self.params.input_file_path
 
-        self.ui.input_path_line.setText(self.params.last_file or '.')
-        self.ui.dx_file_name_line.setText(self.params.last_file or '.')
-        self.ui.output_path_line.setText(self.params.output_dir or '.')
+        self.ui.input_path_line.setText(self.params.input_file_path or '.')
+        self.ui.dx_file_name_line.setText(self.params.input_file_path or '.')
+        self.ui.output_path_line.setText(self.params.output_path or '.')
 
         self.ui.roi_tx.setText(self.params.roi_tx if self.params.roi_tx else str(0))
         self.ui.roi_ty.setText(self.params.roi_ty if self.params.roi_ty else str(0))
@@ -404,7 +415,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
         self.ui.slice_center.setValue(self.params.slice_center if self.params.slice_center else 1)
-        self.ui.axis_spin.setValue(self.params.axis if self.params.axis else 0.0)
+        self.ui.center_spin.setValue(self.params.center if self.params.center else 0.0)
         self.ui.pixel_size.setValue(self.params.pixel_size if self.params.pixel_size else 1.0)
         self.ui.distance.setValue(self.params.propagation_distance if self.params.propagation_distance else 1.0)
         self.ui.energy.setValue(self.params.energy if self.params.energy else 10.0)
@@ -421,6 +432,14 @@ class ApplicationWindow(QtGui.QMainWindow):
         if self.params.manual:
             self.ui.manual_box.setChecked(True)
         self.on_manual_box_clicked()
+
+        if self.params.minus_log:
+            self.ui.minus_log_box.setChecked(True)
+        self.on_minus_log_box_clicked()
+
+        if self.params.nan_and_inf:
+            self.ui.nan_and_inf_box.setChecked(True)
+        self.on_nan_and_inf_box_clicked()
 
         self.ui.slice_box.setChecked(True)
 
@@ -453,18 +472,18 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.change_phase_method()
       
-        if self.params.method == "gridrec":
+        if self.params.reconstruction_algorithm == "gridrec":
             self.ui.rec_method.setCurrentIndex(0)
-        elif self.params.method == "fbp":
+        elif self.params.reconstruction_algorithm == "fbp":
             self.ui.rec_method.setCurrentIndex(1)
-        elif self.params.method == "mlem":
+        elif self.params.reconstruction_algorithm == "mlem":
             self.ui.rec_method.setCurrentIndex(2)
-        elif self.params.method == "sirt":
+        elif self.params.reconstruction_algorithm == "sirt":
             self.ui.rec_method.setCurrentIndex(3)
-        elif self.params.method == "sirtfbp":
+        elif self.params.reconstruction_algorithm == "sirtfbp":
             self.ui.rec_method.setCurrentIndex(4)
 
-        self.change_method()
+        self.change_rec_method()
 
         if self.params.binning == "0":
             self.ui.binning_box.setCurrentIndex(0)
@@ -497,7 +516,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.change_filter()
         
         self.ui.on_slice_box_clicked()
+ 
         self.ui.minus_log_box.setChecked(self.params.minus_log)
+        self.ui.nan_and_inf_box.setChecked(self.params.nan_and_inf)
 
     def change_roi(self):
         if (self.params.ffc_method == "roi"):
@@ -558,13 +579,13 @@ class ApplicationWindow(QtGui.QMainWindow):
                   self.ui.alpha_label, self.ui.alpha):
             w.setVisible(is_paganin)
       
-    def change_method(self):
-        self.params.method = str(self.ui.rec_method.currentText()).lower()
-        is_gridrec = self.params.method == 'gridrec'
-        is_fbp = self.params.method == 'fbp'
-        is_mlem = self.params.method == 'mlem'
-        is_sirt = self.params.method == 'sirt'
-        is_sirtfbp = self.params.method == 'sirtfbp'
+    def change_rec_method(self):
+        self.params.reconstruction_algorithm = str(self.ui.rec_method.currentText()).lower()
+        is_gridrec = self.params.reconstruction_algorithm == 'gridrec'
+        is_fbp = self.params.reconstruction_algorithm == 'fbp'
+        is_mlem = self.params.reconstruction_algorithm == 'mlem'
+        is_sirt = self.params.reconstruction_algorithm == 'sirt'
+        is_sirtfbp = self.params.reconstruction_algorithm == 'sirtfbp'
 
         for w in (self.ui.iterations, self.ui.iterations_label):
             w.setVisible(is_mlem or is_sirt or is_sirtfbp)
@@ -590,25 +611,25 @@ class ApplicationWindow(QtGui.QMainWindow):
     def change_filter(self):
         self.params.filter = str(self.ui.filter_box.currentText()).lower()
 
-    def change_axis_spin(self):
-        if self.ui.axis_spin.value() == 0:
-            self.params.axis = None
+    def change_center_spin(self):
+        if self.ui.center_spin.value() == 0:
+            self.params.center = None
         else:
-            self.params.axis = self.ui.axis_spin.value()
+            self.params.center = self.ui.center_spin.value()
 
     def closeEvent(self, event):
         try:
             self.params.ffc_method = 'default'
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
             config.write('ufot.conf', args=self.params, sections=sections)
-            config.write(str(self.params.last_dir)+'.conf', args=self.params, sections=sections)
+            config.write(str(self.params.input_path)+'.conf', args=self.params, sections=sections)
         except IOError as e:
             self.gui_warn(str(e))
             self.on_save_as()
 
     def on_save_as(self):
-        if os.path.exists(self.params.last_file):
-            config_file = str(self.params.last_file + "/ufot.conf")
+        if os.path.exists(self.params.input_file_path):
+            config_file = str(self.params.input_file_path + "/ufot.conf")
         else:
             config_file = str(os.getenv('HOME') + "ufot.conf")
         save_config = QtGui.QFileDialog.getSaveFileName(self, 'Save as ...', config_file)
@@ -617,7 +638,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             config.write(save_config, args=self.params, sections=sections)
 
     def on_open_from(self):
-        config_file = QtGui.QFileDialog.getOpenFileName(self, 'Open ...', self.params.last_file)
+        config_file = QtGui.QFileDialog.getOpenFileName(self, 'Open ...', self.params.input_file_path)
         parser = ArgumentParser()
         params = config.Params(sections=config.TOMO_PARAMS + ('gui',))
         parser = params.add_arguments(parser)
@@ -666,15 +687,15 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.repaint()
             self.app.processEvents()
 
-            input_images = check_filename(str(self.params.last_file))
+            input_images = check_filename(str(self.params.input_file_path))
             if not input_images:
                 self.gui_warn("No data found in {}".format(str(self.ui.input_path_line.text())))
                 self.ui.centralWidget.setEnabled(True)
                 return
 
-            is_mlem = self.params.method == 'mlem'
-            is_sirt = self.params.method == 'sirt'
-            is_sirtfbp = self.params.method == 'sirtfbp'
+            is_mlem = self.params.reconstruction_algorithm == 'mlem'
+            is_sirt = self.params.reconstruction_algorithm == 'sirt'
+            is_sirtfbp = self.params.reconstruction_algorithm == 'sirtfbp'
             if (is_mlem or is_sirt or is_sirtfbp) :
                 self.params.num_iterations = self.ui.iterations.value()
             
@@ -692,5 +713,5 @@ class ApplicationWindow(QtGui.QMainWindow):
 
 def main(params):
     app = QtGui.QApplication(sys.argv)
-    ApplicationWindow(app,params)
+    ApplicationWindow(app, params)
     sys.exit(app.exec_())

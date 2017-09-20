@@ -1,9 +1,9 @@
 import numpy as np
 
 
-def guess_axis(first_projection, last_projection):
+def guess_center(first_projection, last_projection):
     """
-    Compute the tomographic rotation axis based on cross-correlation technique.
+    Compute the tomographic rotation center based on cross-correlation technique.
     *first_projection* is the projection at 0 deg, *last_projection* is the
     projection at 180 deg.
     """
@@ -22,17 +22,17 @@ def guess_axis(first_projection, last_projection):
     return (width / 2.0 + center) / 2
 
 
-class AxisCalibration(object):
+class CenterCalibration(object):
 
     def __init__(self, first, last):
-        self.axis = guess_axis(first, last)
+        self.center = guess_center(first, last)
         self.height, self.width = first.shape
 
     @property
     def position(self):
-        return self.width / 2.0 + self.width - self.axis * 2.0
+        return self.width / 2.0 + self.width - self.center * 2.0
 
     @position.setter
     def position(self, p):
-        self.axis = (self.width / 2.0 + self.width - p) / 2
+        self.center = (self.width / 2.0 + self.width - p) / 2
 

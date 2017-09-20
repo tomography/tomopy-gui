@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1017</width>
-    <height>1082</height>
+    <height>1093</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -69,7 +69,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_widgetPage2_2">
        <attribute name="title">
@@ -314,7 +314,7 @@
                 <widget class="QSpinBox" name="data_dark_start"/>
                </item>
                <item row="8" column="1">
-                <widget class="QLabel" name="axis_num">
+                <widget class="QLabel" name="center">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -502,7 +502,7 @@
         <item>
          <layout class="QVBoxLayout" name="overlap_layout">
           <item>
-           <widget class="QWidget" name="axis_view_widget" native="true">
+           <widget class="QWidget" name="center_view_widget" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -510,16 +510,7 @@
              </sizepolicy>
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <property name="spacing">
@@ -650,7 +641,7 @@
               <number>6</number>
              </property>
              <item row="0" column="3">
-              <widget class="QDoubleSpinBox" name="axis_spin">
+              <widget class="QDoubleSpinBox" name="center_spin">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -672,7 +663,7 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QLabel" name="axis_label">
+              <widget class="QLabel" name="center_spin_label">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -867,13 +858,6 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="2">
-              <widget class="QDoubleSpinBox" name="cut_off">
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
              <item row="7" column="4">
               <widget class="QDoubleSpinBox" name="energy">
                <property name="maximum">
@@ -881,6 +865,13 @@
                </property>
                <property name="singleStep">
                 <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QDoubleSpinBox" name="cut_off">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
@@ -896,6 +887,19 @@
                 <double>0.010000000000000</double>
                </property>
               </widget>
+             </item>
+             <item row="4" column="1">
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item row="1" column="5">
               <widget class="QLabel" name="roi_by">
@@ -916,19 +920,6 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
-             </item>
-             <item row="4" column="1">
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="7" column="1">
               <widget class="QLabel" name="distance_label">
@@ -974,6 +965,16 @@
                </property>
               </widget>
              </item>
+             <item row="7" column="2">
+              <widget class="QDoubleSpinBox" name="distance">
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
              <item row="1" column="1">
               <widget class="QComboBox" name="ffc_method">
                <property name="enabled">
@@ -1012,16 +1013,6 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="2">
-              <widget class="QDoubleSpinBox" name="distance">
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="3">
               <widget class="QLabel" name="roi_ty">
                <property name="text">
@@ -1043,7 +1034,7 @@
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QCheckBox" name="fix_naninf_box">
+              <widget class="QCheckBox" name="nan_and_inf_box">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -1523,7 +1514,7 @@
      <x>0</x>
      <y>0</y>
      <width>1017</width>
-     <height>22</height>
+     <height>28</height>
     </rect>
    </property>
    <property name="sizePolicy">

@@ -242,6 +242,13 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.nan_and_inf_box.clicked.connect(self.on_nan_and_inf_box_clicked)
         self.ui.minus_log_box.clicked.connect(self.on_minus_log_box_clicked)
 
+        self.ui.ring_removal_method.currentIndexChanged.connect(self.change_ring_removal_method)
+
+        self.ui.wavelet_level.valueChanged.connect(lambda value: self.change_value('wavelet_level', value))
+        self.ui.wavelet_sigma.valueChanged.connect(lambda value: self.change_value('wavelet_sigma', value))
+        self.ui.wavelet_filter.currentIndexChanged.connect(self.change_wavelet_filter)
+        self.ui.wavelet_padding.clicked.connect(self.on_wavelet_padding_clicked)
+
         self.ui.phase_method.currentIndexChanged.connect(self.change_phase_method)
         self.ui.manual_box.clicked.connect(self.on_manual_box_clicked)
         self.ui.rec_method.currentIndexChanged.connect(self.change_rec_method)
@@ -394,7 +401,18 @@ class ApplicationWindow(QtGui.QMainWindow):
         #    w.setVisible(not checked)
         self.params.manual = checked
 
+    def rr_set_visible(checked_01, checked_02, checked_03, checked_04):
+        self.ui.rr_01_label.setVisible(checked_01)
+        self.ui.rr_02_label.setVisible(checked_02)
+        self.ui.rr_03_label.setVisible(checked_03)
+        self.ui.rr_01.setVisible(checked_01)
+        self.ui.rr_02.setVisible(checked_02)
+        self.ui.rr_03.setVisible(checked_03)
+        self.ui.rr_pad.setVisible(checked_04)
+
+
     def get_values_from_params(self):
+
         self.input_path = self.params.input_path
         self.input_file_path = self.params.input_file_path
 
@@ -406,6 +424,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.roi_ty.setText(self.params.roi_ty if self.params.roi_ty else str(0))
         self.ui.roi_bx.setText(self.params.roi_bx if self.params.roi_bx else str(1))
         self.ui.roi_by.setText(self.params.roi_by if self.params.roi_by else str(1))
+
         self.ui.cut_off.setValue(self.params.cut_off if self.params.cut_off else 1.0)
         self.ui.air.setValue(self.params.air if self.params.air else 1.0)
 
@@ -421,6 +440,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.energy.setValue(self.params.energy if self.params.energy else 10.0)
         self.ui.alpha.setValue(self.params.alpha if self.params.alpha else 0.001)
 
+        self.ui.wavelet_level.setValue(self.params.wavelet_level if self.params.wavelet_level else None)
+        self.ui.wavelet_sigma.setValue(self.params.wavelet_sigma if self.params.wavelet_sigma else 2)
+
         if self.params.ffc_calibration:
             self.ui.ffc_box.setChecked(True)
         self.on_ffc_box_clicked()
@@ -433,13 +455,18 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.ui.manual_box.setChecked(True)
         self.on_manual_box_clicked()
 
-        if self.params.minus_log:
+        if self.params.minus_log: #$$$$$$$$$$
             self.ui.minus_log_box.setChecked(True)
         self.on_minus_log_box_clicked()
 
         if self.params.nan_and_inf:
             self.ui.nan_and_inf_box.setChecked(True)
         self.on_nan_and_inf_box_clicked()
+
+        if self.params.wavelet_padding:
+            self.ui.wavelet_padding.setChecked(True)
+        self.on_wavelet_padding_clicked()
+
 
         self.ui.slice_box.setChecked(True)
 
@@ -452,6 +479,35 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.change_ffc_method()
 
+
+        if self.params.ring_removal_method == "none":
+            checked = False
+            self.ui.ring_removal_method.setCurrentIndex(0)
+        elif self.params.ring_removal_method == "wavelet":
+            checked = True
+            self.ui.ring_removal_method.setCurrentIndex(1)
+
+        self.change_ring_removal_method()      
+
+        self.ui.wavelet_level_label.setVisible(checked)
+        self.ui.wavelet_filter_label.setVisible(checked)
+        self.ui.wavelet_sigma_label.setVisible(checked)
+        self.ui.wavelet_padding.setVisible(checked)
+        self.ui.wavelet_level.setVisible(checked)
+        self.ui.wavelet_filter.setVisible(checked)
+        self.ui.wavelet_sigma.setVisible(checked)
+
+        self.ui.wavelet_padding.setVisible(checked)
+
+        if self.params.wavelet_filter == "haar":
+            self.ui.wavelet_filter.setCurrentIndex(0)
+        elif self.params.wavelet_filter == "db5":
+            self.ui.wavelet_filter.setCurrentIndex(1)
+        elif self.params.wavelet_filter == "sym5":
+            self.ui.wavelet_filter.setCurrentIndex(2)
+
+        self.change_wavelet_filter()
+ 
 
         if self.params.phase_method == "none":
             checked = False
@@ -468,7 +524,6 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.energy.setVisible(checked)
         self.ui.alpha_label.setVisible(checked)
         self.ui.alpha.setVisible(checked)
-
 
         self.change_phase_method()
       
@@ -568,6 +623,25 @@ class ApplicationWindow(QtGui.QMainWindow):
         for w in (self.ui.air_label, self.ui.air):
             w.setVisible(is_background)
 
+    def change_ring_removal_method(self):
+        self.params.ring_removal_method = str(self.ui.ring_removal_method.currentText()).lower()
+        is_none = self.params.ring_removal_method == 'none'
+        is_wavelet = self.params.ring_removal_method == 'wavelet'
+
+        for w in (self.ui.wavelet_level, self.ui.wavelet_level_label, 
+                  self.ui.wavelet_sigma, self.ui.wavelet_sigma_label,
+                  self.ui.wavelet_filter, self.ui.wavelet_filter_label,
+                  self.ui.wavelet_padding):
+            w.setVisible(is_wavelet)
+        
+        if is_wavelet:
+            self.ui.wavelet_level_label.setText('level')
+            self.ui.wavelet_sigma_label.setText('sigma')
+            self.ui.wavelet_filter_label.setText('filter')
+
+    def change_wavelet_filter(self):
+        self.params.wavelet_filter = str(self.ui.wavelet_filter.currentText()).lower()
+
     def change_phase_method(self):
         self.params.phase_method = str(self.ui.phase_method.currentText()).lower()
         is_none = self.params.phase_method == 'none'
@@ -587,10 +661,10 @@ class ApplicationWindow(QtGui.QMainWindow):
         is_sirt = self.params.reconstruction_algorithm == 'sirt'
         is_sirtfbp = self.params.reconstruction_algorithm == 'sirtfbp'
 
-        for w in (self.ui.iterations, self.ui.iterations_label):
+        for w in (self.ui.iterations, self.ui.iteration_label):
             w.setVisible(is_mlem or is_sirt or is_sirtfbp)
         if (is_mlem or is_sirt or is_sirtfbp) :
-            self.ui.iterations.setValue(self.params.num_iterations)
+            self.ui.iterations.setValue(self.params.iteration_count)
 
         for w in (self.ui.filter_box, self.ui.filter_label):
             w.setVisible(is_gridrec or is_fbp)
@@ -660,6 +734,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.params.slice_start = self.ui.slice_start.value()
         self.params.slice_end = self.ui.slice_end.value()
 
+    def on_wavelet_padding_clicked(self):
+        if self.ui.wavelet_padding.isChecked():
+            self.params.wavelet_padding = True
+        else:
+            self.params.wavelet_padding = False
+
     def on_manual_box_clicked(self):
         self.ui.data_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_start_label.setVisible(self.ui.manual_box.isChecked())
@@ -697,7 +777,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             is_sirt = self.params.reconstruction_algorithm == 'sirt'
             is_sirtfbp = self.params.reconstruction_algorithm == 'sirtfbp'
             if (is_mlem or is_sirt or is_sirtfbp) :
-                self.params.num_iterations = self.ui.iterations.value()
+                self.params.iteration_count = self.ui.iteration_count.value()
             
             data_size = util.get_dx_dims(str(self.ui.input_path_line.text()), 'data')
 

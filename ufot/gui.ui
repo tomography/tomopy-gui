@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1017</width>
-    <height>1093</height>
+    <height>1109</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -709,13 +709,85 @@
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="7" column="3">
+             <item row="8" column="4">
+              <widget class="QDoubleSpinBox" name="energy">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="2">
+              <widget class="QLabel" name="pixel_size_label">
+               <property name="text">
+                <string>pixel size (um)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="4">
               <widget class="QLabel" name="energy_label">
                <property name="text">
                 <string>energy (keV)</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QComboBox" name="wavelet_filter">
+               <item>
+                <property name="text">
+                 <string>haar</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>db5</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>sym5</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="8" column="3">
+              <widget class="QDoubleSpinBox" name="distance">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLabel" name="wavelet_level_label">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <widget class="QSpinBox" name="wavelet_level">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
@@ -729,13 +801,13 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
-              <widget class="QLabel" name="pixel_size_label">
+             <item row="5" column="4">
+              <widget class="QLabel" name="wavelet_sigma_label">
                <property name="text">
-                <string>pixel size (um)</string>
+                <string/>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
@@ -808,7 +880,7 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="8" column="0">
               <widget class="QLabel" name="phase_method_label">
                <property name="text">
                 <string>Phase retrieval</string>
@@ -835,36 +907,10 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="4">
-              <widget class="QDoubleSpinBox" name="alpha">
-               <property name="decimals">
-                <number>3</number>
-               </property>
-               <property name="maximum">
-                <double>1.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.001000000000000</double>
-               </property>
-               <property name="value">
-                <double>0.010000000000000</double>
-               </property>
-              </widget>
-             </item>
              <item row="3" column="3">
               <widget class="QSpinBox" name="air">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="4">
-              <widget class="QDoubleSpinBox" name="energy">
-               <property name="maximum">
-                <double>100.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
                </property>
               </widget>
              </item>
@@ -874,32 +920,6 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
-             </item>
-             <item row="6" column="2">
-              <widget class="QDoubleSpinBox" name="pixel_size">
-               <property name="minimum">
-                <double>0.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>100.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.010000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="1" column="5">
               <widget class="QLabel" name="roi_by">
@@ -921,17 +941,7 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
-              <widget class="QLabel" name="distance_label">
-               <property name="text">
-                <string>distance (mm)</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
+             <item row="8" column="1">
               <widget class="QComboBox" name="phase_method">
                <item>
                 <property name="text">
@@ -965,16 +975,6 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="2">
-              <widget class="QDoubleSpinBox" name="distance">
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="1">
               <widget class="QComboBox" name="ffc_method">
                <property name="enabled">
@@ -1001,16 +1001,6 @@
                  <string>ROI</string>
                 </property>
                </item>
-              </widget>
-             </item>
-             <item row="6" column="3">
-              <widget class="QLabel" name="alpha_label">
-               <property name="text">
-                <string>alpha</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
               </widget>
              </item>
              <item row="1" column="3">
@@ -1054,6 +1044,119 @@
                 <string>Remove NaN/Inf</string>
                </property>
               </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="ring_removal_method_label">
+               <property name="text">
+                <string>Ring Removal</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="3">
+              <widget class="QLabel" name="distance_label">
+               <property name="text">
+                <string>distance (mm)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QLabel" name="wavelet_filter_label">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="5">
+              <widget class="QCheckBox" name="wavelet_padding">
+               <property name="text">
+                <string>Padding</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="5">
+              <widget class="QDoubleSpinBox" name="alpha">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="decimals">
+                <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.001000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="5">
+              <widget class="QLabel" name="alpha_label">
+               <property name="text">
+                <string>alpha</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QComboBox" name="ring_removal_method">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Wavelet</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="8" column="2">
+              <widget class="QDoubleSpinBox" name="pixel_size">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="minimum">
+                <double>0.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="4">
+              <widget class="QDoubleSpinBox" name="wavelet_sigma">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="7">
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>
@@ -1180,7 +1283,7 @@
               </spacer>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="iterations_label">
+              <widget class="QLabel" name="iteration_label">
                <property name="text">
                 <string>Iteration</string>
                </property>

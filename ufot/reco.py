@@ -10,20 +10,7 @@ import dxchange
 LOG = logging.getLogger(__name__)
 
 def tomo(params):
-    print("XXXXXXXXXXXXXXXXXXXXXXXXX")
-    print("slice:", str(params.slice_start))
-    print("slice:", str(params.slice_end))
-    #print("normalize", str(params.ffc_correction))
-    print("binning", str(params.binning))
-    print("rot axis", str(params.axis))
-    print("rec output dir", str(params.output_dir))
-    print("raw data file dir", str(params.last_file))
-    print("rec method", str(params.method))
-    print("rec filter", str(params.filter))
-    print("rec iteration", str(params.num_iterations))
-    print("full reconstruction", str(params.full_reconstruction))
-    print("XXXXXXXXXXXXXXXXXXXXXXXXX")
-    fname = str(params.last_file)
+    fname = str(params.input_file_path)
 
     start = params.slice_start
     end = params.slice_end
@@ -32,24 +19,26 @@ def tomo(params):
     if  (params.full_reconstruction == False) : 
         end = start + 1
     
-    print("START-END", start, end)
+
+#    LOG.info('Slice start/end: %s', end)
 
     proj, flat, dark, theta = dxchange.read_aps_32id(fname, sino=(start, end))
+    LOG.info('Slice start/end: %s, %s', start, end)
     LOG.info('Data successfully imported: %s', fname)
-    print(proj.shape)
-    print(flat.shape)
-    print(dark.shape)
+    LOG.info('Projections: %s', proj.shape)
+    LOG.info('Flat: %s', flat.shape)
+    LOG.info('Dark: %s', dark.shape)
 
     # Flat-field correction of raw data.
     data = tomopy.normalize(proj, flat, dark)
-    print("NORMALIZED")
+    LOG.info('Normalization completed')
 
     data = tomopy.downsample(data, level=int(params.binning))
-    print("BINNING: ", params.binning)
+    LOG.info('Binning: %s', params.binning)
 
     # remove stripes
     data = tomopy.remove_stripe_fw(data,level=5,wname='sym16',sigma=1,pad=True)
-    print("REMOVE STRIPE")    
+    LOG.info('Ring removal completed')    
 
     # phase retrieval
     #data = tomopy.prep.phase.retrieve_phase(data,pixel_size=detector_pixel_size_x,dist=sample_detector_distance,energy=monochromator_energy,alpha=8e-3,pad=True)
@@ -58,22 +47,22 @@ def tomo(params):
     #rot_center = tomopy.find_center(proj, theta, init=290, ind=0, tol=0.5)
 
     # Set rotation center.
-    rot_center = params.axis/np.power(2, float(params.binning))
-    print ("ROT:", rot_center)
+    rot_center = params.center/np.power(2, float(params.binning))
+    LOG.info('Rotation center: %s', rot_center)
 
     data = tomopy.minus_log(data)
-    print("MINUS LOG")
+    LOG.info('Minus log compled')
 
     # Reconstruct object using Gridrec algorithm.
-    if (str(params.method) == 'sirt'):
-        print("SIRT")
-        print("Iteration: ", params.num_iterations)
-        rec = tomopy.recon(data, theta,  center=rot_center, algorithm='sirt', num_iter=params.num_iterations)
+    LOG.info('Reconstruction started using %s', params.reconstruction_algorithm)
+    if (str(params.reconstruction_algorithm) == 'sirt'):
+        LOG.info('Iteration: %s', params.iteration_count)
+        rec = tomopy.recon(data, theta,  center=rot_center, algorithm='sirt', num_iter=params.iteration_count)
     else:
-        print("gridrec")
+        LOG.info('Filter: %s', params.filter)
         rec = tomopy.recon(data, theta, center=rot_center, algorithm='gridrec', filter_name=params.filter)
 
-    print("REC DONE:", rec.shape)
+    LOG.info('Reconstrion of %s completed', rec.shape)
 
     # Mask each reconstructed slice with a circle.
     rec = tomopy.circ_mask(rec, axis=0, ratio=0.95)
@@ -81,9 +70,9 @@ def tomo(params):
     
     if (params.dry_run == False):
          # Write data as stack of TIFs.
-        fname = str(params.output_dir) + 'reco'
+        fname = str(params.output_path) + 'reco'
         dxchange.write_tiff_stack(rec, fname=fname, overwrite=True)
-        print("REC SAVED:", fname)
+        LOG.info('Reconstrcution saved: %s', fname)
 
     if  (params.full_reconstruction == False) :
         return rec

@@ -58,13 +58,37 @@ SECTIONS['retrieve-phase'] = {
         'help': "Regularization parameter"},
     'pad': {
         'default': True,
-        'help': "Extend the size of the projections by padding with zeros."},
+        'help': "If True, extend the size of the sinogram by padding with zeros"},
     'ncore': {
         'default': None,
         'help': "Number of cores that will be assigned to jobs"},
     'nchunk': {
         'default': None,
         'help': "Chunk size for each core"}}
+
+SECTIONS['ring-removal'] = {
+    'ring-removal-method': {
+        'default': 'none',
+        'type': str,
+        'help': "Ring removal method",
+        'choices': ['none', 'wavelet', 'titarenko', 'smoothing']},
+    'wavelet-sigma': {
+        'default': 2,
+        'type': float,
+        'help': "Damping parameter in Fourier space"},
+    'wavelet-filter': {
+        'default': 'db5',
+        'type': str,
+        'help': "Type of the wavelet filter",
+        'choices': ['haar', 'db5', 'sym5']},
+    'wavelet-level': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Level parameter used by the Fourier-Wavelet method"},
+    'wavelet-padding': {
+        'default': False,
+        'help': "If True, extend the size of the sinogram by padding with zeros",
+        'action': 'store_true'}}
 
 SECTIONS['sinos'] = {
     'pass-size': {
@@ -139,7 +163,7 @@ SECTIONS['reconstruction'] = {
         'help': "Angle of the last projection in radians"}}
 
 SECTIONS['ir'] = {
-    'num-iterations': {
+    'iteration-count': {
         'default': 10,
         'type': util.positive_int,
         'help': "Maximum number of iterations"}}
@@ -220,7 +244,7 @@ SECTIONS['gui'] = {
         'help': "Allow manual entry for proj, dark, white and theta ranges",
         'action': 'store_true'}}
 
-TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'reconstruction', 'ir', 'sirt', 'sirtfbp')
+TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'ring-removal', 'reconstruction', 'ir', 'sirt', 'sirtfbp')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',
@@ -254,6 +278,7 @@ def parse_known_args(parser, subparser=False):
         subparser_value = [sys.argv[1]] if subparser else []
         config_values = config_to_list(config_name=get_config_name())
         values = subparser_value + config_values + sys.argv[1:]
+        #print(subparser_value, config_values, values)
     else:
         values = ""
 

@@ -191,7 +191,7 @@
                 </widget>
                </item>
                <item row="5" column="1">
-                <widget class="QCheckBox" name="ffc_box">
+                <widget class="QCheckBox" name="flat_field">
                  <property name="text">
                   <string>Flat-field Corrected</string>
                  </property>
@@ -709,7 +709,37 @@
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="8" column="4">
+             <item row="0" column="2">
+              <widget class="QLabel" name="cut_off_label">
+               <property name="text">
+                <string>Cut off</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="roi_tx_label">
+               <property name="text">
+                <string>Top Left X</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLabel" name="roi_tx">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="4">
               <widget class="QDoubleSpinBox" name="energy">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -722,7 +752,7 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="2">
+             <item row="8" column="2">
               <widget class="QLabel" name="pixel_size_label">
                <property name="text">
                 <string>pixel size (um)</string>
@@ -732,7 +762,7 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="4">
+             <item row="8" column="4">
               <widget class="QLabel" name="energy_label">
                <property name="text">
                 <string>energy (keV)</string>
@@ -742,7 +772,7 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="3">
+             <item row="7" column="3">
               <widget class="QComboBox" name="wavelet_filter">
                <item>
                 <property name="text">
@@ -761,7 +791,7 @@
                </item>
               </widget>
              </item>
-             <item row="8" column="3">
+             <item row="9" column="3">
               <widget class="QDoubleSpinBox" name="distance">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -774,7 +804,7 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="2">
+             <item row="6" column="2">
               <widget class="QLabel" name="wavelet_level_label">
                <property name="text">
                 <string/>
@@ -784,47 +814,17 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="2">
+             <item row="7" column="2">
               <widget class="QSpinBox" name="wavelet_level">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="roi_tx">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="4">
+             <item row="6" column="4">
               <widget class="QLabel" name="wavelet_sigma_label">
                <property name="text">
                 <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="roi_tx_label">
-               <property name="text">
-                <string>Top Left X</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QLabel" name="cut_off_label">
-               <property name="text">
-                <string>Cut off</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -865,7 +865,7 @@
               </layout>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="ffc_method_label">
+              <widget class="QLabel" name="flat_field_method_label">
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -880,23 +880,13 @@
                </property>
               </widget>
              </item>
-             <item row="8" column="0">
+             <item row="9" column="0">
               <widget class="QLabel" name="phase_method_label">
                <property name="text">
                 <string>Phase retrieval</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="3">
-              <widget class="QLabel" name="air_label">
-               <property name="text">
-                <string>Air</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
@@ -907,41 +897,7 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="3">
-              <widget class="QSpinBox" name="air">
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="QDoubleSpinBox" name="cut_off">
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="5">
-              <widget class="QLabel" name="roi_by">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="QLabel" name="roi_ty_label">
-               <property name="text">
-                <string>Top Left Y</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="1">
+             <item row="9" column="1">
               <widget class="QComboBox" name="phase_method">
                <item>
                 <property name="text">
@@ -955,28 +911,8 @@
                </item>
               </widget>
              </item>
-             <item row="0" column="4">
-              <widget class="QLabel" name="roi_bx_label">
-               <property name="text">
-                <string>Bottom Right X</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="4">
-              <widget class="QLabel" name="roi_bx">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="1">
-              <widget class="QComboBox" name="ffc_method">
+              <widget class="QComboBox" name="flat_field_method">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -1003,26 +939,6 @@
                </item>
               </widget>
              </item>
-             <item row="1" column="3">
-              <widget class="QLabel" name="roi_ty">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="5">
-              <widget class="QLabel" name="roi_by_label">
-               <property name="text">
-                <string>Bottom Right Y</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
              <item row="3" column="1">
               <widget class="QCheckBox" name="nan_and_inf_box">
                <property name="enabled">
@@ -1045,14 +961,14 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
+             <item row="7" column="0">
               <widget class="QLabel" name="ring_removal_method_label">
                <property name="text">
                 <string>Ring Removal</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="3">
+             <item row="8" column="3">
               <widget class="QLabel" name="distance_label">
                <property name="text">
                 <string>distance (mm)</string>
@@ -1062,24 +978,7 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="3">
-              <widget class="QLabel" name="wavelet_filter_label">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="5">
-              <widget class="QCheckBox" name="wavelet_padding">
-               <property name="text">
-                <string>Padding</string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="5">
+             <item row="9" column="5">
               <widget class="QDoubleSpinBox" name="alpha">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -1099,30 +998,23 @@
               </widget>
              </item>
              <item row="7" column="5">
-              <widget class="QLabel" name="alpha_label">
+              <widget class="QCheckBox" name="wavelet_padding">
                <property name="text">
-                <string>alpha</string>
+                <string>Padding</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QLabel" name="wavelet_filter_label">
+               <property name="text">
+                <string/>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
-              <widget class="QComboBox" name="ring_removal_method">
-               <item>
-                <property name="text">
-                 <string>None</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Wavelet</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="8" column="2">
+             <item row="9" column="2">
               <widget class="QDoubleSpinBox" name="pixel_size">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -1138,15 +1030,136 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="4">
+             <item row="8" column="5">
+              <widget class="QLabel" name="alpha_label">
+               <property name="text">
+                <string>alpha</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="4">
               <widget class="QDoubleSpinBox" name="wavelet_sigma">
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
-             <item row="4" column="7">
+             <item row="5" column="7">
               <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="7" column="1">
+              <widget class="QComboBox" name="ring_removal_method">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Wavelet</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QDoubleSpinBox" name="cut_off">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="air_label">
+               <property name="text">
+                <string>Air</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QSpinBox" name="air">
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QLabel" name="roi_ty_label">
+               <property name="text">
+                <string>Top Left Y</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QLabel" name="roi_ty">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="4">
+              <widget class="QLabel" name="roi_bx_label">
+               <property name="text">
+                <string>Bottom Right X</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="5">
+              <widget class="QLabel" name="roi_by_label">
+               <property name="text">
+                <string>Bottom Right Y</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="4">
+              <widget class="QLabel" name="roi_bx">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="5">
+              <widget class="QLabel" name="roi_by">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="7">
+              <spacer name="verticalSpacer_3">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>

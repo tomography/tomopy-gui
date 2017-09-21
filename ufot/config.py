@@ -25,8 +25,99 @@ SECTIONS['general'] = {
         'type': str,
         'help': "File name of optional log",
         'metavar': 'FILE'}}
+
+SECTIONS['gui'] = {
+    'show-2d': {
+        'default': False,
+        'help': "Show 2D slices with pyqtgraph",
+        'action': 'store_true'},
+    'show-3d': {
+        'default': False,
+        'help': "Show 3D slices with pyqtgraph",
+        'action': 'store_true'},
+    'pre-processing': {
+        'default': False,
+        'help': "Enable pre-proces correction",
+        'action': 'store_true'}}
  
-SECTIONS['flat-correction'] = {
+SECTIONS['file-io'] = {
+    'projection-number': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Number of projections"},
+    'slice-start': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Start slice to read for reconstruction"},
+    'slice-end': {
+        'type': util.positive_int,
+        'default': 1,
+        'help': "End slice to read for reconstruction"},
+    'slice-center': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Slice used to find the center of rotation"},
+    'input-path': {
+        'default': '.',
+        'type': str,
+        'help': "Path of the last used directory",
+        'metavar': 'PATH'},
+    'input-file-path': {
+        'default': '.',
+        'type': str,
+        'help': "Name of the last file used",
+        'metavar': 'PATH'},
+    'output-path': {
+        'default': '.',
+        'type': str,
+        'help': "Path to location or format-specified file path "
+                "for storing reconstructed slices",
+        'metavar': 'PATH'}}
+
+SECTIONS['flat-field-correction'] = {
+    'flat-field': {
+        'default': False,
+        'help': "Enable flat field correction",
+        'action': 'store_true'},
+    'flat-field-method': {
+        'default': 'default',
+        'type': str,
+        'help': "Flat field correction method",
+        'choices': ['default', 'background', 'roi']},
+    'cut-off': {
+        'default': 1.0,
+        'type': float,
+        'help': "Permitted maximum vaue for the normalized data"},
+    'air': {
+        'type': util.positive_int,
+        'default': 1,
+        'help': "Number of pixels at each boundary to calculate the scaling factor"},
+    'roi-tx': {
+        'type': str,
+        'default': '0',
+        'help': "ROI top left x pixel coordinate"},
+    'roi-ty': {
+        'type': str,
+        'default': '0',
+        'help': "ROI top left y pixel coordinate"},
+    'roi-bx': {
+        'type': str,
+        'default': '1',
+        'help': "ROI bottom right x pixel coordinate"},
+    'roi-by': {
+        'type': str,
+        'default': '1',
+        'help': "ROI bottom right y pixel coordinate"},
+    'num-flats': {
+        'default': 0,
+        'type': int,
+        'help': "Number of flats for ffc correction."},
+    'manual': {
+        'default': False,
+        'help': "Allow manual entry for proj, dark, white and theta ranges",
+        'action': 'store_true'}}
+
+SECTIONS['normalization'] = {
     'nan-and-inf': {
         'default': True,
         'help': "Fix nan and inf"},
@@ -34,7 +125,7 @@ SECTIONS['flat-correction'] = {
         'default': True,
         'help': 'Do minus log'}}
 
-SECTIONS['retrieve-phase'] = {
+SECTIONS['phase-retrieval'] = {
     'phase-method': {
         'default': 'none',
         'type': str,
@@ -58,13 +149,7 @@ SECTIONS['retrieve-phase'] = {
         'help': "Regularization parameter"},
     'pad': {
         'default': True,
-        'help': "If True, extend the size of the sinogram by padding with zeros"},
-    'ncore': {
-        'default': None,
-        'help': "Number of cores that will be assigned to jobs"},
-    'nchunk': {
-        'default': None,
-        'help': "Chunk size for each core"}}
+        'help': "If True, extend the size of the sinogram by padding with zeros"}}
 
 SECTIONS['ring-removal'] = {
     'ring-removal-method': {
@@ -89,41 +174,6 @@ SECTIONS['ring-removal'] = {
         'default': False,
         'help': "If True, extend the size of the sinogram by padding with zeros",
         'action': 'store_true'}}
-
-SECTIONS['sinos'] = {
-    'pass-size': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': 'Number of sinograms to process per pass'}}
-
-SECTIONS['reading'] = {
-    'projection-number': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': "Number of projections"},
-    'slice-start': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': "Start slice to read for reconstruction"},
-    'slice-end': {
-        'type': util.positive_int,
-        'default': 1,
-        'help': "End slice to read for reconstruction"},
-    'slice-center': {
-        'type': util.positive_int,
-        'default': 0,
-        'help': "Slice used to find the center of rotation"},
-    'input-file-path': {
-        'default': '.',
-        'type': str,
-        'help': "Name of the last file used",
-        'metavar': 'PATH'},
-    'output-path': {
-        'default': '.',
-        'type': str,
-        'help': "Path to location or format-specified file path "
-                "for storing reconstructed slices",
-        'metavar': 'PATH'}}
 
 SECTIONS['reconstruction'] = {
     'binning': {
@@ -184,67 +234,19 @@ SECTIONS['sirtfbp'] = {
         'type': float,
         'help': "mu (sirtfbp)"}}
 
-SECTIONS['gui'] = {
-    'input-path': {
-        'default': '.',
-        'type': str,
-        'help': "Path of the last used directory",
-        'metavar': 'PATH'},
-    'show-2d': {
-        'default': False,
-        'help': "Show 2D slices with pyqtgraph",
-        'action': 'store_true'},
-    'show-3d': {
-        'default': False,
-        'help': "Show 3D slices with pyqtgraph",
-        'action': 'store_true'},
-    'pre-processing': {
-        'default': False,
-        'help': "Enable pre-proces correction",
-        'action': 'store_true'},
-    'ffc-calibration': {
-        'default': False,
-        'help': "Enable flats correction",
-        'action': 'store_true'},
-    'ffc-method': {
-        'default': 'default',
-        'type': str,
-        'help': "Flat-field correction method",
-        'choices': ['default', 'background', 'roi']},
-    'cut-off': {
-        'default': 1.0,
-        'type': float,
-        'help': "Permitted maximum vaue for the normalized data"},
-    'air': {
+SECTIONS['processing'] = {
+    'sino-pass': {
         'type': util.positive_int,
-        'default': 1,
-        'help': "Number of pixels at each boundary to calculate the scaling factor"},
-    'roi-tx': {
-        'type': str,
-        'default': '0',
-        'help': "ROI top left x pixel coordinate"},
-    'roi-ty': {
-        'type': str,
-        'default': '0',
-        'help': "ROI top left y pixel coordinate"},
-    'roi-bx': {
-        'type': str,
-        'default': '1',
-        'help': "ROI bottom right x pixel coordinate"},
-    'roi-by': {
-        'type': str,
-        'default': '1',
-        'help': "ROI bottom right y pixel coordinate"},
-    'num-flats': {
-        'default': 0,
-        'type': int,
-        'help': "Number of flats for ffc correction."},
-    'manual': {
-        'default': False,
-        'help': "Allow manual entry for proj, dark, white and theta ranges",
-        'action': 'store_true'}}
+        'default': 16,
+        'help': 'Number of sinograms to process per pass'},
+    'ncore': {
+        'default': None,
+        'help': "Number of cores that will be assigned to jobs"},
+    'nchunk': {
+        'default': None,
+        'help': "Chunk size for each core"}}
 
-TOMO_PARAMS = ('reading', 'flat-correction', 'retrieve-phase', 'ring-removal', 'reconstruction', 'ir', 'sirt', 'sirtfbp')
+TOMO_PARAMS = ('file-io', 'flat-field-correction', 'normalization', 'phase-retrieval', 'processing', 'ring-removal', 'reconstruction', 'ir', 'sirt', 'sirtfbp')
 
 NICE_NAMES = ('General', 'Input', 'Flat field correction', 'Sinogram generation',
               'General reconstruction', 'Tomographic reconstruction',

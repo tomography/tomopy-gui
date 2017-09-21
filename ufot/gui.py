@@ -62,7 +62,7 @@ def set_gui_startup(self, path):
         self.ui.preprocessing_container.setVisible(True)
         self.ui.reconstruction_container.setVisible(True)
         self.ui.output_container.setVisible(True)
-        self.ui.ffc_box.setVisible(True)        
+        self.ui.flat_field.setVisible(True)        
         self.ui.calibrate_dx.setVisible(True)
 
 
@@ -75,7 +75,7 @@ def set_gui_startup(self, path):
         
         self.ui.pre_processing_box.setVisible(True)
 
-        self.on_ffc_box_clicked()
+        self.on_flat_field_clicked()
         self.on_pre_processing_box_clicked()
         self.on_show_projection_clicked()
 
@@ -191,7 +191,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.preprocessing_container.setVisible(False)
         self.ui.reconstruction_container.setVisible(False)
         self.ui.output_container.setVisible(False)
-        self.ui.ffc_box.setVisible(False)
+        self.ui.flat_field.setVisible(False)
         self.ui.pre_processing_box.setVisible(False)
         #self.ui.calibrate_dx.setVisible(False)
         self.ui.calibrate_container.setVisible(False)
@@ -234,8 +234,8 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.calibrate_dx.clicked.connect(self.on_calibrate_dx)
         self.ui.show_slices_button.clicked.connect(self.on_show_slices_clicked)
         self.ui.show_projection_button.clicked.connect(self.on_show_projection_clicked)
-        self.ui.ffc_box.clicked.connect(self.on_pre_processing_box_clicked)
-        self.ui.ffc_method.currentIndexChanged.connect(self.change_ffc_method)
+        self.ui.flat_field.clicked.connect(self.on_pre_processing_box_clicked)
+        self.ui.flat_field_method.currentIndexChanged.connect(self.change_flat_field_method)
         self.ui.cut_off.valueChanged.connect(lambda value: self.change_value('cut_off', value))
         self.ui.air.valueChanged.connect(lambda value: self.change_value('air', value))
 
@@ -306,12 +306,12 @@ class ApplicationWindow(QtGui.QMainWindow):
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(0, 1))
         ##self.ui.theta_step.setText(str((180.0 / np.pi * theta[1] - theta[0]).astype(np.float)))
 
-        if self.params.ffc_calibration:
+        if self.params.flat_field:
             first = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
         else:
             first = proj[0,:,:].astype(np.float)
         proj, flat, dark, theta = dx.read_aps_32id(fname, proj=(last_ind[0]-1, last_ind[0]))
-        if self.params.ffc_calibration:
+        if self.params.flat_field:
             last = proj[0,:,:].astype(np.float)/flat[0,:,:].astype(np.float)
         else:
             last = proj[0,:,:].astype(np.float)
@@ -350,7 +350,7 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.projection_dock.setWidget(self.projection_viewer)
             self.ui.projection_dock.setVisible(True)
         else:
-            self.projection_viewer.load_files(path, self.params.ffc_calibration)
+            self.projection_viewer.load_files(path, self.params.flat_field)
 
     def change_value(self, name, value):
         setattr(self.params, name, value)
@@ -377,9 +377,9 @@ class ApplicationWindow(QtGui.QMainWindow):
     def change_center(self, name, value):
         setattr(self.params, name, value)
 
-    def on_ffc_box_clicked(self):
-        checked = self.ui.ffc_box.isChecked()
-        self.params.ffc_calibration = checked
+    def on_flat_field_clicked(self):
+        checked = self.ui.flat_field.isChecked()
+        self.params.flat_field = checked
 
     def on_pre_processing_box_clicked(self):
         checked = self.ui.pre_processing_box.isChecked()
@@ -443,9 +443,9 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.wavelet_level.setValue(self.params.wavelet_level if self.params.wavelet_level else None)
         self.ui.wavelet_sigma.setValue(self.params.wavelet_sigma if self.params.wavelet_sigma else 2)
 
-        if self.params.ffc_calibration:
-            self.ui.ffc_box.setChecked(True)
-        self.on_ffc_box_clicked()
+        if self.params.flat_field:
+            self.ui.flat_field.setChecked(True)
+        self.on_flat_field_clicked()
 
         if self.params.pre_processing:
             self.ui.pre_processing_box.setChecked(True)
@@ -470,14 +470,14 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.ui.slice_box.setChecked(True)
 
-        if self.params.ffc_method == "default":
-            self.ui.ffc_method.setCurrentIndex(0)
-        elif self.params.ffc_method == "background":
-            self.ui.ffc_method.setCurrentIndex(1)
-        elif self.params.ffc_method == "roi":
-            self.ui.ffc_method.setCurrentIndex(2)
+        if self.params.flat_field_method == "default":
+            self.ui.flat_field_method.setCurrentIndex(0)
+        elif self.params.flat_field_method == "background":
+            self.ui.flat_field_method.setCurrentIndex(1)
+        elif self.params.flat_field_method == "roi":
+            self.ui.flat_field_method.setCurrentIndex(2)
 
-        self.change_ffc_method()
+        self.change_flat_field_method()
 
 
         if self.params.ring_removal_method == "none":
@@ -576,7 +576,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.nan_and_inf_box.setChecked(self.params.nan_and_inf)
 
     def change_roi(self):
-        if (self.params.ffc_method == "roi"):
+        if (self.params.flat_field_method == "roi"):
             roi_dlg = RoiDialog()
             roi_dlg.exec_()
             if roi_dlg.result() == 0:
@@ -591,11 +591,17 @@ class ApplicationWindow(QtGui.QMainWindow):
                 self.params.roi_by = str(self.ui.roi_by)
             # Do stuff with values
 
-    def change_ffc_method(self):
-        self.params.ffc_method = str(self.ui.ffc_method.currentText()).lower()
-        is_default = self.params.ffc_method == 'default'
-        is_background = self.params.ffc_method == 'background'
-        is_roi = self.params.ffc_method == 'roi'
+    def change_flat_field_method(self):
+        self.params.flat_field_method = str(self.ui.flat_field_method.currentText()).lower()
+        is_default = self.params.flat_field_method == 'default'
+        is_background = self.params.flat_field_method == 'background'
+        is_roi = self.params.flat_field_method == 'roi'
+
+        for w in (self.ui.cut_off_label, self.ui.cut_off):
+            w.setVisible(is_default)
+
+        for w in (self.ui.air_label, self.ui.air):
+            w.setVisible(is_background)
 
         for w in (self.ui.roi_tx_label, self.ui.roi_ty_label, 
                   self.ui.roi_bx_label, self.ui.roi_by_label,  
@@ -617,11 +623,6 @@ class ApplicationWindow(QtGui.QMainWindow):
                 self.params.roi_bx = roi_bx
                 self.params.roi_by = roi_by
 
-        for w in (self.ui.cut_off_label, self.ui.cut_off):
-            w.setVisible(is_default)
-
-        for w in (self.ui.air_label, self.ui.air):
-            w.setVisible(is_background)
 
     def change_ring_removal_method(self):
         self.params.ring_removal_method = str(self.ui.ring_removal_method.currentText()).lower()
@@ -693,7 +694,7 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def closeEvent(self, event):
         try:
-            self.params.ffc_method = 'default'
+            self.params.flat_field_method = 'default'
             sections = config.TOMO_PARAMS + ('gui', 'retrieve-phase')
             config.write('ufot.conf', args=self.params, sections=sections)
             config.write(str(self.params.input_path)+'.conf', args=self.params, sections=sections)

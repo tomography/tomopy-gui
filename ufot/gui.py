@@ -440,7 +440,7 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.ui.energy.setValue(self.params.energy if self.params.energy else 10.0)
         self.ui.alpha.setValue(self.params.alpha if self.params.alpha else 0.001)
 
-        self.ui.wavelet_level.setValue(self.params.wavelet_level if self.params.wavelet_level else None)
+        self.ui.wavelet_level.setValue(self.params.wavelet_level if self.params.wavelet_level else 0)
         self.ui.wavelet_sigma.setValue(self.params.wavelet_sigma if self.params.wavelet_sigma else 2)
 
         if self.params.flat_field:

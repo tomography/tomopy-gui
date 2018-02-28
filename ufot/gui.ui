@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1017</width>
-    <height>1109</height>
+    <height>1122</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -69,7 +69,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_widgetPage2_2">
        <attribute name="title">
@@ -268,9 +268,9 @@
                 </widget>
                </item>
                <item row="13" column="0">
-                <widget class="QLabel" name="data_dark_label">
+                <widget class="QLabel" name="dark_label">
                  <property name="text">
-                  <string>Bad Darks</string>
+                  <string>Darks</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -288,9 +288,9 @@
                 </widget>
                </item>
                <item row="14" column="0">
-                <widget class="QLabel" name="data_white_label">
+                <widget class="QLabel" name="flat_label">
                  <property name="text">
-                  <string>Bad Flats</string>
+                  <string>Flats</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -305,13 +305,25 @@
                 </widget>
                </item>
                <item row="12" column="2">
-                <widget class="QSpinBox" name="data_end"/>
+                <widget class="QSpinBox" name="projection_max">
+                 <property name="maximum">
+                  <number>4096</number>
+                 </property>
+                </widget>
                </item>
                <item row="12" column="1">
-                <widget class="QSpinBox" name="data_start"/>
+                <widget class="QSpinBox" name="projection_min">
+                 <property name="maximum">
+                  <number>4095</number>
+                 </property>
+                </widget>
                </item>
                <item row="13" column="1">
-                <widget class="QSpinBox" name="data_dark_start"/>
+                <widget class="QSpinBox" name="dark_min">
+                 <property name="maximum">
+                  <number>4095</number>
+                 </property>
+                </widget>
                </item>
                <item row="8" column="1">
                 <widget class="QLabel" name="center">
@@ -366,13 +378,21 @@
                 </widget>
                </item>
                <item row="14" column="1">
-                <widget class="QSpinBox" name="data_white_start"/>
+                <widget class="QSpinBox" name="flat_min"/>
                </item>
                <item row="14" column="2">
-                <widget class="QSpinBox" name="data_white_end"/>
+                <widget class="QSpinBox" name="flat_max">
+                 <property name="maximum">
+                  <number>4096</number>
+                 </property>
+                </widget>
                </item>
                <item row="13" column="2">
-                <widget class="QSpinBox" name="data_dark_end"/>
+                <widget class="QSpinBox" name="dark_max">
+                 <property name="maximum">
+                  <number>4096</number>
+                 </property>
+                </widget>
                </item>
                <item row="7" column="0">
                 <widget class="QLabel" name="slice_center_precision_label">
@@ -428,9 +448,9 @@
                 </widget>
                </item>
                <item row="12" column="0">
-                <widget class="QLabel" name="data_label">
+                <widget class="QLabel" name="projection_label">
                  <property name="text">
-                  <string>Blocked Projections</string>
+                  <string>Projections</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

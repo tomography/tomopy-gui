@@ -305,21 +305,21 @@
                 </widget>
                </item>
                <item row="12" column="2">
-                <widget class="QSpinBox" name="projection_end">
+                <widget class="QSpinBox" name="projection_max">
                  <property name="maximum">
                   <number>4096</number>
                  </property>
                 </widget>
                </item>
                <item row="12" column="1">
-                <widget class="QSpinBox" name="projection_start">
+                <widget class="QSpinBox" name="projection_min">
                  <property name="maximum">
                   <number>4095</number>
                  </property>
                 </widget>
                </item>
                <item row="13" column="1">
-                <widget class="QSpinBox" name="dark_start">
+                <widget class="QSpinBox" name="dark_min">
                  <property name="maximum">
                   <number>4095</number>
                  </property>
@@ -378,21 +378,17 @@
                 </widget>
                </item>
                <item row="14" column="1">
-                <widget class="QSpinBox" name="flat_start">
-                 <property name="maximum">
-                  <number>4095</number>
-                 </property>
-                </widget>
+                <widget class="QSpinBox" name="flat_min"/>
                </item>
                <item row="14" column="2">
-                <widget class="QSpinBox" name="flat_end">
+                <widget class="QSpinBox" name="flat_max">
                  <property name="maximum">
                   <number>4096</number>
                  </property>
                 </widget>
                </item>
                <item row="13" column="2">
-                <widget class="QSpinBox" name="dark_end">
+                <widget class="QSpinBox" name="dark_max">
                  <property name="maximum">
                   <number>4096</number>
                  </property>

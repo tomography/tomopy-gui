@@ -390,16 +390,12 @@ class ApplicationWindow(QtGui.QMainWindow):
                 self.ui.projection_max.setMinimum(value+1)
             self.params.projection_number = self.ui.projection_max.value() - self.ui.projection_min.value()
             self.ui.theta_step.setText(str(util.theta_step(np.rad2deg(self.params.theta_start), np.rad2deg(self.params.theta_end), self.params.projection_number)))
-            print("Start:", self.params.projection_number)
-            #self.params.projection_min = value
         elif(name == 'flat_min'):
             if (value < self.params.flat_end):
                 self.ui.flat_max.setMinimum(value+1)
-            #self.params.flat_min = value
         elif(name == 'dark_min'):
             if (value < self.params.dark_end):
                 self.ui.dark_max.setMinimum(value+1)
-            #self.params.dark_min = value
         setattr(self.params, name, value)
 
     def change_end(self, name, value):
@@ -413,17 +409,13 @@ class ApplicationWindow(QtGui.QMainWindow):
             if (value > 0 ): 
                 self.ui.projection_min.setMaximum(value-1)
             self.params.projection_number = self.ui.projection_max.value() - self.ui.projection_min.value()
-            #self.params.projection_max = value
-            print("End:", self.params.projection_number )
             self.ui.theta_step.setText(str(util.theta_step(np.rad2deg(self.params.theta_start), np.rad2deg(self.params.theta_end), self.params.projection_number)))
         elif(name == 'flat_max'):
             if (value > 0 ): 
                 self.ui.flat_min.setMaximum(value-1)            
-            #self.params.flat_max = value
         elif(name == 'dark_max'):
             if (value > 0 ): 
                 self.ui.dark_min.setMaximum(value-1)
-            #self.params.flat_max = value    
         setattr(self.params, name, value)
 
     def change_center(self, name, value):

@@ -41,10 +41,58 @@ SECTIONS['gui'] = {
         'action': 'store_true'}}
  
 SECTIONS['file-io'] = {
+    'projection-start': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the first projection"},
+    'projection-end': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the last projection"},
     'projection-number': {
         'type': util.positive_int,
         'default': 0,
         'help': "Number of projections"},
+    'projection-min': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the first projection"},
+    'projection-max': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the last projection"},
+    'dark-start': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the first dark field"},
+    'dark-end': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the last dark field"},
+    'dark-min': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the first dark field"},
+    'dark-max': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the last dark field"},
+    'flat-start': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the first white field"},
+    'flat-end': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the last white field"},
+    'flat-min': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the first white field"},
+    'flat-max': {
+        'type': util.positive_int,
+        'default': 0,
+        'help': "Index of the last white field"},
     'slice-start': {
         'type': util.positive_int,
         'default': 0,

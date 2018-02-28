@@ -41,7 +41,24 @@ def set_gui_startup(self, path):
         self.ui.theta_step.setText(str(np.rad2deg((theta[1] - theta[0]))))
         self.params.theta_start = theta[0]
         self.params.theta_end = theta[-1]
-        self.params.projection_number = data_size[0]
+
+        self.params.projection_start = 0
+        self.params.projection_end = data_size[0]
+        self.params.projection_min = 0
+        self.params.projection_max = data_size[0]
+        self.ui.projection_end.setMaximum(data_size[0])
+        self.params.projection_number = self.params.projection_end - self.params.projection_start
+
+        self.params.dark_start = 0
+        self.params.dark_end = data_dark_size[0]
+        self.params.dark_min = 0
+        self.params.dark_max = data_dark_size[0]
+        self.ui.dark_end.setMaximum(data_dark_size[0])
+        self.params.flat_start = 0
+        self.params.flat_end = data_white_size[0]
+        self.params.flat_min = 0
+        self.params.flat_max = data_white_size[0]
+        self.ui.flat_end.setMaximum(data_white_size[0])
 
         self.ui.theta_start.setValue(np.rad2deg(theta[0]))
         self.ui.theta_end.setValue(np.rad2deg(theta[-1]))
@@ -260,6 +277,12 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.ui.theta_start.valueChanged.connect(lambda value: self.change_start('theta_start', value))
         self.ui.theta_end.valueChanged.connect(lambda value: self.change_end('theta_end', value))
+        self.ui.projection_start.valueChanged.connect(lambda value: self.change_start('projection_start', value))
+        self.ui.projection_end.valueChanged.connect(lambda value: self.change_end('projection_end', value))
+        self.ui.flat_start.valueChanged.connect(lambda value: self.change_start('flat_start', value))
+        self.ui.flat_end.valueChanged.connect(lambda value: self.change_end('flat_end', value))
+        self.ui.dark_start.valueChanged.connect(lambda value: self.change_start('dark_start', value))
+        self.ui.dark_end.valueChanged.connect(lambda value: self.change_end('dark_end', value))
 
         self.ui.pixel_size.valueChanged.connect(lambda value: self.change_value('pixel_size', value))
         self.ui.distance.valueChanged.connect(lambda value: self.change_value('propagation_distance', value))
@@ -361,8 +384,19 @@ class ApplicationWindow(QtGui.QMainWindow):
         elif(name == 'theta_start'):
             self.ui.theta_end.setMinimum(value+0.01)
             self.ui.theta_step.setText(str(util.theta_step(value, np.rad2deg(self.params.theta_end), self.params.projection_number)))
-            #$$$$$$
             value = np.deg2rad(value)
+        elif(name == 'projection_start'):
+            self.ui.projection_end.setMinimum(value+1)
+            self.params.projection_number = self.ui.projection_end.value() - self.ui.projection_start.value()
+            self.ui.theta_step.setText(str(util.theta_step(np.rad2deg(self.params.theta_start), np.rad2deg(self.params.theta_end), self.params.projection_number)))
+            print("Start:", self.params.projection_number)
+            #self.params.projection_start = value
+        elif(name == 'flat_start'):
+            self.ui.flat_end.setMinimum(value+1)
+            #self.params.flat_start = value
+        elif(name == 'dark_start'):
+            self.ui.dark_end.setMinimum(value+1)
+            #self.params.dark_start = value
         setattr(self.params, name, value)
 
     def change_end(self, name, value):
@@ -372,6 +406,21 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.ui.theta_start.setMaximum(value-0.01)
             self.ui.theta_step.setText(str(util.theta_step(np.rad2deg(self.params.theta_start), value, self.params.projection_number)))
             value = np.deg2rad(value)
+        elif(name == 'projection_end'):
+            if (value >=1 ): 
+                self.ui.projection_start.setMaximum(value-1)
+            self.params.projection_number = self.ui.projection_end.value() - self.ui.projection_start.value()
+            #self.params.projection_end = value
+            print("End:", self.params.projection_number )
+            self.ui.theta_step.setText(str(util.theta_step(np.rad2deg(self.params.theta_start), np.rad2deg(self.params.theta_end), self.params.projection_number)))
+        elif(name == 'flat_end'):
+            if (value >=1 ): 
+                self.ui.flat_start.setMaximum(value-1)            
+            #self.params.flat_end = value
+        elif(name == 'dark_end'):
+            if (value >=1 ): 
+                self.ui.dark_start.setMaximum(value-1)
+            #self.params.flat_end = value    
         setattr(self.params, name, value)
 
     def change_center(self, name, value):
@@ -430,6 +479,15 @@ class ApplicationWindow(QtGui.QMainWindow):
 
         self.ui.theta_start.setValue(self.params.theta_start if self.params.theta_start else 0.0)
         self.ui.theta_end.setValue(self.params.theta_end if self.params.theta_end else np.pi)
+
+        self.ui.projection_start.setValue(self.params.projection_start if self.params.projection_start else 0)
+        self.ui.projection_end.setValue(self.params.projection_end if self.params.projection_end else 1)
+
+        self.ui.flat_start.setValue(self.params.flat_start if self.params.flat_start else 0)
+        self.ui.flat_end.setValue(self.params.flat_end if self.params.flat_end else 1)
+
+        self.ui.dark_start.setValue(self.params.dark_start if self.params.dark_start else 0)
+        self.ui.dark_end.setValue(self.params.dark_end if self.params.dark_end else 1)
 
         self.ui.slice_start.setValue(self.params.slice_start if self.params.slice_start else 1)
         self.ui.slice_end.setValue(self.params.slice_end if self.params.slice_end else 2)
@@ -742,19 +800,19 @@ class ApplicationWindow(QtGui.QMainWindow):
             self.params.wavelet_padding = False
 
     def on_manual_box_clicked(self):
-        self.ui.data_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_start_label.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_start.setVisible(self.ui.manual_box.isChecked())
         self.ui.data_end_label.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.projection_label.setVisible(self.ui.manual_box.isChecked())
+        self.ui.projection_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.projection_end.setVisible(self.ui.manual_box.isChecked())
 
-        self.ui.data_dark_label.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_dark_start.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_dark_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.dark_label.setVisible(self.ui.manual_box.isChecked())
+        self.ui.dark_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.dark_end.setVisible(self.ui.manual_box.isChecked())
  
-        self.ui.data_white_label.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_white_start.setVisible(self.ui.manual_box.isChecked())
-        self.ui.data_white_end.setVisible(self.ui.manual_box.isChecked())
+        self.ui.flat_label.setVisible(self.ui.manual_box.isChecked())
+        self.ui.flat_start.setVisible(self.ui.manual_box.isChecked())
+        self.ui.flat_end.setVisible(self.ui.manual_box.isChecked())
  
         self.ui.theta_label.setVisible(self.ui.manual_box.isChecked())
         self.ui.theta_start.setVisible(self.ui.manual_box.isChecked())

@@ -43,7 +43,7 @@ To do a tomographic reconstruction:
 from the command line. To get correct results, you may need to append
 options such as `--center/-c` to set the rotation axis position. 
 
-    $ tofu tomo --center=1024.0 --last-file /local/data.h5
+    $ ufot tomo --center=1024.0 --last-file /local/data.h5
 
 You can get a help for all options by running
 

@@ -1,10 +1,8 @@
 ufot
 ####
 
-**ufot** is [tofu](https://github.com/ufo-kit/tofu) for [tomopy](https://github.com/tomopy/tomopy)
-
-an open-source Python package for tomographic data 
-processing and image reconstruction.
+**ufot** is UI for [tomopy](https://github.com/tomopy/tomopy) an open-source Python package for tomographic data 
+processing and image reconstruction. **ufot** is derived from [tofu](https://github.com/ufo-kit/tofu) 
 
 About
 =====

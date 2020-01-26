@@ -1,10 +1,10 @@
-ufot
-####
+tomopy-gui
+##########
 
-**ufot** is UI for [tomopy](https://github.com/tomopy/tomopy) an open-source Python package for tomographic data 
+**tomopy-gui** is UI for [tomopy](https://github.com/tomopy/tomopy) an open-source Python package for tomographic data 
 processing and image reconstruction. 
 
-**ufot** is derived from [tofu](https://github.com/ufo-kit/tofu).
+**tomopy-gui** is derived from [tofu](https://github.com/ufo-kit/tofu).
 
 About
 =====
@@ -14,11 +14,24 @@ This repository contains a customized version of [tofu](https://github.com/ufo-k
 Installation
 ============
 
-Run
+First, you must have `Conda <http://continuum.io/downloads>`_ installed.
 
-    python setup.py install
+Next, install TomoPy and all its dependencies into a new Conda environment
+called ``tomopy`` by running::
 
-in a prepared virtualenv or as root for system-wide installation.
+    $ conda create --name tomopy --channel conda-forge tomopy
+
+Use this TomoPy installation by activating this environment::
+
+    $ conda activate tomopy
+
+
+then::
+
+    $ conda clone https://github.com/tomography/tomopy-gui.git 
+    $ cd tomopy-gui
+    $ python setup.py install
+
 
 .. warning:: If your python installation is in a location different from #!/usr/bin/env python please edit the first line of the bin/ufot file to match yours.
 

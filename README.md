@@ -1,5 +1,5 @@
-tomopy gui
-##########
+tomopy-gui
+==========
 
 **tomopy-gui** is UI for [tomopy](https://github.com/tomopy/tomopy) an open-source Python package for tomographic data 
 processing and image reconstruction. 
